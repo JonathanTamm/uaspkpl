@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PKPL - Materi UAS Lengkap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        .sticky-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(10,14,26,0.92); backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(99,102,241,0.12);
+            padding: 14px 24px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-links { display: flex; align-items: center; gap: 4px; font-size: 0.85rem; flex-wrap: wrap; }
+        .nav-links a { color: #94a3b8; text-decoration: none; padding: 5px 12px; border-radius: 7px; transition: all 0.2s; font-weight: 500; }
+        .nav-links a:hover { color: #c4b5fd; background: rgba(99,102,241,0.1); text-decoration: none; }
+        .nav-links a.active { color: #e2e8f0; font-weight: 600; }
+        .nav-links .sep { color: #1e293b; margin: 0 2px; font-size: 0.7rem; user-select: none; }
+        .nav-brand { display: inline-flex; align-items: center; gap: 6px; padding: 5px 16px; background: linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15)); border: 1px solid rgba(99,102,241,0.25); border-radius: 50px; font-size: 0.78rem; font-weight: 600; color: #c4b5fd; white-space: nowrap; }
+        body { padding-top: 56px; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e1a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .bg-glow {
+            position: fixed; top: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        .bg-glow-2 {
+            position: fixed; bottom: -200px; left: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; }
+        .header {
+            text-align: center; margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+        .header .badge {
+            display: inline-block; padding: 6px 16px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2));
+            border: 1px solid rgba(99,102,241,0.3); border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; color: #a5b4fc;
+            margin-bottom: 16px; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .header h1 {
+            font-size: 2.8rem; font-weight: 900;
+            background: linear-gradient(135deg, #e2e8f0, #a5b4fc, #c084fc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .header p { font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+        .progress-section {
+            background: rgba(15,23,42,0.6); border: 1px solid rgba(99,102,241,0.15);
+            border-radius: 16px; padding: 24px 30px; margin-bottom: 40px;
+            backdrop-filter: blur(10px); animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        .progress-section h3 { font-size: 1rem; color: #a5b4fc; margin-bottom: 14px; font-weight: 600; }
+        .progress-bar-bg {
+            width: 100%; height: 10px; background: rgba(99,102,241,0.1);
+            border-radius: 10px; overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%; border-radius: 10px; transition: width 0.8s ease;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+        }
+        .progress-text { font-size: 0.85rem; color: #94a3b8; margin-top: 8px; }
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px; margin-bottom: 40px;
+        }
+        .card {
+            background: rgba(15,23,42,0.6); border: 1px solid rgba(99,102,241,0.12);
+            border-radius: 16px; padding: 28px; cursor: pointer;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+            backdrop-filter: blur(10px); text-decoration: none; color: inherit;
+            display: block; animation: fadeInUp 0.6s ease both;
+        }
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .card:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(99,102,241,0.1); }
+        .card:hover::before { opacity: 1; }
+        .card .icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+        }
+        .card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #f1f5f9; }
+        .card p { font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin-bottom: 16px; }
+        .card .tag {
+            display: inline-block; padding: 4px 10px; border-radius: 6px;
+            font-size: 0.72rem; font-weight: 600;
+            background: rgba(99,102,241,0.15); color: #a5b4fc;
+        }
+        .card .card-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 4px;
+        }
+        .card .quiz-status {
+            font-size: 0.75rem; color: #64748b;
+        }
+        .card .quiz-status.done { color: #34d399; }
+        .uas-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1));
+            border: 1px solid rgba(99,102,241,0.25);
+        }
+        .uas-card:hover { border-color: rgba(168,85,247,0.5);
+            box-shadow: 0 12px 40px rgba(168,85,247,0.15); }
+        .uas-card .icon { background: linear-gradient(135deg, #ec4899, #a855f7); }
+        .uas-card h3 { font-size: 1.3rem; }
+        .stats-row {
+            display: flex; gap: 20px; flex-wrap: wrap; margin-top: 12px;
+        }
+        .stat-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.85rem; color: #a5b4fc;
+        }
+        .stat-item span { font-weight: 700; font-size: 1.1rem; color: #e2e8f0; }
+        footer {
+            text-align: center; padding: 30px 0; color: #475569;
+            font-size: 0.8rem; border-top: 1px solid rgba(99,102,241,0.1);
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 680px) {
+            .header h1 { font-size: 1.8rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sticky-nav">
+        <div class="nav-links">
+            <a href="index.html" class="active">🏠 Home</a>
+            <span class="sep">/</span>
+            <a href="ch01-unit-testing.html">Ch 1</a>
+            <span class="sep">/</span>
+            <a href="ch02-regression-testing.html">Ch 2</a>
+            <span class="sep">/</span>
+            <a href="ch03-integration-system-acceptance.html">Ch 3</a>
+            <span class="sep">/</span>
+            <a href="ch04-penetration-testing.html">Ch 4</a>
+            <span class="sep">/</span>
+            <a href="ch05-law-ethics-cybercrime.html">Ch 5</a>
+            <span class="sep">/</span>
+            <a href="uas-simulation.html">UAS</a>
+        </div>
+        <div class="nav-brand">✨ Made by Chill House</div>
+    </nav>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+    <div class="container">
+        <div class="header">
+            <div class="badge">Semester 4 — Persiapan UAS</div>
+            <h1>PKPL Study Hub</h1>
+            <p>Pengujian & Penjaminan Kualitas Perangkat Lunak — Materi lengkap, latihan soal, dan simulasi UAS dalam satu tempat.</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <h3>📊 Progress Belajar Keseluruhan</h3>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">Memuat progress...</div>
+        </div>
+
+        <div class="cards-grid">
+            <a href="ch01-unit-testing.html" class="card" style="--accent1:#6366f1;--accent2:#818cf8;">
+                <div class="icon">🧪</div>
+                <h3>Bab 1: Unit Testing</h3>
+                <p>Prinsip unit testing, framework populer, OWASP-based unit test untuk keamanan, serta mocking & isolation.</p>
+                <div class="card-footer">
+                    <span class="tag">Materi + Quiz 9</span>
+                    <span class="quiz-status" id="status-ch01">Belum dikerjakan</span>
+                </div>
+            </a>
+
+            <a href="ch02-regression-testing.html" class="card" style="--accent1:#3b82f6;--accent2:#60a5fa;">
+                <div class="icon">🔄</div>
+                <h3>Bab 2: Regression Testing</h3>
+                <p>Retesting vs Regression, strategi seleksi tes, otomatisasi CI/CD, RPA, dan Load Testing.</p>
+                <div class="card-footer">
+                    <span class="tag">Materi + Quiz 10</span>
+                    <span class="quiz-status" id="status-ch02">Belum dikerjakan</span>
+                </div>
+            </a>
+
+            <a href="ch03-integration-system-acceptance.html" class="card" style="--accent1:#8b5cf6;--accent2:#a78bfa;">
+                <div class="icon">🔗</div>
+                <h3>Bab 3: Integration, System & Acceptance Testing</h3>
+                <p>Pendekatan integrasi, Test Doubles (Stub vs Mock), System Testing, UAT & OAT.</p>
+                <div class="card-footer">
+                    <span class="tag">Materi + Quiz 11</span>
+                    <span class="quiz-status" id="status-ch03">Belum dikerjakan</span>
+                </div>
+            </a>
+
+            <a href="ch04-penetration-testing.html" class="card" style="--accent1:#ef4444;--accent2:#f87171;">
+                <div class="icon">🛡️</div>
+                <h3>Bab 4: Penetration Testing</h3>
+                <p>Tipe & cakupan pentest, 7 fase pentesting, tools (Nmap, Metasploit, Burp Suite, dll).</p>
+                <div class="card-footer">
+                    <span class="tag">Materi + Quiz 12</span>
+                    <span class="quiz-status" id="status-ch04">Belum dikerjakan</span>
+                </div>
+            </a>
+
+            <a href="ch05-law-ethics-cybercrime.html" class="card" style="--accent1:#f59e0b;--accent2:#fbbf24;">
+                <div class="icon">⚖️</div>
+                <h3>Bab 5: Law, Ethics & Cyber Crime</h3>
+                <p>Etika vs Hukum, UU ITE, UU PDP, GDPR, hukum AS, kode etik profesi IT.</p>
+                <div class="card-footer">
+                    <span class="tag">Materi + Quiz 13</span>
+                    <span class="quiz-status" id="status-ch05">Belum dikerjakan</span>
+                </div>
+            </a>
+
+            <a href="uas-simulation.html" class="card uas-card" style="--accent1:#ec4899;--accent2:#a855f7;">
+                <div class="icon">🎯</div>
+                <h3>Simulasi UAS — 80 Soal Pilihan Ganda</h3>
+                <p>Simulasi ujian akhir semester lengkap dari semua materi. Jawaban tersimpan otomatis, bisa di-review setelah submit.</p>
+                <div class="stats-row">
+                    <div class="stat-item">📝 <span>80</span> Soal</div>
+                    <div class="stat-item">⏱️ <span>120</span> Menit</div>
+                    <div class="stat-item">📚 <span>5</span> Materi</div>
+                </div>
+                <div class="card-footer" style="margin-top:12px;">
+                    <span class="tag" style="background:rgba(236,72,153,0.2);color:#f9a8d4;">Simulasi Ujian</span>
+                    <span class="quiz-status" id="status-uas">Belum dikerjakan</span>
+                </div>
+            </a>
+        </div>
+
+        <footer>
+            PKPL Study Hub &copy; 2026 — Dibuat untuk persiapan UAS Semester 4
+        </footer>
+    </div>
+
+    <script>
+        function updateProgress() {
+            const chapters = ['ch01','ch02','ch03','ch04','ch05'];
+            let totalQuestions = 0;
+            let totalCorrect = 0;
+            let completedChapters = 0;
+
+            chapters.forEach(ch => {
+                const data = localStorage.getItem(`pkpl_quiz_${ch}`);
+                const statusEl = document.getElementById(`status-${ch}`);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    totalQuestions += parsed.total || 0;
+                    totalCorrect += parsed.correct || 0;
+                    completedChapters++;
+                    if (statusEl) {
+                        statusEl.textContent = `✅ ${parsed.correct}/${parsed.total} benar`;
+                        statusEl.classList.add('done');
+                    }
+                }
+            });
+
+            const uasData = localStorage.getItem('pkpl_uas_simulation');
+            const uasStatus = document.getElementById('status-uas');
+            if (uasData) {
+                const parsed = JSON.parse(uasData);
+                if (uasStatus) {
+                    uasStatus.textContent = `✅ Skor: ${parsed.correct}/${parsed.total}`;
+                    uasStatus.classList.add('done');
+                }
+                completedChapters++;
+            }
+
+            const totalItems = 6;
+            const pct = Math.round((completedChapters / totalItems) * 100);
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').textContent =
+                `${completedChapters} dari ${totalItems} bagian selesai (${pct}%)` +
+                (totalQuestions > 0 ? ` — Total skor latihan: ${totalCorrect}/${totalQuestions}` : '');
+        }
+        updateProgress();
+    </script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bab 5: Law, Ethics & Cyber Crime — PKPL Study Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,158,11,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
+        .nav-links a:hover{color:#fde68a;background:rgba(245,158,11,0.1);text-decoration:none}
+        .nav-links a.active{color:#e2e8f0;font-weight:600}
+        .nav-links .sep{color:#1e293b;margin:0 2px;font-size:0.7rem;user-select:none}
+        .nav-brand{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15));border:1px solid rgba(99,102,241,0.25);border-radius:50px;font-size:0.78rem;font-weight:600;color:#c4b5fd;white-space:nowrap}
+        body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e8f0;line-height:1.7;padding-top:56px}
+        .bg-glow{position:fixed;bottom:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(245,158,11,0.12) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .container{max-width:900px;margin:0 auto;padding:30px 20px;position:relative;z-index:1}
+        a{color:#fde68a;text-decoration:none}a:hover{text-decoration:underline}
+        .back-link{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:#64748b;margin-bottom:24px;transition:color 0.2s}.back-link:hover{color:#fde68a;text-decoration:none}
+        .chapter-header{margin-bottom:40px;animation:fadeIn 0.6s ease}
+        .chapter-badge{display:inline-block;padding:5px 14px;background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(251,191,36,0.2));border:1px solid rgba(245,158,11,0.3);border-radius:50px;font-size:0.75rem;font-weight:600;color:#fde68a;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+        .chapter-header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e2e8f0,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .chapter-header p{color:#94a3b8;font-size:1rem}
+        .section{background:rgba(15,23,42,0.6);border:1px solid rgba(245,158,11,0.1);border-radius:16px;padding:28px;margin-bottom:24px;backdrop-filter:blur(10px)}
+        .section h2{font-size:1.4rem;font-weight:800;color:#e2e8f0;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .section h3{font-size:1.1rem;font-weight:700;color:#fde68a;margin:20px 0 10px;padding-left:12px;border-left:3px solid #f59e0b}
+        .section h4{font-size:0.95rem;font-weight:600;color:#fbbf24;margin:14px 0 8px}
+        .section p,.section li{font-size:0.92rem;color:#cbd5e1;line-height:1.8}
+        .section ul,.section ol{padding-left:20px;margin:8px 0 16px}
+        .section li{margin-bottom:6px}
+        .highlight-box{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(251,191,36,0.08));border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .highlight-box.warning{background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(248,113,113,0.08));border-color:rgba(239,68,68,0.3)}
+        .highlight-box.success{background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(16,185,129,0.08));border-color:rgba(52,211,153,0.3)}
+        .highlight-box h4{margin-top:0}
+        .highlight-box.success h4{color:#34d399}
+        table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem}
+        th,td{border:1px solid rgba(245,158,11,0.15);padding:10px 14px;text-align:left}
+        th{background:rgba(245,158,11,0.1);color:#fde68a;font-weight:600}
+        td{color:#cbd5e1}
+        tr:hover td{background:rgba(245,158,11,0.05)}
+        .memory-tip{background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .memory-tip h4{color:#f9a8d4;margin:0 0 8px;font-size:0.95rem}
+        .memory-tip p,.memory-tip li{font-size:0.88rem;color:#e2a8d4}
+        .example-box{background:rgba(15,23,42,0.8);border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;padding:16px 20px;margin:12px 0}
+        .example-box .label{font-size:0.75rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .law-card{background:rgba(15,23,42,0.8);border:1px solid rgba(245,158,11,0.15);border-radius:12px;padding:16px;margin:10px 0}
+        .law-card h4{margin:0 0 6px;color:#fbbf24;font-size:0.95rem}
+        .law-card p{font-size:0.85rem;margin:0}
+        .quiz-section{background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(251,191,36,0.05));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:28px;margin:30px 0}
+        .quiz-section h2{color:#fde68a}
+        .quiz-question{background:rgba(15,23,42,0.8);border:1px solid rgba(245,158,11,0.1);border-radius:12px;padding:20px;margin:16px 0}
+        .quiz-question .q-num{font-size:0.75rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-question .q-text{font-size:0.93rem;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.6}
+        .quiz-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;margin:6px 0;border-radius:8px;cursor:pointer;border:1px solid rgba(245,158,11,0.08);transition:all 0.2s;font-size:0.88rem}
+        .quiz-option:hover{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2)}
+        .quiz-option input{margin-top:3px;accent-color:#f59e0b}
+        .quiz-option.correct{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.4)}
+        .quiz-option.incorrect{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.4)}
+        .quiz-option .explanation{display:none;font-size:0.82rem;color:#94a3b8;margin-top:6px;padding-top:6px;border-top:1px solid rgba(245,158,11,0.1)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-primary{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#0a0e1a}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(245,158,11,0.3)}
+        .btn-secondary{background:rgba(245,158,11,0.15);color:#fde68a;border:1px solid rgba(245,158,11,0.3)}.btn-secondary:hover{background:rgba(245,158,11,0.25)}
+        .result-box{display:none;background:rgba(15,23,42,0.8);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:24px;margin-top:20px;text-align:center}
+        .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
+        .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}}
+    </style>
+</head>
+<body>
+<nav class="sticky-nav">
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <span class="sep">/</span>
+        <a href="ch04-penetration-testing.html">← Ch 4</a>
+        <span class="sep">/</span>
+        <a class="active">Chapter 5</a>
+        <span class="sep">/</span>
+        <a href="uas-simulation.html">UAS →</a>
+    </div>
+    <div class="nav-brand">✨ Made by Chill House</div>
+</nav>
+<div class="bg-glow"></div>
+<div class="container">
+
+    <div class="chapter-header">
+        <div class="chapter-badge">Bab 5 — Materi + Quiz 13</div>
+        <h1>⚖️ Law, Ethics & Cyber Crime</h1>
+        <p>Hukum, etika, dan kejahatan siber — aturan main yang harus dipahami oleh setiap profesional IT.</p>
+    </div>
+
+    <!-- ETIKA VS HUKUM -->
+    <div class="section">
+        <h2>📖 Etika vs Hukum — Apa Bedanya?</h2>
+        <p>Ini konsep dasar yang sering keluar di soal. Keduanya berbeda meskipun saling terkait.</p>
+
+        <table>
+            <tr><th>Aspek</th><th>Etika (Ethics)</th><th>Hukum (Law)</th></tr>
+            <tr><td><strong>Definisi</strong></td><td>Prinsip <strong>moral</strong> tentang benar-salah berdasarkan nilai masyarakat/profesi</td><td><strong>Aturan resmi</strong> yang dibuat dan ditegakkan oleh negara/pemerintah</td></tr>
+            <tr><td><strong>Sifat</strong></td><td><strong>Subyektif</strong> — bisa berbeda antar budaya/individu</td><td><strong>Obyektif</strong> — tertulis dan mengikat secara hukum</td></tr>
+            <tr><td><strong>Penegakan</strong></td><td>Oleh komunitas/profesi (peer pressure, reputasi)</td><td>Oleh negara (polisi, pengadilan, penjara)</td></tr>
+            <tr><td><strong>Sanksi</strong></td><td>Sanksi <strong>sosial</strong> (dikucilkan, dipecat dari organisasi profesi)</td><td>Sanksi <strong>hukum</strong> (denda, penjara)</td></tr>
+            <tr><td><strong>Contoh</strong></td><td>"Jangan mengintip data pribadi klien meskipun kamu bisa"</td><td>"Hacking diancam pidana 8 tahun penjara (UU ITE)"</td></tr>
+        </table>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan Etika vs Hukum</h4>
+            <ul>
+                <li><strong>Etika</strong> = "<strong>E</strong>ti-kat" → "Sopan santun" → Prinsip moral → Tidak selalu tertulis</li>
+                <li><strong>Hukum</strong> = "<strong>H</strong>arus" → Wajib diikuti → Aturan negara → Ada sanksi pidana</li>
+                <li>Sesuatu bisa <strong>legal tapi tidak etis</strong> (contoh: menjual data user yang di-agree di terms of service)</li>
+                <li>Sesuatu bisa <strong>etis tapi ilegal</strong> (contoh: whistleblowing data pelanggaran pemerintah)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- HUKUM AS -->
+    <div class="section">
+        <h2>🇺🇸 Hukum Siber di Amerika Serikat</h2>
+        <p>Beberapa undang-undang penting di AS yang sering disebut dalam konteks keamanan siber:</p>
+
+        <div class="law-card">
+            <h4>CFAA (Computer Fraud and Abuse Act)</h4>
+            <p>Hukum utama AS untuk kejahatan komputer. Melarang <strong>akses tidak sah</strong> (unauthorized access) ke komputer dan jaringan. Meliputi hacking, penyebaran malware, dan pencurian data.</p>
+        </div>
+
+        <div class="law-card">
+            <h4>ECPA (Electronic Communications Privacy Act)</h4>
+            <p>Melindungi <strong>privasi komunikasi elektronik</strong> (email, telepon, data tersimpan). Melarang penyadapan (wiretapping) tanpa izin.</p>
+        </div>
+
+        <div class="law-card">
+            <h4>DMCA (Digital Millennium Copyright Act)</h4>
+            <p>Melindungi <strong>hak cipta digital</strong>. Melarang pembajakan software, circumvention (menghilangkan proteksi copy), dan pelanggaran hak cipta di internet.</p>
+        </div>
+
+        <div class="law-card">
+            <h4>SOX (Sarbanes-Oxley Act)</h4>
+            <p>Mengatur <strong>tata kelola perusahaan publik</strong> — termasuk kewajiban melindungi data keuangan dan integritas laporan keuangan.</p>
+        </div>
+
+        <div class="law-card">
+            <h4>HIPAA (Health Insurance Portability and Accountability Act)</h4>
+            <p>Melindungi <strong>data kesehatan pasien</strong>. Organisasi kesehatan wajib menjaga kerahasiaan data medis.</p>
+        </div>
+
+        <div class="law-card">
+            <h4>FOIA (Freedom of Information Act)</h4>
+            <p>Memberikan hak <strong>akses publik terhadap informasi pemerintah</strong>, dengan pengecualian tertentu (rahasia negara, privasi).</p>
+        </div>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan Hukum AS: "CEDSF-H"</h4>
+            <ul>
+                <li><strong>C</strong>FAA → <strong>C</strong>omputer fraud → Hacking</li>
+                <li><strong>E</strong>CPA → <strong>E</strong>lectronic → Privasi komunikasi</li>
+                <li><strong>D</strong>MCA → <strong>D</strong>igital → Hak cipta</li>
+                <li><strong>S</strong>OX → <strong>S</strong>aham → Perusahaan publik</li>
+                <li><strong>H</strong>IPAA → <strong>H</strong>ealth → Data kesehatan</li>
+                <li><strong>F</strong>OIA → <strong>F</strong>reedom → Keterbukaan info pemerintah</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- GDPR -->
+    <div class="section">
+        <h2>🇪🇺 GDPR (General Data Protection Regulation)</h2>
+        <p><strong>GDPR</strong> adalah regulasi perlindungan data dari <strong>Uni Eropa</strong> yang berlaku sejak 2018. Ini adalah standar perlindungan data paling ketat di dunia.</p>
+
+        <h3>Prinsip-Prinsip Kunci GDPR</h3>
+        <ul>
+            <li><strong>Lawfulness, Fairness, Transparency</strong> — Data harus diproses secara sah, adil, dan transparan</li>
+            <li><strong>Purpose Limitation</strong> — Data hanya boleh dikumpulkan untuk tujuan yang <strong>jelas dan sah</strong> (legitimate purpose)</li>
+            <li><strong>Data Minimization</strong> — Hanya kumpulkan data yang <strong>benar-benar diperlukan</strong></li>
+            <li><strong>Accuracy</strong> — Data harus akurat dan up-to-date</li>
+            <li><strong>Storage Limitation</strong> — Data tidak boleh disimpan lebih lama dari yang diperlukan</li>
+            <li><strong>Integrity & Confidentiality</strong> — Data harus dilindungi dari akses tidak sah</li>
+        </ul>
+
+        <h3>Hak-Hak Data Subject (Pemilik Data)</h3>
+        <ul>
+            <li><strong>Right to Access</strong> — Hak untuk tahu data apa yang disimpan tentang mereka</li>
+            <li><strong>Right to Rectification</strong> — Hak untuk memperbaiki data yang salah</li>
+            <li><strong>Right to Erasure</strong> ("Right to be Forgotten") — Hak untuk meminta data dihapus</li>
+            <li><strong>Right to Data Portability</strong> — Hak untuk memindahkan data ke layanan lain</li>
+        </ul>
+
+        <div class="highlight-box">
+            <h4 style="color:#fde68a">Sering Keluar di Soal: Dasar Hukum Pemrosesan Data dalam GDPR</h4>
+            <p>Salah satu dasar yang sah untuk memproses data menurut GDPR adalah bahwa pemrosesan data <strong>diperlukan untuk tujuan kepentingan yang sah (legitimate interest)</strong> dari pengontrol data, selama tidak melanggar hak dan kebebasan data subject.</p>
+        </div>
+    </div>
+
+    <!-- HUKUM INDONESIA -->
+    <div class="section">
+        <h2>🇮🇩 Hukum Siber di Indonesia (SANGAT PENTING!)</h2>
+        <p>Bagian ini <strong>paling banyak keluar di soal</strong>. Hapalkan nomor pasal dan sanksinya!</p>
+
+        <h3>UU ITE (UU No. 11 Tahun 2008, direvisi hingga UU No. 1 Tahun 2024)</h3>
+        <p>UU ITE adalah undang-undang utama Indonesia yang mengatur tentang <strong>informasi dan transaksi elektronik</strong>, termasuk kejahatan siber.</p>
+
+        <div class="highlight-box warning">
+            <h4 style="color:#ef4444">🚨 Pasal-Pasal Penting UU ITE (WAJIB HAPAL!)</h4>
+            <table>
+                <tr><th>Pasal</th><th>Larangan</th><th>Penjelasan Mudah</th></tr>
+                <tr><td><strong>Pasal 30</strong></td><td><strong>Hacking / Akses Ilegal</strong></td><td>Dilarang mengakses komputer/sistem orang lain <strong>tanpa izin</strong>. Termasuk meretas akun, masuk ke server tanpa otorisasi.</td></tr>
+                <tr><td><strong>Pasal 31</strong></td><td><strong>Intersepsi / Penyadapan</strong></td><td>Dilarang <strong>menyadap</strong> komunikasi elektronik orang lain (chat, email, telepon).</td></tr>
+                <tr><td><strong>Pasal 33</strong></td><td><strong>Penyebaran Malware / Gangguan Sistem</strong></td><td>Dilarang menyebarkan <strong>virus, trojan, worm</strong> atau program yang merusak/mengganggu sistem elektronik.</td></tr>
+                <tr><td><strong>Pasal 35</strong></td><td><strong>Pencurian Identitas / Manipulasi Data</strong></td><td>Dilarang melakukan <strong>manipulasi, penciptaan, atau perubahan informasi elektronik</strong> agar dianggap data asli. Termasuk <strong>phishing</strong> dan pemalsuan identitas digital.</td></tr>
+            </table>
+        </div>
+
+        <div class="highlight-box" style="border-color:rgba(239,68,68,0.4);background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(245,158,11,0.08))">
+            <h4 style="color:#ef4444">🔥 PALING PENTING — Sanksi Hacking (Pasal 30 UU ITE):</h4>
+            <p style="font-size:1.1rem;font-weight:700;color:#fca5a5;text-align:center;margin:12px 0">
+                Maksimal <strong>8 TAHUN penjara</strong> dan/atau denda <strong>Rp 800.000.000</strong> (800 juta)
+            </p>
+            <p style="font-size:0.85rem;color:#94a3b8;text-align:center">Ini yang paling sering ditanyakan di soal — hapalkan angkanya: <strong>8 tahun + 800 juta</strong></p>
+        </div>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan Pasal UU ITE: "30-31-33-35"</h4>
+            <ul>
+                <li>Pasal <strong>30</strong> = tiga-puluh = <strong>3</strong>0 = <strong>H</strong>acking (akses) → 8 tahun / 800 juta</li>
+                <li>Pasal <strong>31</strong> = <strong>31</strong> = <strong>I</strong>ntersepsi (sadap)</li>
+                <li>Pasal <strong>33</strong> = <strong>33</strong> = <strong>M</strong>alware (gangguan sistem)</li>
+                <li>Pasal <strong>35</strong> = <strong>35</strong> = <strong>P</strong>encurian identitas / manipulasi data</li>
+                <li>Ingat urutan: <strong>Hack → Sadap → Virus → Palsu</strong> (30-31-33-35)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>UU PDP (UU No. 27 Tahun 2022) — Perlindungan Data Pribadi</h3>
+        <p>UU PDP adalah undang-undang Indonesia yang khusus mengatur tentang <strong>perlindungan data pribadi</strong>, terinspirasi dari GDPR.</p>
+
+        <h4>Jenis Data Pribadi menurut UU PDP:</h4>
+        <table>
+            <tr><th>Jenis</th><th>Apa Itu?</th><th>Contoh</th></tr>
+            <tr><td><strong>Data Pribadi Umum (General)</strong></td><td>Data yang bersifat <strong>umum</strong> dan bisa digunakan untuk mengidentifikasi seseorang</td><td>Nama, alamat email, nomor telepon, alamat</td></tr>
+            <tr><td><strong>Data Pribadi Spesifik (Specific)</strong></td><td>Data yang bersifat <strong>sensitif</strong> dan memerlukan perlindungan ekstra</td><td>Data kesehatan, biometrik, catatan keuangan, orientasi seksual, data anak, catatan kriminal</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Regulasi Sektoral Lainnya</h3>
+
+        <div class="law-card">
+            <h4>PP No. 71 Tahun 2019</h4>
+            <p>Peraturan Pemerintah tentang <strong>Penyelenggaraan Sistem dan Transaksi Elektronik (PSTE)</strong>. Mengatur penyelenggara sistem elektronik (PSE), kewajiban pendaftaran, dan perlindungan data.</p>
+        </div>
+
+        <div class="law-card">
+            <h4>UU No. 28 Tahun 2014 — Hak Cipta</h4>
+            <p>Melindungi <strong>hak cipta atas karya intelektual</strong>, termasuk <strong>software/program komputer</strong>. Pembajakan software termasuk pelanggaran UU ini.</p>
+        </div>
+
+        <div class="law-card">
+            <h4>UU No. 30 Tahun 2000 — Rahasia Dagang</h4>
+            <p>Melindungi <strong>informasi bisnis yang bersifat rahasia</strong> (trade secret) — misalnya algoritma, formula, strategi bisnis yang memberi keunggulan kompetitif.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>👨‍💻 Kode Etik Profesi IT</h2>
+        <p>Organisasi profesi IT memiliki kode etik yang harus dipatuhi anggotanya:</p>
+
+        <table>
+            <tr><th>Organisasi</th><th>Fokus</th><th>Kode Etik Utama</th></tr>
+            <tr><td><strong>ACM</strong> (Association for Computing Machinery)</td><td>Ilmuwan komputer & programmer</td><td>Memberikan kontribusi positif, menghindari bahaya, jujur, menghormati privasi</td></tr>
+            <tr><td><strong>(ISC)²</strong></td><td>Profesional keamanan siber (CISSP)</td><td>Melindungi masyarakat, bertindak dengan integritas, memberikan layanan yang kompeten</td></tr>
+            <tr><td><strong>ISACA</strong></td><td>IT Governance & Audit (CISA, CISM)</td><td>Mendukung tata kelola IT, menjaga kerahasiaan, integritas profesional</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
+        <div class="highlight-box success">
+            <h4>✅ Ringkasan Kunci untuk UAS</h4>
+            <ol>
+                <li><strong>Etika = prinsip moral</strong> (subyektif), <strong>Hukum = aturan negara</strong> (obyektif, ada sanksi pidana)</li>
+                <li>Sanksi hacking menurut UU ITE: <strong>maksimal 8 tahun penjara dan/atau denda Rp 800 juta</strong></li>
+                <li><strong>Pasal 30</strong> = Hacking, <strong>Pasal 31</strong> = Intersepsi, <strong>Pasal 33</strong> = Malware, <strong>Pasal 35</strong> = Pencurian identitas/manipulasi</li>
+                <li><strong>Pasal 35 UU ITE</strong> melarang pencurian identitas dan manipulasi data elektronik</li>
+                <li><strong>UU PDP (UU 27/2022)</strong>: Data umum (nama, email) vs Data spesifik (kesehatan, biometrik)</li>
+                <li><strong>GDPR</strong>: Pemrosesan data harus punya tujuan yang sah (legitimate purpose)</li>
+                <li><strong>CFAA</strong> (AS) = hukum utama untuk kejahatan komputer</li>
+                <li><strong>DMCA</strong> = hak cipta digital, <strong>HIPAA</strong> = data kesehatan</li>
+                <li><strong>UU 28/2014</strong> = Hak Cipta (termasuk software), <strong>UU 30/2000</strong> = Rahasia Dagang</li>
+                <li>Kode Etik: <strong>ACM</strong> (computing), <strong>(ISC)²</strong> (cybersecurity), <strong>ISACA</strong> (IT governance)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Contoh Soal & Jawaban</h2>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 1</div>
+            <p><strong>Berapa sanksi maksimal untuk tindakan hacking menurut UU ITE?</strong></p>
+            <p>A. 4 tahun penjara dan Rp 400 juta<br>
+            B. 6 tahun penjara dan Rp 600 juta<br>
+            C. 8 tahun penjara dan/atau denda Rp 800 juta<br>
+            D. 10 tahun penjara dan Rp 1 miliar</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: C</strong> — Pasal 30 UU ITE: maksimal 8 tahun penjara dan/atau denda Rp 800 juta.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 2</div>
+            <p><strong>Pasal berapa dalam UU ITE yang melarang pencurian identitas dan manipulasi informasi elektronik?</strong></p>
+            <p>A. Pasal 30<br>B. Pasal 31<br>C. Pasal 33<br>D. Pasal 35</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: D</strong> — Pasal 35 melarang manipulasi, penciptaan, atau perubahan informasi elektronik agar dianggap data asli.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 3</div>
+            <p><strong>Apa perbedaan utama antara etika dan hukum?</strong></p>
+            <p>A. Etika bersifat subyektif berdasarkan prinsip moral, sedangkan hukum adalah aturan resmi negara dengan sanksi pidana<br>
+            B. Keduanya sama<br>
+            C. Hukum bersifat subyektif<br>
+            D. Etika ditegakkan oleh polisi</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: A</strong> — Etika = prinsip moral (subyektif), Hukum = aturan negara (obyektif, sanksi hukum).</p>
+        </div>
+    </div>
+
+    <!-- ===== LATIHAN SOAL ===== -->
+    <div class="quiz-section" id="quizSection">
+        <h2>🎮 Latihan Soal Interaktif — Law, Ethics & Cyber Crime</h2>
+        <p style="color:#94a3b8;margin-bottom:20px">Kerjakan 15 soal berikut, lalu klik Submit untuk melihat hasilnya.</p>
+        <div id="quizContainer"></div>
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="submitQuiz()">📊 Submit & Lihat Hasil</button>
+            <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Reset</button>
+        </div>
+        <div class="result-box" id="resultBox">
+            <div class="score" id="scoreText">0/15</div>
+            <div class="score-label">Skor Anda</div>
+            <p style="margin-top:12px;color:#94a3b8;font-size:0.88rem" id="scoreMessage"></p>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="ch04-penetration-testing.html" class="btn btn-secondary" style="text-decoration:none">← Bab 4: Penetration Testing</a>
+        <a href="uas-simulation.html" class="btn btn-primary" style="text-decoration:none">🎯 Simulasi UAS →</a>
+    </div>
+</div>
+
+<script>
+const questions = [
+    {q:"Berapa sanksi maksimal untuk tindakan hacking menurut UU ITE?",options:["4 tahun penjara dan Rp 400 juta","6 tahun penjara dan Rp 600 juta","8 tahun penjara dan/atau denda Rp 800 juta","10 tahun penjara dan Rp 1 miliar"],answer:2,explanation:"Pasal 30 UU ITE: maksimal 8 tahun penjara dan/atau denda Rp 800 juta."},
+    {q:"Pasal berapa dalam UU ITE yang melarang pencurian identitas dan manipulasi informasi elektronik?",options:["Pasal 30","Pasal 31","Pasal 33","Pasal 35"],answer:3,explanation:"Pasal 35 melarang manipulasi/penciptaan informasi elektronik palsu."},
+    {q:"Apa perbedaan utama antara etika dan hukum?",options:["Etika bersifat subyektif berdasarkan prinsip moral, hukum adalah aturan resmi negara dengan sanksi pidana","Keduanya identik","Hukum bersifat subyektif","Etika ditegakkan oleh kepolisian"],answer:0,explanation:"Etika = prinsip moral (subyektif), Hukum = aturan negara (obyektif, sanksi hukum)."},
+    {q:"GDPR mengharuskan bahwa pemrosesan data pribadi harus...",options:["Dilakukan tanpa persetujuan pemilik data","Memiliki tujuan yang sah (legitimate purpose) dan jelas","Tidak perlu alasan apapun","Hanya berlaku untuk perusahaan besar"],answer:1,explanation:"GDPR mewajibkan pemrosesan data berdasarkan tujuan yang sah (lawful basis)."},
+    {q:"UU PDP (UU No. 27 Tahun 2022) membedakan data pribadi menjadi...",options:["Data publik dan data rahasia","Data umum (general) dan data spesifik (specific)","Data primer dan data sekunder","Data online dan data offline"],answer:1,explanation:"UU PDP: Data umum (nama, email) vs Data spesifik (kesehatan, biometrik, dll)."},
+    {q:"Pasal 33 UU ITE melarang...",options:["Hacking/akses ilegal","Penyadapan komunikasi","Penyebaran malware dan gangguan terhadap sistem elektronik","Pencurian identitas"],answer:2,explanation:"Pasal 33 = penyebaran malware/program yang merusak/mengganggu sistem elektronik."},
+    {q:"CFAA (Computer Fraud and Abuse Act) adalah hukum utama di AS yang mengatur...",options:["Perlindungan data kesehatan","Kejahatan komputer termasuk akses tidak sah (unauthorized access)","Hak cipta digital","Keterbukaan informasi pemerintah"],answer:1,explanation:"CFAA adalah hukum utama AS untuk kejahatan komputer, termasuk hacking."},
+    {q:"DMCA (Digital Millennium Copyright Act) melindungi...",options:["Data kesehatan pasien","Hak cipta digital dan melarang pembajakan software","Privasi komunikasi elektronik","Data keuangan perusahaan"],answer:1,explanation:"DMCA melindungi hak cipta digital, termasuk melarang circumvention proteksi copy."},
+    {q:"HIPAA mengatur perlindungan...",options:["Hak cipta software","Data keuangan","Data kesehatan pasien","Informasi pemerintah"],answer:2,explanation:"HIPAA = Health Insurance Portability and Accountability Act = data kesehatan."},
+    {q:"Pasal 31 UU ITE melarang...",options:["Hacking","Intersepsi/penyadapan komunikasi elektronik","Penyebaran malware","Manipulasi data"],answer:1,explanation:"Pasal 31 = intersepsi/penyadapan komunikasi elektronik tanpa izin."},
+    {q:"UU No. 28 Tahun 2014 di Indonesia mengatur tentang...",options:["Perlindungan data pribadi","Informasi dan transaksi elektronik","Hak cipta, termasuk perlindungan software/program komputer","Rahasia dagang"],answer:2,explanation:"UU 28/2014 = UU Hak Cipta, melindungi karya intelektual termasuk software."},
+    {q:"UU No. 30 Tahun 2000 di Indonesia mengatur tentang...",options:["Hak cipta","Perlindungan data pribadi","Rahasia dagang (trade secret)","Transaksi elektronik"],answer:2,explanation:"UU 30/2000 = Rahasia Dagang, melindungi informasi bisnis rahasia."},
+    {q:"Organisasi (ISC)² menaungi profesional di bidang...",options:["Programming dan software development","Keamanan siber (cybersecurity) dengan sertifikasi CISSP","Akuntansi dan keuangan","Desain grafis"],answer:1,explanation:"(ISC)² = organisasi profesional cybersecurity, sertifikasi utamanya CISSP."},
+    {q:"Sesuatu yang legal tapi tidak etis dalam konteks IT adalah...",options:["Hacking tanpa izin","Menjual data pengguna yang sudah disetujui di terms of service meskipun merugikan pengguna","Menyebarkan malware","Menyadap telepon"],answer:1,explanation:"Legal karena ada persetujuan, tapi tidak etis karena merugikan pengguna."},
+    {q:"Right to Erasure dalam GDPR berarti...",options:["Hak untuk mengakses data","Hak untuk memindahkan data","Hak untuk meminta penghapusan data pribadi (right to be forgotten)","Hak untuk memperbaiki data"],answer:2,explanation:"Right to Erasure = hak untuk meminta data pribadi dihapus dari sistem."}
+];
+
+function renderQuiz(){const c=document.getElementById('quizContainer');const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch05_answers')||'{}');c.innerHTML=questions.map((q,i)=>`<div class="quiz-question" id="qq-${i}"><div class="q-num">Soal ${i+1} dari ${questions.length}</div><div class="q-text">${q.q}</div>${q.options.map((opt,j)=>`<label class="quiz-option" id="opt-${i}-${j}"><input type="radio" name="q${i}" value="${j}" ${s[i]==j?'checked':''} onchange="saveAnswer(${i},${j})"><span>${opt}</span></label>`).join('')}</div>`).join('')}
+function saveAnswer(qi,oi){const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch05_answers')||'{}');s[qi]=oi;localStorage.setItem('pkpl_quiz_ch05_answers',JSON.stringify(s))}
+function submitQuiz(){const saved=JSON.parse(localStorage.getItem('pkpl_quiz_ch05_answers')||'{}');let correct=0;questions.forEach((q,i)=>{q.options.forEach((_,j)=>{const el=document.getElementById(`opt-${i}-${j}`);el.classList.remove('correct','incorrect');const old=el.querySelector('.explanation');if(old)old.remove()});const ua=saved[i];if(ua!==undefined){if(parseInt(ua)===q.answer){correct++;document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}else{document.getElementById(`opt-${i}-${ua}`).classList.add('incorrect');document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}}else{document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}const expDiv=document.createElement('div');expDiv.className='explanation';expDiv.style.display='block';expDiv.textContent='💡 '+q.explanation;document.getElementById(`opt-${i}-${q.answer}`).appendChild(expDiv)});const rb=document.getElementById('resultBox');rb.style.display='block';document.getElementById('scoreText').textContent=`${correct}/${questions.length}`;const pct=Math.round((correct/questions.length)*100);document.getElementById('scoreMessage').textContent=pct>=80?'🎉 Luar biasa! Materi Law & Ethics sudah dikuasai!':pct>=60?'👍 Bagus! Review lagi pasal-pasal UU ITE ya!':'📚 Hapalkan pasal UU ITE dan perbedaan etika vs hukum!';localStorage.setItem('pkpl_quiz_ch05',JSON.stringify({correct,total:questions.length}));rb.scrollIntoView({behavior:'smooth'})}
+function resetQuiz(){localStorage.removeItem('pkpl_quiz_ch05_answers');localStorage.removeItem('pkpl_quiz_ch05');document.getElementById('resultBox').style.display='none';renderQuiz()}
+renderQuiz();
+</script>
+</body>
+</html>

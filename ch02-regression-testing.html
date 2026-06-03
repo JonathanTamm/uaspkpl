@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bab 2: Regression Testing — PKPL Study Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(59,130,246,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
+        .nav-links a:hover{color:#93c5fd;background:rgba(59,130,246,0.1);text-decoration:none}
+        .nav-links a.active{color:#e2e8f0;font-weight:600}
+        .nav-links .sep{color:#1e293b;margin:0 2px;font-size:0.7rem;user-select:none}
+        .nav-brand{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15));border:1px solid rgba(99,102,241,0.25);border-radius:50px;font-size:0.78rem;font-weight:600;color:#c4b5fd;white-space:nowrap}
+        body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e8f0;line-height:1.7;padding-top:56px}
+        .bg-glow{position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,0.15) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .container{max-width:900px;margin:0 auto;padding:30px 20px;position:relative;z-index:1}
+        a{color:#93c5fd;text-decoration:none}a:hover{text-decoration:underline}
+        .back-link{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:#64748b;margin-bottom:24px;transition:color 0.2s}.back-link:hover{color:#93c5fd;text-decoration:none}
+        .chapter-header{margin-bottom:40px;animation:fadeIn 0.6s ease}
+        .chapter-badge{display:inline-block;padding:5px 14px;background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(96,165,250,0.2));border:1px solid rgba(59,130,246,0.3);border-radius:50px;font-size:0.75rem;font-weight:600;color:#93c5fd;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+        .chapter-header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e2e8f0,#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .chapter-header p{color:#94a3b8;font-size:1rem}
+        .section{background:rgba(15,23,42,0.6);border:1px solid rgba(59,130,246,0.1);border-radius:16px;padding:28px;margin-bottom:24px;backdrop-filter:blur(10px);animation:fadeIn 0.6s ease}
+        .section h2{font-size:1.4rem;font-weight:800;color:#e2e8f0;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .section h3{font-size:1.1rem;font-weight:700;color:#93c5fd;margin:20px 0 10px;padding-left:12px;border-left:3px solid #3b82f6}
+        .section h4{font-size:0.95rem;font-weight:600;color:#7dd3fc;margin:14px 0 8px}
+        .section p,.section li{font-size:0.92rem;color:#cbd5e1;line-height:1.8}
+        .section ul,.section ol{padding-left:20px;margin:8px 0 16px}
+        .section li{margin-bottom:6px}
+        .highlight-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(96,165,250,0.08));border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .highlight-box.warning{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.08));border-color:rgba(245,158,11,0.3)}
+        .highlight-box.success{background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(16,185,129,0.08));border-color:rgba(52,211,153,0.3)}
+        .highlight-box h4{margin-top:0}
+        .highlight-box.success h4{color:#34d399}
+        table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem}
+        th,td{border:1px solid rgba(59,130,246,0.15);padding:10px 14px;text-align:left}
+        th{background:rgba(59,130,246,0.12);color:#93c5fd;font-weight:600}
+        td{color:#cbd5e1}
+        tr:hover td{background:rgba(59,130,246,0.05)}
+        .memory-tip{background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .memory-tip h4{color:#f9a8d4;margin:0 0 8px;font-size:0.95rem}
+        .memory-tip p,.memory-tip li{font-size:0.88rem;color:#e2a8d4}
+        .example-box{background:rgba(15,23,42,0.8);border-left:3px solid #3b82f6;border-radius:0 10px 10px 0;padding:16px 20px;margin:12px 0}
+        .example-box .label{font-size:0.75rem;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-section{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(96,165,250,0.05));border:1px solid rgba(59,130,246,0.2);border-radius:16px;padding:28px;margin:30px 0}
+        .quiz-section h2{color:#93c5fd}
+        .quiz-question{background:rgba(15,23,42,0.8);border:1px solid rgba(59,130,246,0.1);border-radius:12px;padding:20px;margin:16px 0}
+        .quiz-question .q-num{font-size:0.75rem;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-question .q-text{font-size:0.93rem;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.6}
+        .quiz-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;margin:6px 0;border-radius:8px;cursor:pointer;border:1px solid rgba(59,130,246,0.08);transition:all 0.2s;font-size:0.88rem}
+        .quiz-option:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2)}
+        .quiz-option input{margin-top:3px;accent-color:#3b82f6}
+        .quiz-option.correct{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.4)}
+        .quiz-option.incorrect{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.4)}
+        .quiz-option .explanation{display:none;font-size:0.82rem;color:#94a3b8;margin-top:6px;padding-top:6px;border-top:1px solid rgba(59,130,246,0.1)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-primary{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,0.3)}
+        .btn-secondary{background:rgba(59,130,246,0.15);color:#93c5fd;border:1px solid rgba(59,130,246,0.3)}.btn-secondary:hover{background:rgba(59,130,246,0.25)}
+        .result-box{display:none;background:rgba(15,23,42,0.8);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:24px;margin-top:20px;text-align:center}
+        .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
+        .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}}
+    </style>
+</head>
+<body>
+<nav class="sticky-nav">
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <span class="sep">/</span>
+        <a href="ch01-unit-testing.html">← Ch 1</a>
+        <span class="sep">/</span>
+        <a class="active">Chapter 2</a>
+        <span class="sep">/</span>
+        <a href="ch03-integration-system-acceptance.html">Ch 3 →</a>
+    </div>
+    <div class="nav-brand">✨ Made by Chill House</div>
+</nav>
+<div class="bg-glow"></div>
+<div class="container">
+
+    <div class="chapter-header">
+        <div class="chapter-badge">Bab 2 — Materi + Quiz 10</div>
+        <h1>🔄 Regression Testing</h1>
+        <p>Memastikan bahwa perubahan kode (fix bug, fitur baru, refactor) tidak merusak fungsi yang sebelumnya sudah berjalan dengan benar.</p>
+    </div>
+
+    <!-- ===== MATERI ===== -->
+    <div class="section">
+        <h2>📖 Apa Itu Regression Testing?</h2>
+        <p><strong>Regression Testing</strong> adalah pengujian ulang terhadap perangkat lunak setelah ada <strong>perubahan</strong> (update kode, perbaikan bug, penambahan fitur) untuk memastikan bahwa perubahan tersebut <strong>tidak menyebabkan masalah baru</strong> pada fitur yang sudah ada.</p>
+
+        <div class="example-box">
+            <div class="label">Analogi Sederhana</div>
+            <p>Bayangkan kamu punya mobil yang berfungsi normal. Kamu ganti ban-nya. Regression testing = kamu cek <strong>semua fungsi mobil lainnya</strong> (rem, lampu, AC, dll.) masih bekerja, bukan hanya ban barunya. Karena bisa saja saat ganti ban, kamu tidak sengaja memutus kabel lampu.</p>
+        </div>
+
+        <h3>Kapan Regression Testing Dilakukan?</h3>
+        <ul>
+            <li>Setelah <strong>bug fix</strong> — memperbaiki satu bug bisa menyebabkan bug baru</li>
+            <li>Setelah <strong>penambahan fitur baru</strong> — fitur baru bisa bentrok dengan fitur lama</li>
+            <li>Setelah <strong>refactoring</strong> — mengubah struktur kode bisa mengubah perilaku</li>
+            <li>Setelah <strong>update dependency/library</strong> — versi baru bisa punya breaking changes</li>
+            <li>Setelah <strong>perubahan konfigurasi</strong> — environment baru bisa berperilaku berbeda</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔍 Retesting vs Regression Testing (WAJIB PAHAM!)</h2>
+        <p>Ini adalah konsep yang <strong>sering membingungkan</strong> dan <strong>sering keluar di soal</strong>. Keduanya mirip tapi sangat berbeda.</p>
+
+        <table>
+            <tr><th>Aspek</th><th>Retesting</th><th>Regression Testing</th></tr>
+            <tr><td><strong>Tujuan</strong></td><td>Memastikan <strong>bug yang sudah diperbaiki benar-benar sudah fix</strong></td><td>Memastikan <strong>perubahan tidak merusak fitur lain</strong> yang sudah berfungsi</td></tr>
+            <tr><td><strong>Fokus</strong></td><td>Bug <strong>spesifik</strong> yang di-fix</td><td><strong>Seluruh area</strong> yang mungkin terdampak perubahan</td></tr>
+            <tr><td><strong>Scope</strong></td><td>Sempit (hanya area yang di-fix)</td><td>Luas (bisa seluruh sistem)</td></tr>
+            <tr><td><strong>Otomatisasi</strong></td><td>Sulit diotomatisasi</td><td>Sangat cocok untuk diotomatisasi</td></tr>
+            <tr><td><strong>Kapan?</strong></td><td>Setelah bug fix</td><td>Setiap kali ada perubahan apapun</td></tr>
+        </table>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan: Re-testing vs Regression</h4>
+            <ul>
+                <li><strong>Re-testing</strong> = "Re" = Mengulang tes yang <strong>sama</strong> untuk bug yang <strong>sama</strong> → "Apakah bug-nya sudah beneran fix?"</li>
+                <li><strong>Regression</strong> = "Regress" = Mundur/memburuk → "Apakah perubahan membuat hal lain <strong>mundur/rusak</strong>?"</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📋 Tipe-Tipe Regression Testing</h2>
+
+        <h3>1. Corrective Regression Testing</h3>
+        <p>Dilakukan ketika <strong>tidak ada perubahan pada kode</strong>, hanya ingin memastikan tes yang sudah ada masih valid. Bisa langsung jalankan tes lama tanpa modifikasi.</p>
+
+        <h3>2. Progressive Regression Testing</h3>
+        <p>Dilakukan ketika ada <strong>perubahan/update pada kode</strong>. Test case mungkin perlu di-<strong>update</strong> untuk menyesuaikan dengan perubahan baru, sambil tetap menguji fitur lama.</p>
+
+        <h3>3. Selective Regression Testing</h3>
+        <p>Hanya memilih <strong>subset</strong> dari test suite yang relevan dengan area yang berubah. Lebih <strong>efisien</strong> dari segi waktu.</p>
+
+        <h3>4. Complete/Full Regression Testing</h3>
+        <p>Menjalankan <strong>seluruh test suite</strong> dari awal. Paling <strong>aman</strong> tapi paling <strong>memakan waktu</strong>. Biasanya dilakukan sebelum major release.</p>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan Tipe Regression</h4>
+            <p>"<strong>CPSC</strong>" = <strong>C</strong>orrective (kode ga berubah), <strong>P</strong>rogressive (kode berubah), <strong>S</strong>elective (pilih-pilih tes), <strong>C</strong>omplete (semua tes)</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Strategi Seleksi Test Case</h2>
+        <p>Karena menjalankan semua tes bisa memakan waktu, kita perlu strategi untuk memilih tes mana yang paling penting:</p>
+
+        <h3>1. Risk-Based Selection</h3>
+        <p>Pilih tes berdasarkan <strong>risiko</strong>. Area yang paling kritis/berbahaya kalau rusak → diuji duluan.</p>
+        <div class="example-box">
+            <div class="label">Contoh</div>
+            <p>Modul pembayaran lebih berisiko dari modul "ubah warna tema", jadi prioritas tes di modul pembayaran.</p>
+        </div>
+
+        <h3>2. Coverage-Based Selection</h3>
+        <p>Pilih tes berdasarkan <strong>cakupan kode</strong> (code coverage). Tes yang mencakup area kode yang berubah diprioritaskan.</p>
+
+        <h3>3. Dependency-Based Selection</h3>
+        <p>Pilih tes berdasarkan <strong>ketergantungan antar modul</strong>. Jika modul A berubah dan modul B bergantung pada modul A, maka tes modul B juga harus dijalankan.</p>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan: "RCD"</h4>
+            <ul>
+                <li><strong>R</strong>isk — yang paling bahaya duluan</li>
+                <li><strong>C</strong>overage — yang codecnya berubah</li>
+                <li><strong>D</strong>ependency — yang terhubung/tergantung</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🤖 Otomatisasi & CI/CD</h2>
+        <p>Regression testing sangat cocok untuk <strong>diotomatisasi</strong> karena:</p>
+        <ul>
+            <li>Test case-nya <strong>repetitif</strong> — tes yang sama dijalankan berulang-ulang</li>
+            <li>Jumlah tesnya bisa <strong>sangat banyak</strong> — tidak efisien kalau manual</li>
+            <li>Harus dijalankan <strong>setiap kali ada perubahan</strong> — integrasi dengan CI/CD sangat penting</li>
+        </ul>
+
+        <h3>Regression Testing dalam CI/CD</h3>
+        <p><strong>CI/CD</strong> (Continuous Integration / Continuous Delivery) adalah praktik di mana kode secara otomatis di-build dan di-test setiap kali ada perubahan.</p>
+
+        <div class="highlight-box">
+            <h4 style="color:#93c5fd">Alur CI/CD + Regression Testing:</h4>
+            <ol>
+                <li>Developer push kode ke repository (Git)</li>
+                <li>CI server (Jenkins, GitHub Actions, dll.) otomatis mendeteksi perubahan</li>
+                <li><strong>Regression test suite otomatis dijalankan</strong></li>
+                <li>Jika ada tes yang gagal → build ditandai <strong>FAILED</strong>, developer diberitahu</li>
+                <li>Jika semua tes pass → build <strong>berhasil</strong>, bisa lanjut ke deployment</li>
+            </ol>
+        </div>
+
+        <div class="highlight-box warning">
+            <h4 style="color:#fbbf24">⚠️ Peran utama regression test dalam CI/CD:</h4>
+            <p>Menjaga <strong>stabilitas build</strong> — memastikan setiap perubahan yang masuk ke repository tidak merusak fungsionalitas yang sudah ada. Kalau ada yang rusak, langsung ketahuan sebelum sampai ke production.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🤖 RPA (Robotic Process Automation) dalam Regression Testing</h2>
+        <p><strong>RPA</strong> adalah teknologi yang menggunakan "robot" software untuk mengotomatisasi tugas-tugas repetitif yang biasanya dilakukan manusia. Dalam konteks testing, RPA digunakan untuk <strong>regression testing berbasis UI</strong>.</p>
+
+        <h3>UI.Vision</h3>
+        <p><strong>UI.Vision</strong> (sebelumnya bernama Kantu) adalah tool RPA open-source yang bisa:</p>
+        <ul>
+            <li><strong>Merekam</strong> interaksi user di browser (klik, ketik, navigasi)</li>
+            <li><strong>Memutar ulang</strong> rekaman tersebut secara otomatis</li>
+            <li>Melakukan <strong>visual verification</strong> — membandingkan screenshot untuk mendeteksi perubahan tampilan</li>
+        </ul>
+
+        <div class="example-box">
+            <div class="label">Contoh Penggunaan</div>
+            <p>Kamu rekam skenario: Buka browser → Login → Klik menu "Profil" → Cek nama tampil benar. Setiap ada update, robot akan menjalankan skenario ini otomatis dan memeriksa apakah hasilnya masih sama.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ Load Testing vs Regression Testing</h2>
+        <table>
+            <tr><th>Aspek</th><th>Load Testing</th><th>Regression Testing</th></tr>
+            <tr><td><strong>Tujuan</strong></td><td>Menguji <strong>performa</strong> sistem di bawah beban tertentu</td><td>Menguji apakah perubahan <strong>merusak fungsi yang ada</strong></td></tr>
+            <tr><td><strong>Mengukur Apa?</strong></td><td>Response time, throughput, CPU usage</td><td>Fungsionalitas (benar/salah)</td></tr>
+            <tr><td><strong>Kapan?</strong></td><td>Sebelum go-live / rilis besar</td><td>Setiap ada perubahan kode</td></tr>
+            <tr><td><strong>Tools</strong></td><td>JMeter, Locust, k6</td><td>Selenium, Jest, Pytest</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
+        <div class="highlight-box success">
+            <h4>✅ Ringkasan Kunci untuk UAS</h4>
+            <ol>
+                <li><strong>Regression Testing</strong> = memastikan perubahan kode <strong>tidak merusak fitur lama</strong></li>
+                <li><strong>Retesting</strong> = memastikan <strong>bug yang di-fix sudah benar-benar fix</strong></li>
+                <li>Regression = cakupan <strong>luas</strong>, Retesting = cakupan <strong>sempit</strong></li>
+                <li>Dalam <strong>CI/CD</strong>, regression test menjaga <strong>stabilitas build</strong></li>
+                <li>Strategi seleksi: <strong>Risk-based, Coverage-based, Dependency-based</strong></li>
+                <li><strong>Jika test suite tidak pernah di-update</strong> → bug baru yang terjadi tidak akan terdeteksi karena tes hanya mengecek skenario lama</li>
+                <li>Menjalankan <strong>tes lama</strong> penting untuk memastikan perubahan tidak merusak fungsi yang sebelumnya benar</li>
+                <li><strong>RPA (UI.Vision)</strong> digunakan untuk regression testing berbasis UI secara otomatis</li>
+                <li>Regression test sangat cocok <strong>diotomatisasi</strong> karena repetitif</li>
+                <li>Regression testing ≠ Load Testing (regression = fungsionalitas, load = performa)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Contoh Soal & Jawaban</h2>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 1</div>
+            <p><strong>Apa peran utama regression testing dalam pipeline CI/CD?</strong></p>
+            <p>A. Menguji performa server<br>
+            B. Memastikan setiap perubahan tidak merusak fungsionalitas yang ada sehingga menjaga stabilitas build<br>
+            C. Mendesain tampilan UI<br>
+            D. Mengecek keamanan jaringan</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: B</strong> — Regression test di CI/CD bertujuan menjaga stabilitas build dengan memastikan perubahan tidak merusak fitur lama.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 2</div>
+            <p><strong>Apa perbedaan utama antara retesting dan regression testing?</strong></p>
+            <p>A. Retesting menguji fitur baru, regression testing menguji fitur lama<br>
+            B. Retesting memverifikasi bug yang di-fix, regression testing memverifikasi bahwa perubahan tidak merusak area lain<br>
+            C. Keduanya sama saja<br>
+            D. Regression testing hanya untuk UI</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: B</strong> — Retesting = verifikasi fix bug spesifik. Regression = verifikasi dampak perubahan terhadap seluruh sistem.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 3</div>
+            <p><strong>Apa risiko jika regression test suite tidak pernah di-update setelah penambahan fitur baru?</strong></p>
+            <p>A. Test suite menjadi lebih cepat<br>
+            B. Bug baru pada fitur yang ditambahkan tidak akan terdeteksi oleh test suite yang ada<br>
+            C. Semua test case menjadi lebih akurat<br>
+            D. Performa aplikasi meningkat</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: B</strong> — Test suite yang tidak di-update tidak akan mencakup skenario baru, sehingga bug baru tidak terdeteksi.</p>
+        </div>
+    </div>
+
+    <!-- ===== LATIHAN SOAL INTERAKTIF ===== -->
+    <div class="quiz-section" id="quizSection">
+        <h2>🎮 Latihan Soal Interaktif — Regression Testing</h2>
+        <p style="color:#94a3b8;margin-bottom:20px">Kerjakan 15 soal berikut, lalu klik Submit untuk melihat hasilnya.</p>
+
+        <div id="quizContainer"></div>
+
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="submitQuiz()">📊 Submit & Lihat Hasil</button>
+            <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Reset</button>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <div class="score" id="scoreText">0/15</div>
+            <div class="score-label">Skor Anda</div>
+            <p style="margin-top:12px;color:#94a3b8;font-size:0.88rem" id="scoreMessage"></p>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="ch01-unit-testing.html" class="btn btn-secondary" style="text-decoration:none">← Bab 1: Unit Testing</a>
+        <a href="ch03-integration-system-acceptance.html" class="btn btn-primary" style="text-decoration:none">Bab 3: Integration Testing →</a>
+    </div>
+</div>
+
+<script>
+const questions = [
+    {
+        q: "Apa tujuan utama regression testing?",
+        options: [
+            "Menguji performa server dibawah beban tinggi",
+            "Memastikan bahwa perubahan kode tidak menyebabkan masalah baru pada fitur yang sudah berfungsi sebelumnya",
+            "Menguji keamanan jaringan",
+            "Mendesain user interface"
+        ],
+        answer: 1,
+        explanation: "Regression testing memastikan perubahan kode tidak merusak fungsionalitas yang sudah ada."
+    },
+    {
+        q: "Apa perbedaan utama antara retesting dan regression testing?",
+        options: [
+            "Retesting lebih luas dari regression testing",
+            "Retesting memverifikasi bug spesifik yang di-fix, regression testing memverifikasi dampak perubahan terhadap area lain",
+            "Keduanya identik dalam tujuan dan scope",
+            "Regression testing tidak bisa diotomatisasi"
+        ],
+        answer: 1,
+        explanation: "Retesting = verifikasi fix bug. Regression = verifikasi dampak perubahan terhadap seluruh sistem."
+    },
+    {
+        q: "Dalam pipeline CI/CD, peran utama regression testing adalah...",
+        options: [
+            "Menguji UI secara manual",
+            "Menambah fitur baru",
+            "Menjaga stabilitas build dengan memastikan setiap perubahan tidak merusak fungsionalitas yang ada",
+            "Menghapus kode yang tidak dipakai"
+        ],
+        answer: 2,
+        explanation: "Regression test di CI/CD memastikan setiap commit tidak merusak build yang stabil."
+    },
+    {
+        q: "Strategi seleksi test case yang memprioritaskan area paling kritis disebut...",
+        options: [
+            "Coverage-based selection",
+            "Random selection",
+            "Risk-based selection",
+            "Alphabetical selection"
+        ],
+        answer: 2,
+        explanation: "Risk-based selection memprioritaskan pengujian pada area yang paling berisiko."
+    },
+    {
+        q: "Apa yang terjadi jika regression test suite tidak pernah di-update?",
+        options: [
+            "Test suite menjadi lebih akurat",
+            "Bug baru pada fitur yang ditambahkan tidak akan terdeteksi",
+            "Performance aplikasi meningkat",
+            "Kode menjadi lebih bersih"
+        ],
+        answer: 1,
+        explanation: "Test suite yang tidak di-update tidak mencakup skenario baru, sehingga bug baru lolos."
+    },
+    {
+        q: "Mengapa regression test perlu menjalankan kembali tes-tes lama?",
+        options: [
+            "Untuk menghabiskan waktu",
+            "Untuk memastikan bahwa perubahan terbaru tidak merusak fungsi yang sebelumnya sudah benar",
+            "Karena tes baru belum dibuat",
+            "Untuk menguji performa"
+        ],
+        answer: 1,
+        explanation: "Menjalankan tes lama memverifikasi bahwa perubahan tidak menyebabkan regresi pada fitur lama."
+    },
+    {
+        q: "Tipe regression testing yang menjalankan seluruh test suite dari awal disebut...",
+        options: [
+            "Corrective Regression",
+            "Selective Regression",
+            "Progressive Regression",
+            "Complete/Full Regression Testing"
+        ],
+        answer: 3,
+        explanation: "Complete/Full Regression Testing menjalankan seluruh test suite untuk cakupan maksimal."
+    },
+    {
+        q: "UI.Vision dalam konteks regression testing digunakan untuk...",
+        options: [
+            "Menguji keamanan API",
+            "Mengotomatisasi regression testing berbasis UI dengan merekam dan memutar ulang interaksi user",
+            "Menghapus file duplikat",
+            "Membuat database baru"
+        ],
+        answer: 1,
+        explanation: "UI.Vision adalah tool RPA untuk otomatisasi regression testing berbasis UI."
+    },
+    {
+        q: "Perbedaan Load Testing dengan Regression Testing adalah...",
+        options: [
+            "Load testing menguji fungsionalitas, regression menguji performa",
+            "Load testing menguji performa sistem di bawah beban, regression testing menguji apakah perubahan merusak fungsi yang ada",
+            "Keduanya menguji hal yang sama",
+            "Regression testing tidak memerlukan test case"
+        ],
+        answer: 1,
+        explanation: "Load = performa di bawah beban. Regression = fungsionalitas setelah perubahan."
+    },
+    {
+        q: "Corrective Regression Testing dilakukan ketika...",
+        options: [
+            "Ada perubahan besar pada kode",
+            "Tidak ada perubahan pada kode, hanya ingin memastikan tes yang ada masih valid",
+            "Seluruh test suite harus dijalankan",
+            "Terjadi masalah keamanan"
+        ],
+        answer: 1,
+        explanation: "Corrective regression dilakukan tanpa perubahan kode untuk memastikan tes lama masih valid."
+    },
+    {
+        q: "Dependency-based selection memilih test case berdasarkan...",
+        options: [
+            "Abjad nama test case",
+            "Risiko bisnis",
+            "Ketergantungan antar modul yang terdampak perubahan",
+            "Waktu pembuatan test case"
+        ],
+        answer: 2,
+        explanation: "Dependency-based selection memilih tes berdasarkan modul yang terhubung/tergantung pada area yang berubah."
+    },
+    {
+        q: "Progressive Regression Testing dilakukan ketika...",
+        options: [
+            "Tidak ada perubahan apapun",
+            "Hanya UI yang berubah",
+            "Ada perubahan/update pada kode dan test case mungkin perlu di-update",
+            "Hanya saat major release"
+        ],
+        answer: 2,
+        explanation: "Progressive regression dilakukan saat ada perubahan kode, dan tes mungkin perlu disesuaikan."
+    },
+    {
+        q: "Kenapa regression testing sangat cocok untuk diotomatisasi?",
+        options: [
+            "Karena hanya dijalankan sekali",
+            "Karena test case-nya repetitif dan harus dijalankan berulang-ulang setiap ada perubahan",
+            "Karena tidak memerlukan test case",
+            "Karena hanya menguji satu fungsi"
+        ],
+        answer: 1,
+        explanation: "Regression testing repetitif dan sering dijalankan, sehingga otomatisasi sangat efisien."
+    },
+    {
+        q: "Selective Regression Testing adalah...",
+        options: [
+            "Menjalankan seluruh test suite",
+            "Menghapus semua test case lama",
+            "Memilih subset dari test suite yang relevan dengan area yang berubah",
+            "Menguji hanya fitur baru"
+        ],
+        answer: 2,
+        explanation: "Selective regression hanya menjalankan tes yang relevan dengan perubahan untuk efisiensi."
+    },
+    {
+        q: "Coverage-based selection memilih test case berdasarkan...",
+        options: [
+            "Jumlah baris kode",
+            "Cakupan kode (code coverage) — tes yang mencakup area kode yang berubah diprioritaskan",
+            "Nama developer",
+            "Tanggal pembuatan"
+        ],
+        answer: 1,
+        explanation: "Coverage-based selection memprioritaskan tes yang mencakup area kode yang mengalami perubahan."
+    }
+];
+
+function renderQuiz() {
+    const container = document.getElementById('quizContainer');
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers') || '{}');
+    container.innerHTML = questions.map((q, i) => `
+        <div class="quiz-question" id="qq-${i}">
+            <div class="q-num">Soal ${i+1} dari ${questions.length}</div>
+            <div class="q-text">${q.q}</div>
+            ${q.options.map((opt, j) => `
+                <label class="quiz-option" id="opt-${i}-${j}">
+                    <input type="radio" name="q${i}" value="${j}" ${saved[i]==j?'checked':''} onchange="saveAnswer(${i},${j})">
+                    <span>${opt}</span>
+                </label>
+            `).join('')}
+        </div>
+    `).join('');
+}
+
+function saveAnswer(qi,oi){const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers')||'{}');s[qi]=oi;localStorage.setItem('pkpl_quiz_ch02_answers',JSON.stringify(s))}
+
+function submitQuiz(){
+    const saved=JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers')||'{}');let correct=0;
+    questions.forEach((q,i)=>{
+        q.options.forEach((_,j)=>{const el=document.getElementById(`opt-${i}-${j}`);el.classList.remove('correct','incorrect');const old=el.querySelector('.explanation');if(old)old.remove()});
+        const ua=saved[i];
+        if(ua!==undefined){if(parseInt(ua)===q.answer){correct++;document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}else{document.getElementById(`opt-${i}-${ua}`).classList.add('incorrect');document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}}else{document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}
+        const expDiv=document.createElement('div');expDiv.className='explanation';expDiv.style.display='block';expDiv.textContent='💡 '+q.explanation;document.getElementById(`opt-${i}-${q.answer}`).appendChild(expDiv);
+    });
+    const rb=document.getElementById('resultBox');rb.style.display='block';document.getElementById('scoreText').textContent=`${correct}/${questions.length}`;
+    const pct=Math.round((correct/questions.length)*100);document.getElementById('scoreMessage').textContent=pct>=80?'🎉 Luar biasa! Kamu sudah menguasai Regression Testing!':pct>=60?'👍 Bagus! Tapi masih ada yang perlu dipelajari lagi.':'📚 Ayo pelajari lagi materinya!';
+    localStorage.setItem('pkpl_quiz_ch02',JSON.stringify({correct,total:questions.length}));rb.scrollIntoView({behavior:'smooth'});
+}
+
+function resetQuiz(){localStorage.removeItem('pkpl_quiz_ch02_answers');localStorage.removeItem('pkpl_quiz_ch02');document.getElementById('resultBox').style.display='none';renderQuiz()}
+renderQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bab 4: Penetration Testing — PKPL Study Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(239,68,68,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
+        .nav-links a:hover{color:#fca5a5;background:rgba(239,68,68,0.1);text-decoration:none}
+        .nav-links a.active{color:#e2e8f0;font-weight:600}
+        .nav-links .sep{color:#1e293b;margin:0 2px;font-size:0.7rem;user-select:none}
+        .nav-brand{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15));border:1px solid rgba(99,102,241,0.25);border-radius:50px;font-size:0.78rem;font-weight:600;color:#c4b5fd;white-space:nowrap}
+        body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e8f0;line-height:1.7;padding-top:56px}
+        .bg-glow{position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(239,68,68,0.12) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .container{max-width:900px;margin:0 auto;padding:30px 20px;position:relative;z-index:1}
+        a{color:#fca5a5;text-decoration:none}a:hover{text-decoration:underline}
+        .back-link{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:#64748b;margin-bottom:24px;transition:color 0.2s}.back-link:hover{color:#fca5a5;text-decoration:none}
+        .chapter-header{margin-bottom:40px;animation:fadeIn 0.6s ease}
+        .chapter-badge{display:inline-block;padding:5px 14px;background:linear-gradient(135deg,rgba(239,68,68,0.2),rgba(248,113,113,0.2));border:1px solid rgba(239,68,68,0.3);border-radius:50px;font-size:0.75rem;font-weight:600;color:#fca5a5;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+        .chapter-header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e2e8f0,#fca5a5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .chapter-header p{color:#94a3b8;font-size:1rem}
+        .section{background:rgba(15,23,42,0.6);border:1px solid rgba(239,68,68,0.1);border-radius:16px;padding:28px;margin-bottom:24px;backdrop-filter:blur(10px)}
+        .section h2{font-size:1.4rem;font-weight:800;color:#e2e8f0;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .section h3{font-size:1.1rem;font-weight:700;color:#fca5a5;margin:20px 0 10px;padding-left:12px;border-left:3px solid #ef4444}
+        .section h4{font-size:0.95rem;font-weight:600;color:#f87171;margin:14px 0 8px}
+        .section p,.section li{font-size:0.92rem;color:#cbd5e1;line-height:1.8}
+        .section ul,.section ol{padding-left:20px;margin:8px 0 16px}
+        .section li{margin-bottom:6px}
+        .highlight-box{background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(248,113,113,0.08));border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .highlight-box.warning{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.08));border-color:rgba(245,158,11,0.3)}
+        .highlight-box.success{background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(16,185,129,0.08));border-color:rgba(52,211,153,0.3)}
+        .highlight-box h4{margin-top:0}
+        .highlight-box.success h4{color:#34d399}
+        table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem}
+        th,td{border:1px solid rgba(239,68,68,0.15);padding:10px 14px;text-align:left}
+        th{background:rgba(239,68,68,0.1);color:#fca5a5;font-weight:600}
+        td{color:#cbd5e1}
+        tr:hover td{background:rgba(239,68,68,0.05)}
+        .memory-tip{background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .memory-tip h4{color:#f9a8d4;margin:0 0 8px;font-size:0.95rem}
+        .memory-tip p,.memory-tip li{font-size:0.88rem;color:#e2a8d4}
+        .example-box{background:rgba(15,23,42,0.8);border-left:3px solid #ef4444;border-radius:0 10px 10px 0;padding:16px 20px;margin:12px 0}
+        .example-box .label{font-size:0.75rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .tool-card{background:rgba(15,23,42,0.8);border:1px solid rgba(239,68,68,0.15);border-radius:12px;padding:16px;margin:10px 0}
+        .tool-card h4{margin:0 0 6px;color:#f87171;font-size:0.95rem}
+        .tool-card p{font-size:0.85rem;margin:0}
+        .phase-card{background:rgba(15,23,42,0.8);border:1px solid rgba(239,68,68,0.12);border-radius:12px;padding:18px;margin:10px 0;display:flex;gap:14px;align-items:flex-start}
+        .phase-num{min-width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#ef4444,#f87171);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem}
+        .quiz-section{background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(248,113,113,0.05));border:1px solid rgba(239,68,68,0.2);border-radius:16px;padding:28px;margin:30px 0}
+        .quiz-section h2{color:#fca5a5}
+        .quiz-question{background:rgba(15,23,42,0.8);border:1px solid rgba(239,68,68,0.1);border-radius:12px;padding:20px;margin:16px 0}
+        .quiz-question .q-num{font-size:0.75rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-question .q-text{font-size:0.93rem;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.6}
+        .quiz-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;margin:6px 0;border-radius:8px;cursor:pointer;border:1px solid rgba(239,68,68,0.08);transition:all 0.2s;font-size:0.88rem}
+        .quiz-option:hover{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2)}
+        .quiz-option input{margin-top:3px;accent-color:#ef4444}
+        .quiz-option.correct{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.4)}
+        .quiz-option.incorrect{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.4)}
+        .quiz-option .explanation{display:none;font-size:0.82rem;color:#94a3b8;margin-top:6px;padding-top:6px;border-top:1px solid rgba(239,68,68,0.1)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-primary{background:linear-gradient(135deg,#ef4444,#f87171);color:#fff}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(239,68,68,0.3)}
+        .btn-secondary{background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)}.btn-secondary:hover{background:rgba(239,68,68,0.25)}
+        .result-box{display:none;background:rgba(15,23,42,0.8);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:24px;margin-top:20px;text-align:center}
+        .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#ef4444,#f87171);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
+        .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}}
+    </style>
+</head>
+<body>
+<nav class="sticky-nav">
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <span class="sep">/</span>
+        <a href="ch03-integration-system-acceptance.html">← Ch 3</a>
+        <span class="sep">/</span>
+        <a class="active">Chapter 4</a>
+        <span class="sep">/</span>
+        <a href="ch05-law-ethics-cybercrime.html">Ch 5 →</a>
+    </div>
+    <div class="nav-brand">✨ Made by Chill House</div>
+</nav>
+<div class="bg-glow"></div>
+<div class="container">
+
+    <div class="chapter-header">
+        <div class="chapter-badge">Bab 4 — Materi + Quiz 12</div>
+        <h1>🛡️ Penetration Testing</h1>
+        <p>Simulasi serangan terhadap sistem untuk menemukan kerentanan keamanan sebelum penyerang sungguhan menemukannya.</p>
+    </div>
+
+    <div class="section">
+        <h2>📖 Apa Itu Penetration Testing?</h2>
+        <p><strong>Penetration Testing (Pentest)</strong> adalah metode pengujian keamanan di mana tester <strong>mensimulasikan serangan nyata</strong> terhadap sistem untuk menemukan kerentanan (vulnerability). Tester berperan sebagai "hacker yang baik" (<strong>ethical hacker</strong>).</p>
+
+        <div class="highlight-box warning">
+            <h4 style="color:#fbbf24">⚠️ Hal PENTING yang Sering Keluar di Soal:</h4>
+            <p>Penetration testing hanya bisa <strong>menunjukkan adanya kerentanan</strong>, tapi <strong>TIDAK bisa membuktikan bahwa sistem 100% aman</strong>. Tidak mungkin menguji semua kemungkinan serangan.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Analogi</div>
+            <p>Pentest itu seperti menyewa pencuri profesional untuk mencoba masuk ke rumahmu. Kalau dia berhasil masuk lewat jendela belakang, kamu tahu harus memasang kunci di sana. Tapi kalau dia tidak berhasil masuk, <strong>bukan berarti</strong> rumahmu 100% aman — mungkin pencuri dengan skill berbeda bisa menemukan jalan lain.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Tipe Penetration Testing</h2>
+        <table>
+            <tr><th>Tipe</th><th>Pengetahuan Tester</th><th>Simulasi</th><th>Kelebihan</th></tr>
+            <tr>
+                <td><strong>Black Box</strong></td>
+                <td><strong>Tidak tahu apa-apa</strong> tentang sistem (kode, arsitektur, credential)</td>
+                <td>Simulasi serangan dari <strong>hacker luar</strong> yang tidak punya informasi</td>
+                <td>Paling realistis</td>
+            </tr>
+            <tr>
+                <td><strong>White Box</strong></td>
+                <td><strong>Tahu semua</strong> (source code, arsitektur, credential, dokumentasi)</td>
+                <td>Simulasi serangan dari <strong>orang dalam</strong> (insider)</td>
+                <td>Paling menyeluruh (thorough)</td>
+            </tr>
+            <tr>
+                <td><strong>Gray Box</strong></td>
+                <td>Tahu <strong>sebagian</strong> informasi (misalnya akun user biasa)</td>
+                <td>Simulasi serangan dari <strong>user biasa</strong> yang punya akses terbatas</td>
+                <td>Keseimbangan antara realistis dan menyeluruh</td>
+            </tr>
+        </table>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan Tipe Pentest</h4>
+            <ul>
+                <li><strong>Black</strong> = "Gelap" → Tidak tahu apa-apa → Hacker luar</li>
+                <li><strong>White</strong> = "Terang" → Tahu semua → Orang dalam</li>
+                <li><strong>Gray</strong> = "Abu-abu" → Tahu sebagian → Antara luar dan dalam</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🌐 Cakupan (Scope) Penetration Testing</h2>
+        <table>
+            <tr><th>Scope</th><th>Apa yang Diuji?</th></tr>
+            <tr><td><strong>Web Application</strong></td><td>Keamanan aplikasi web (SQL Injection, XSS, CSRF, dll.)</td></tr>
+            <tr><td><strong>Network</strong></td><td>Keamanan jaringan (port scanning, firewall bypass, sniffing)</td></tr>
+            <tr><td><strong>Mobile</strong></td><td>Keamanan aplikasi mobile (Android/iOS)</td></tr>
+            <tr><td><strong>Social Engineering</strong></td><td>Manipulasi manusia (phishing, pretexting, baiting)</td></tr>
+            <tr><td><strong>Wireless</strong></td><td>Keamanan jaringan nirkabel (WiFi cracking, evil twin)</td></tr>
+            <tr><td><strong>Physical</strong></td><td>Keamanan fisik (tailgating, lock picking, dumpster diving)</td></tr>
+            <tr><td><strong>IoT</strong></td><td>Keamanan perangkat Internet of Things (smart home, sensor)</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>📋 7 Fase Penetration Testing (SANGAT PENTING!)</h2>
+        <p>Pentest dilakukan secara sistematis melalui 7 fase berurutan:</p>
+
+        <div class="phase-card">
+            <div class="phase-num">1</div>
+            <div>
+                <h4 style="margin-top:0">Pre-engagement Interaction</h4>
+                <p>Persiapan sebelum pentest. Menentukan <strong>scope</strong> (apa yang boleh dan tidak boleh diuji), <strong>rules of engagement</strong> (aturan main), <strong>timeline</strong>, dan <strong>perjanjian legal</strong>. Ini fase "kontrak" antara pentester dan klien.</p>
+            </div>
+        </div>
+
+        <div class="phase-card">
+            <div class="phase-num">2</div>
+            <div>
+                <h4 style="margin-top:0">Reconnaissance (Information Gathering)</h4>
+                <p>Fase mengumpulkan informasi sebanyak-banyaknya tentang target. Ada 2 jenis:</p>
+                <ul>
+                    <li><strong>Passive Reconnaissance</strong> — Mengumpulkan info <strong>tanpa menyentuh target</strong> (Google, WHOIS, media sosial, Shodan). Target <strong>tidak tahu</strong> sedang diamati.</li>
+                    <li><strong>Active Reconnaissance</strong> — Berinteraksi <strong>langsung dengan target</strong> (port scanning, banner grabbing). Target <strong>bisa mendeteksi</strong> aktivitas ini.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase-card">
+            <div class="phase-num">3</div>
+            <div>
+                <h4 style="margin-top:0">Threat Modeling</h4>
+                <p>Mengidentifikasi <strong>ancaman potensial</strong> dan menentukan <strong>prioritas</strong> pengujian berdasarkan informasi yang dikumpulkan. Menjawab: "Serangan apa yang paling mungkin dan paling berbahaya?"</p>
+            </div>
+        </div>
+
+        <div class="phase-card">
+            <div class="phase-num">4</div>
+            <div>
+                <h4 style="margin-top:0">Vulnerability Analysis</h4>
+                <p>Menganalisis dan mengidentifikasi <strong>kerentanan spesifik</strong> pada sistem. Menggunakan tools seperti <strong>Nessus</strong> (vulnerability scanner) untuk melakukan scanning otomatis.</p>
+            </div>
+        </div>
+
+        <div class="phase-card">
+            <div class="phase-num">5</div>
+            <div>
+                <h4 style="margin-top:0">Exploitation</h4>
+                <p>Fase <strong>"serangan"</strong> — mengeksploitasi kerentanan yang ditemukan untuk membuktikan bahwa celah tersebut benar-benar bisa dimanfaatkan. Menggunakan tools seperti <strong>Metasploit</strong>.</p>
+            </div>
+        </div>
+
+        <div class="phase-card">
+            <div class="phase-num">6</div>
+            <div>
+                <h4 style="margin-top:0">Post-Exploitation</h4>
+                <p>Setelah berhasil masuk, tester menilai <strong>seberapa besar dampak</strong> yang bisa ditimbulkan. Termasuk: eskalasi privilege, lateral movement, data exfiltration, dan menentukan <strong>nilai aset</strong> yang bisa diakses.</p>
+            </div>
+        </div>
+
+        <div class="phase-card">
+            <div class="phase-num">7</div>
+            <div>
+                <h4 style="margin-top:0">Reporting</h4>
+                <p>Membuat <strong>laporan lengkap</strong> yang berisi temuan, bukti (proof-of-concept), tingkat keparahan, dan <strong>rekomendasi perbaikan</strong>. Ini adalah hasil akhir yang diberikan ke klien.</p>
+            </div>
+        </div>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan 7 Fase — "PRE-RECON, THREAT, VULN, EXPLOIT, POST, REPORT"</h4>
+            <ul>
+                <li><strong>P</strong>re-engagement → Kontrak & aturan</li>
+                <li><strong>R</strong>econnaissance → Kumpulkan info</li>
+                <li><strong>T</strong>hreat Modeling → Identifikasi ancaman</li>
+                <li><strong>V</strong>ulnerability Analysis → Cari celah</li>
+                <li><strong>E</strong>xploitation → Serang!</li>
+                <li><strong>P</strong>ost-Exploitation → Nilai dampak</li>
+                <li><strong>R</strong>eporting → Buat laporan</li>
+            </ul>
+            <p>Singkat: "<strong>PR-TV-EPR</strong>" atau ingat alurnya: Persiapan → Info → Prioritas → Celah → Serang → Dampak → Laporan</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Tools Penetration Testing (WAJIB HAPAL!)</h2>
+        <p>Setiap tool punya fungsi spesifik. Berikut yang paling sering keluar di soal:</p>
+
+        <div class="tool-card">
+            <h4>🔍 Nmap (Network Mapper)</h4>
+            <p><strong>Fungsi:</strong> Port scanning & network discovery. Menemukan port yang terbuka, service yang berjalan, dan OS yang digunakan.</p>
+            <p><strong>Fase:</strong> Reconnaissance (Active)</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>📧 theHarvester</h4>
+            <p><strong>Fungsi:</strong> Mengumpulkan email, subdomain, dan nama dari sumber publik (Google, LinkedIn, dll).</p>
+            <p><strong>Fase:</strong> Reconnaissance (Passive)</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>🔎 Nessus</h4>
+            <p><strong>Fungsi:</strong> Vulnerability Scanner — memindai sistem untuk menemukan kerentanan yang sudah diketahui (known vulnerabilities).</p>
+            <p><strong>Fase:</strong> Vulnerability Analysis</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>💣 Metasploit</h4>
+            <p><strong>Fungsi:</strong> Exploitation Framework — menyediakan kumpulan exploit yang siap pakai untuk mengeksploitasi kerentanan.</p>
+            <p><strong>Fase:</strong> Exploitation</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>🌐 Burp Suite</h4>
+            <p><strong>Fungsi:</strong> Web Application Security Testing — <strong>menginteresepsi (intercept) trafik HTTP/HTTPS</strong> antara browser dan server. Bisa memodifikasi request/response. Juga bisa melakukan <strong>spidering/crawling</strong> untuk memetakan struktur aplikasi web.</p>
+            <p><strong>Fase:</strong> Vulnerability Analysis & Exploitation</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>🛡️ OWASP ZAP</h4>
+            <p><strong>Fungsi:</strong> Web Application Scanner — mirip Burp Suite tapi open-source. Untuk mencari kerentanan web (XSS, SQLi, dll).</p>
+            <p><strong>Fase:</strong> Vulnerability Analysis</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>💉 SQLmap</h4>
+            <p><strong>Fungsi:</strong> Otomatisasi SQL Injection — mendeteksi dan mengeksploitasi kerentanan SQL Injection secara otomatis.</p>
+            <p><strong>Fase:</strong> Exploitation</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>📡 Wireshark</h4>
+            <p><strong>Fungsi:</strong> Network Protocol Analyzer — menangkap dan menganalisis paket data jaringan secara real-time (packet sniffing).</p>
+            <p><strong>Fase:</strong> Reconnaissance / Analysis</p>
+        </div>
+
+        <div class="tool-card">
+            <h4>📋 Dradis</h4>
+            <p><strong>Fungsi:</strong> Reporting & Collaboration — mengorganisir temuan dari berbagai tools menjadi laporan yang terstruktur.</p>
+            <p><strong>Fase:</strong> Reporting</p>
+        </div>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan Tools</h4>
+            <ul>
+                <li><strong>Nmap</strong> = "Map" = peta jaringan → port scanning</li>
+                <li><strong>Nessus</strong> = "Ness" = vulnerability <strong>scanner</strong></li>
+                <li><strong>Metasploit</strong> = "Exploit" → eksploitasi kerentanan</li>
+                <li><strong>Burp Suite</strong> = "Burp" = intercept → <strong>menyadap trafik HTTP</strong></li>
+                <li><strong>SQLmap</strong> = "SQL" → otomatisasi <strong>SQL Injection</strong></li>
+                <li><strong>Wireshark</strong> = "Wire" + "Shark" → <strong>menangkap paket</strong> jaringan</li>
+                <li><strong>Dradis</strong> = <strong>Reporting</strong> tool</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🕷️ Spidering / Crawling</h2>
+        <p><strong>Spidering</strong> (atau crawling) adalah proses otomatis <strong>memetakan seluruh struktur aplikasi web</strong> — menemukan semua halaman, link, form, dan endpoint yang ada.</p>
+        <p>Fungsinya:</p>
+        <ul>
+            <li>Memetakan <strong>semua URL</strong> dan halaman yang ada di aplikasi</li>
+            <li>Menemukan <strong>halaman tersembunyi</strong> atau yang tidak terlihat dari navigasi utama</li>
+            <li>Mengidentifikasi <strong>form input</strong> yang bisa menjadi titik serangan</li>
+            <li>Membuat <strong>sitemap</strong> lengkap dari aplikasi target</li>
+        </ul>
+
+        <div class="highlight-box warning">
+            <h4 style="color:#fbbf24">⚠️ Sering Keluar di Soal:</h4>
+            <p>Fungsi utama spidering/crawling adalah <strong>memetakan struktur aplikasi web</strong>, BUKAN menyerang atau mengeksploitasi kerentanan.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ Risiko Active Scanning</h2>
+        <p><strong>Active scanning</strong> (pemindaian aktif) melibatkan interaksi langsung dengan target. Risikonya:</p>
+        <ul>
+            <li><strong>Mengganggu layanan</strong> (service disruption) — scanning intensif bisa membuat server overload</li>
+            <li><strong>Terdeteksi</strong> oleh IDS/IPS (Intrusion Detection/Prevention System)</li>
+            <li><strong>Meninggalkan jejak</strong> di log server</li>
+            <li>Bisa menyebabkan <strong>downtime</strong> pada sistem yang sensitif</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
+        <div class="highlight-box success">
+            <h4>✅ Ringkasan Kunci untuk UAS</h4>
+            <ol>
+                <li>Pentest <strong>TIDAK bisa membuktikan sistem 100% aman</strong>, hanya menunjukkan adanya kerentanan</li>
+                <li><strong>Black Box</strong> = tidak tahu apa-apa, <strong>White Box</strong> = tahu semua, <strong>Gray Box</strong> = tahu sebagian</li>
+                <li>7 Fase: Pre-engagement → Reconnaissance → Threat Modeling → Vuln Analysis → Exploitation → Post-exploitation → Reporting</li>
+                <li><strong>Metasploit</strong> = exploitation framework (menyerang)</li>
+                <li><strong>Burp Suite</strong> = intercept trafik HTTP/HTTPS (menyadap dan memodifikasi request)</li>
+                <li><strong>Nmap</strong> = port scanning (peta jaringan)</li>
+                <li><strong>Spidering/Crawling</strong> = memetakan struktur aplikasi web</li>
+                <li><strong>Active scanning</strong> berisiko mengganggu layanan</li>
+                <li><strong>Passive recon</strong> = tidak menyentuh target (Google, WHOIS)</li>
+                <li><strong>Active recon</strong> = menyentuh target langsung (port scanning)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Contoh Soal & Jawaban</h2>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 1</div>
+            <p><strong>Penetration testing dapat...</strong></p>
+            <p>A. Membuktikan bahwa sistem 100% aman<br>
+            B. Menunjukkan adanya kerentanan, tetapi tidak bisa membuktikan sistem 100% aman<br>
+            C. Mengganti sistem keamanan<br>
+            D. Mempercepat performa sistem</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: B</strong> — Pentest hanya bisa menunjukkan kerentanan yang ditemukan, tidak menjamin tidak ada kerentanan lain.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 2</div>
+            <p><strong>Metasploit digunakan untuk...</strong></p>
+            <p>A. Membuat laporan pentest<br>
+            B. Scanning port jaringan<br>
+            C. Mengeksploitasi kerentanan yang ditemukan pada sistem target<br>
+            D. Mendesain user interface</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: C</strong> — Metasploit adalah exploitation framework untuk mengeksploitasi kerentanan.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 3</div>
+            <p><strong>Burp Suite dalam penetration testing digunakan untuk...</strong></p>
+            <p>A. Mengedit source code<br>
+            B. Menginteresepsi dan memodifikasi trafik HTTP/HTTPS antara browser dan server<br>
+            C. Membuat database<br>
+            D. Mengirim email</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: B</strong> — Burp Suite berfungsi sebagai proxy untuk intercept trafik HTTP/HTTPS.</p>
+        </div>
+    </div>
+
+    <!-- ===== LATIHAN SOAL ===== -->
+    <div class="quiz-section" id="quizSection">
+        <h2>🎮 Latihan Soal Interaktif — Penetration Testing</h2>
+        <p style="color:#94a3b8;margin-bottom:20px">Kerjakan 15 soal berikut, lalu klik Submit untuk melihat hasilnya.</p>
+        <div id="quizContainer"></div>
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="submitQuiz()">📊 Submit & Lihat Hasil</button>
+            <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Reset</button>
+        </div>
+        <div class="result-box" id="resultBox">
+            <div class="score" id="scoreText">0/15</div>
+            <div class="score-label">Skor Anda</div>
+            <p style="margin-top:12px;color:#94a3b8;font-size:0.88rem" id="scoreMessage"></p>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="ch03-integration-system-acceptance.html" class="btn btn-secondary" style="text-decoration:none">← Bab 3: Integration Testing</a>
+        <a href="ch05-law-ethics-cybercrime.html" class="btn btn-primary" style="text-decoration:none">Bab 5: Law, Ethics & Cyber Crime →</a>
+    </div>
+</div>
+
+<script>
+const questions = [
+    {q:"Penetration testing dapat...",options:["Membuktikan bahwa sistem 100% aman dan bebas dari kerentanan","Menunjukkan adanya kerentanan, tetapi tidak bisa membuktikan sistem 100% aman","Mengganti seluruh infrastruktur keamanan","Mempercepat waktu loading aplikasi"],answer:1,explanation:"Pentest hanya menunjukkan kerentanan yang ditemukan, tidak menjamin tidak ada kerentanan lain."},
+    {q:"Metasploit dalam penetration testing digunakan untuk...",options:["Membuat laporan hasil pengujian","Melakukan port scanning","Mengeksploitasi kerentanan yang ditemukan pada sistem target","Mendesain arsitektur jaringan"],answer:2,explanation:"Metasploit adalah exploitation framework untuk mengeksploitasi kerentanan."},
+    {q:"Burp Suite berfungsi untuk...",options:["Mengedit source code","Melakukan backup database","Menginteresepsi dan memodifikasi trafik HTTP/HTTPS antara browser dan server","Mengirim notifikasi push"],answer:2,explanation:"Burp Suite adalah proxy tool untuk intercept trafik HTTP/HTTPS."},
+    {q:"Risiko utama dari active scanning yang intensif adalah...",options:["Membuat laporan lebih cepat","Mengganggu layanan (service disruption) pada sistem target","Meningkatkan keamanan","Mempercepat jaringan"],answer:1,explanation:"Active scanning intensif bisa membuat server overload dan mengganggu layanan."},
+    {q:"Fungsi utama spidering/crawling dalam pengujian web adalah...",options:["Mengeksploitasi SQL Injection","Memetakan seluruh struktur dan halaman aplikasi web","Menghapus log server","Mengenkripsi data"],answer:1,explanation:"Spidering memetakan semua URL, halaman, form, dan endpoint pada aplikasi web."},
+    {q:"Tipe pentest di mana tester tidak memiliki informasi apapun tentang target disebut...",options:["White Box","Gray Box","Black Box","Crystal Box"],answer:2,explanation:"Black Box = tester tidak tahu apa-apa tentang target (zero knowledge)."},
+    {q:"White Box testing disebut juga simulasi serangan dari...",options:["Hacker luar (external attacker)","Orang dalam (insider) yang memiliki pengetahuan lengkap tentang sistem","Pengguna biasa","Robot otomatis"],answer:1,explanation:"White Box tester tahu semua tentang sistem, mensimulasikan insider threat."},
+    {q:"Fase pertama dalam penetration testing adalah...",options:["Reconnaissance","Exploitation","Pre-engagement Interaction","Reporting"],answer:2,explanation:"Pre-engagement Interaction = persiapan kontrak, scope, dan aturan main."},
+    {q:"Passive Reconnaissance berbeda dari Active Reconnaissance karena...",options:["Passive lebih berbahaya","Passive mengumpulkan informasi tanpa menyentuh target sehingga target tidak menyadari","Active menggunakan Google","Passive menggunakan Metasploit"],answer:1,explanation:"Passive recon = mengumpulkan info tanpa interaksi langsung (WHOIS, Google, media sosial)."},
+    {q:"Nmap digunakan terutama untuk...",options:["Mengeksploitasi kerentanan","Port scanning dan network discovery untuk menemukan port terbuka","Membuat laporan","SQL Injection otomatis"],answer:1,explanation:"Nmap = Network Mapper untuk port scanning dan menemukan service yang berjalan."},
+    {q:"Nessus adalah tool untuk...",options:["Exploitation","Port scanning","Vulnerability scanning — memindai sistem untuk menemukan kerentanan yang sudah diketahui","Packet sniffing"],answer:2,explanation:"Nessus adalah vulnerability scanner yang mencari kerentanan (known vulnerabilities)."},
+    {q:"Fase Post-Exploitation bertujuan untuk...",options:["Menandatangani kontrak","Mengumpulkan info awal","Menilai seberapa besar dampak yang bisa ditimbulkan setelah berhasil masuk ke sistem","Membuat wireframe UI"],answer:2,explanation:"Post-exploitation = menilai dampak setelah berhasil eksploitasi (eskalasi privilege, data apa yang bisa diakses)."},
+    {q:"SQLmap digunakan untuk otomatisasi serangan jenis...",options:["XSS","Phishing","SQL Injection","DDoS"],answer:2,explanation:"SQLmap mengotomatisasi deteksi dan eksploitasi SQL Injection."},
+    {q:"Dradis dalam penetration testing digunakan untuk...",options:["Exploitasi kerentanan","Port scanning","Mengorganisir temuan menjadi laporan yang terstruktur (reporting)","Sniffing jaringan"],answer:2,explanation:"Dradis adalah tool reporting untuk mengorganisir temuan dari berbagai tools."},
+    {q:"Gray Box testing mensimulasikan serangan dari...",options:["Hacker luar tanpa informasi apapun","Orang dalam dengan akses penuh","User biasa yang memiliki pengetahuan/akses terbatas tentang sistem","Administrator sistem"],answer:2,explanation:"Gray Box = tester tahu sebagian info, simulasi serangan dari user dengan akses terbatas."}
+];
+
+function renderQuiz(){const c=document.getElementById('quizContainer');const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch04_answers')||'{}');c.innerHTML=questions.map((q,i)=>`<div class="quiz-question" id="qq-${i}"><div class="q-num">Soal ${i+1} dari ${questions.length}</div><div class="q-text">${q.q}</div>${q.options.map((opt,j)=>`<label class="quiz-option" id="opt-${i}-${j}"><input type="radio" name="q${i}" value="${j}" ${s[i]==j?'checked':''} onchange="saveAnswer(${i},${j})"><span>${opt}</span></label>`).join('')}</div>`).join('')}
+function saveAnswer(qi,oi){const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch04_answers')||'{}');s[qi]=oi;localStorage.setItem('pkpl_quiz_ch04_answers',JSON.stringify(s))}
+function submitQuiz(){const saved=JSON.parse(localStorage.getItem('pkpl_quiz_ch04_answers')||'{}');let correct=0;questions.forEach((q,i)=>{q.options.forEach((_,j)=>{const el=document.getElementById(`opt-${i}-${j}`);el.classList.remove('correct','incorrect');const old=el.querySelector('.explanation');if(old)old.remove()});const ua=saved[i];if(ua!==undefined){if(parseInt(ua)===q.answer){correct++;document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}else{document.getElementById(`opt-${i}-${ua}`).classList.add('incorrect');document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}}else{document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}const expDiv=document.createElement('div');expDiv.className='explanation';expDiv.style.display='block';expDiv.textContent='💡 '+q.explanation;document.getElementById(`opt-${i}-${q.answer}`).appendChild(expDiv)});const rb=document.getElementById('resultBox');rb.style.display='block';document.getElementById('scoreText').textContent=`${correct}/${questions.length}`;const pct=Math.round((correct/questions.length)*100);document.getElementById('scoreMessage').textContent=pct>=80?'🎉 Luar biasa! Pentest sudah dikuasai!':pct>=60?'👍 Bagus! Review lagi bagian tools dan fase ya!':'📚 Pelajari lagi tools dan 7 fase pentest!';localStorage.setItem('pkpl_quiz_ch04',JSON.stringify({correct,total:questions.length}));rb.scrollIntoView({behavior:'smooth'})}
+function resetQuiz(){localStorage.removeItem('pkpl_quiz_ch04_answers');localStorage.removeItem('pkpl_quiz_ch04');document.getElementById('resultBox').style.display='none';renderQuiz()}
+renderQuiz();
+</script>
+</body>
+</html>

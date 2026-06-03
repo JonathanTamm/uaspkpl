@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi UAS — PKPL Study Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1001;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(236,72,153,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
+        .nav-links a:hover{color:#f9a8d4;background:rgba(236,72,153,0.1);text-decoration:none}
+        .nav-links a.active{color:#e2e8f0;font-weight:600}
+        .nav-links .sep{color:#1e293b;margin:0 2px;font-size:0.7rem;user-select:none}
+        .nav-brand{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15));border:1px solid rgba(99,102,241,0.25);border-radius:50px;font-size:0.78rem;font-weight:600;color:#c4b5fd;white-space:nowrap}
+        body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e8f0;line-height:1.7;padding-top:56px}
+        .bg-glow{position:fixed;top:-300px;right:-300px;width:800px;height:800px;background:radial-gradient(circle,rgba(236,72,153,0.1) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .bg-glow-2{position:fixed;bottom:-300px;left:-300px;width:800px;height:800px;background:radial-gradient(circle,rgba(168,85,247,0.08) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .container{max-width:900px;margin:0 auto;padding:30px 20px;position:relative;z-index:1}
+        a{color:#f9a8d4;text-decoration:none}a:hover{text-decoration:underline}
+        .back-link{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:#64748b;margin-bottom:24px;transition:color 0.2s}.back-link:hover{color:#f9a8d4;text-decoration:none}
+        .exam-header{text-align:center;margin-bottom:30px;animation:fadeIn 0.6s ease}
+        .exam-badge{display:inline-block;padding:5px 14px;background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2));border:1px solid rgba(236,72,153,0.3);border-radius:50px;font-size:0.75rem;font-weight:600;color:#f9a8d4;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+        .exam-header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e2e8f0,#f9a8d4,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .exam-header p{color:#94a3b8;font-size:0.95rem}
+        .exam-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:20px 0 30px;padding:20px;background:rgba(15,23,42,0.6);border:1px solid rgba(236,72,153,0.15);border-radius:14px}
+        .info-item{text-align:center}
+        .info-item .label{font-size:0.72rem;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .info-item .value{font-size:1.3rem;font-weight:800;color:#f9a8d4}
+        .progress-sticky{position:sticky;top:56px;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);padding:12px 0;border-bottom:1px solid rgba(236,72,153,0.1);margin-bottom:20px}
+        .progress-bar-bg{width:100%;height:8px;background:rgba(236,72,153,0.1);border-radius:8px;overflow:hidden}
+        .progress-bar-fill{height:100%;border-radius:8px;transition:width 0.3s;background:linear-gradient(90deg,#ec4899,#a855f7)}
+        .progress-text{font-size:0.78rem;color:#94a3b8;margin-top:6px;display:flex;justify-content:space-between}
+        .section-divider{background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:14px 20px;margin:24px 0 16px;font-weight:700;color:#f9a8d4;font-size:0.95rem}
+        .quiz-question{background:rgba(15,23,42,0.6);border:1px solid rgba(236,72,153,0.08);border-radius:12px;padding:20px;margin:12px 0;transition:border-color 0.2s}
+        .quiz-question.answered{border-color:rgba(52,211,153,0.2)}
+        .quiz-question .q-num{font-size:0.72rem;font-weight:700;color:#a855f7;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-question .q-text{font-size:0.93rem;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.6}
+        .quiz-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;margin:5px 0;border-radius:8px;cursor:pointer;border:1px solid rgba(236,72,153,0.06);transition:all 0.2s;font-size:0.88rem}
+        .quiz-option:hover{background:rgba(236,72,153,0.06);border-color:rgba(236,72,153,0.15)}
+        .quiz-option input{margin-top:3px;accent-color:#ec4899}
+        .quiz-option.correct{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.4)}
+        .quiz-option.incorrect{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.4)}
+        .quiz-option .explanation{display:none;font-size:0.82rem;color:#94a3b8;margin-top:6px;padding-top:6px;border-top:1px solid rgba(236,72,153,0.1)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-primary{background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(236,72,153,0.3)}
+        .btn-secondary{background:rgba(236,72,153,0.15);color:#f9a8d4;border:1px solid rgba(236,72,153,0.3)}.btn-secondary:hover{background:rgba(236,72,153,0.25)}
+        .btn-danger{background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)}.btn-danger:hover{background:rgba(239,68,68,0.3)}
+        .action-bar{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0;justify-content:center}
+        .result-box{display:none;background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(168,85,247,0.06));border:1px solid rgba(236,72,153,0.25);border-radius:16px;padding:30px;margin:24px 0;text-align:center}
+        .result-box .score{font-size:3rem;font-weight:900;background:linear-gradient(135deg,#ec4899,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .result-box .score-label{font-size:1rem;color:#94a3b8;margin-top:4px}
+        .result-box .grade{font-size:1.5rem;font-weight:800;margin-top:12px}
+        .result-box .breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:20px;text-align:center}
+        .result-box .breakdown .item{background:rgba(15,23,42,0.6);border-radius:10px;padding:12px}
+        .result-box .breakdown .item .label{font-size:0.72rem;color:#94a3b8;text-transform:uppercase;letter-spacing:1px}
+        .result-box .breakdown .item .val{font-size:1.2rem;font-weight:700;color:#e2e8f0;margin-top:4px}
+        .number-nav{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0;justify-content:center}
+        .number-nav button{width:36px;height:36px;border-radius:8px;border:1px solid rgba(236,72,153,0.15);background:rgba(15,23,42,0.6);color:#94a3b8;font-family:inherit;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+        .number-nav button.answered{background:rgba(52,211,153,0.15);border-color:rgba(52,211,153,0.3);color:#34d399}
+        .number-nav button:hover{border-color:rgba(236,72,153,0.4);color:#f9a8d4}
+        .filter-bar{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap;justify-content:center}
+        .filter-btn{padding:6px 14px;border-radius:8px;border:1px solid rgba(236,72,153,0.15);background:transparent;color:#94a3b8;font-family:inherit;font-size:0.78rem;cursor:pointer;transition:all 0.2s}
+        .filter-btn.active{background:rgba(236,72,153,0.15);color:#f9a8d4;border-color:rgba(236,72,153,0.3)}
+        .filter-btn:hover{border-color:rgba(236,72,153,0.3);color:#f9a8d4}
+        .review-card{background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(251,191,36,0.05));border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:16px;margin-top:12px;animation:fadeIn 0.4s ease}
+        .review-card .review-title{font-size:0.78rem;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+        .review-card .review-content{font-size:0.85rem;color:#e2e8f0;line-height:1.7}
+        .review-card .review-content strong{color:#fde68a}
+        .review-card .review-content ul{padding-left:18px;margin:6px 0}
+        .review-card .review-content li{margin-bottom:4px;color:#cbd5e1}
+        .review-card .review-content code{background:rgba(99,102,241,0.15);padding:2px 6px;border-radius:4px;font-size:0.82rem;color:#a5b4fc}
+        .review-summary{background:rgba(15,23,42,0.7);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:28px;margin:24px 0;display:none}
+        .review-summary h2{font-size:1.3rem;font-weight:800;color:#fbbf24;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+        .review-summary .review-subtitle{font-size:0.88rem;color:#94a3b8;margin-bottom:20px}
+        .review-summary .review-bab{background:rgba(15,23,42,0.6);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:20px;margin:14px 0}
+        .review-summary .review-bab h3{font-size:1rem;font-weight:700;color:#fde68a;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(245,158,11,0.15)}
+        .review-summary .review-bab .concept{background:rgba(245,158,11,0.06);border-left:3px solid #f59e0b;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0}
+        .review-summary .review-bab .concept h4{font-size:0.88rem;font-weight:700;color:#fbbf24;margin-bottom:6px}
+        .review-summary .review-bab .concept p,.review-summary .review-bab .concept li{font-size:0.84rem;color:#cbd5e1;line-height:1.7}
+        .review-summary .review-bab .concept ul{padding-left:18px;margin:4px 0}
+        .review-summary .review-bab .concept code{background:rgba(99,102,241,0.15);padding:1px 5px;border-radius:3px;font-size:0.8rem;color:#a5b4fc}
+        .review-toggle{display:flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid rgba(245,158,11,0.25);border-radius:10px;background:rgba(245,158,11,0.08);color:#fde68a;font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;margin:16px auto}.review-toggle:hover{background:rgba(245,158,11,0.15)}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:680px){.exam-header h1{font-size:1.6rem}.exam-info{grid-template-columns:repeat(2,1fr)}}
+    </style>
+</head>
+<body>
+<nav class="sticky-nav">
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <span class="sep">/</span>
+        <a href="ch05-law-ethics-cybercrime.html">← Ch 5</a>
+        <span class="sep">/</span>
+        <a class="active">Simulasi UAS</a>
+    </div>
+    <div class="nav-brand">✨ Made by Chill House</div>
+</nav>
+<div class="bg-glow"></div>
+<div class="bg-glow-2"></div>
+<div class="container">
+    <div class="exam-header">
+        <div class="exam-badge">Simulasi Ujian Akhir Semester</div>
+        <h1>🎯 Simulasi UAS PKPL</h1>
+        <p>80 soal pilihan ganda dari seluruh materi. Jawaban tersimpan otomatis, bisa di-review setelah submit.</p>
+    </div>
+
+    <div class="exam-info">
+        <div class="info-item"><div class="label">Total Soal</div><div class="value">80</div></div>
+        <div class="info-item"><div class="label">Tipe</div><div class="value">PG</div></div>
+        <div class="info-item"><div class="label">Materi</div><div class="value">5 Bab</div></div>
+        <div class="info-item"><div class="label">Status</div><div class="value" id="examStatus">Belum</div></div>
+    </div>
+
+    <div class="progress-sticky">
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-text">
+            <span id="progressText">0/80 dijawab</span>
+            <span id="progressPct">0%</span>
+        </div>
+    </div>
+
+    <div class="number-nav" id="numberNav"></div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterQuestions('all')">Semua</button>
+        <button class="filter-btn" onclick="filterQuestions('unanswered')">Belum Dijawab</button>
+        <button class="filter-btn" onclick="filterQuestions('bab1')">Bab 1</button>
+        <button class="filter-btn" onclick="filterQuestions('bab2')">Bab 2</button>
+        <button class="filter-btn" onclick="filterQuestions('bab3')">Bab 3</button>
+        <button class="filter-btn" onclick="filterQuestions('bab4')">Bab 4</button>
+        <button class="filter-btn" onclick="filterQuestions('bab5')">Bab 5</button>
+    </div>
+
+    <div id="quizContainer"></div>
+
+    <div class="action-bar">
+        <button class="btn btn-primary" onclick="submitExam()">📊 Submit & Lihat Hasil</button>
+        <button class="btn btn-secondary" onclick="scrollToTop()">⬆️ Ke Atas</button>
+        <button class="btn btn-danger" onclick="resetExam()">🔄 Reset Semua</button>
+    </div>
+
+    <div class="result-box" id="resultBox">
+        <div class="score" id="scoreText">0/80</div>
+        <div class="score-label">Skor Total</div>
+        <div class="grade" id="gradeText"></div>
+        <div class="breakdown" id="breakdownBox"></div>
+        <p style="margin-top:16px;color:#94a3b8;font-size:0.85rem" id="adviceText"></p>
+        <button class="review-toggle" id="reviewToggleBtn" onclick="toggleReviewSummary()" style="display:none">📖 Lihat Materi Tambahan untuk Soal yang Salah</button>
+    </div>
+
+    <div class="review-summary" id="reviewSummary">
+        <h2>📖 Materi Tambahan — Berdasarkan Jawaban Salah</h2>
+        <div class="review-subtitle">Berikut ringkasan materi untuk konsep yang perlu kamu pelajari lagi:</div>
+        <div id="reviewContent"></div>
+    </div>
+</div>
+
+<script>
+// ===== REVIEW MATERIAL DATABASE =====
+const reviewMaterial = {
+    bab1: {
+        title: 'Bab 1: Unit Testing',
+        topics: {
+            'prinsip': {
+                title: 'Prinsip-Prinsip Unit Testing',
+                content: `<strong>4 Prinsip Utama Unit Testing:</strong>
+<ul>
+<li><strong>Isolasi</strong> — Setiap tes berdiri sendiri, tidak tergantung komponen lain (database, API, dll)</li>
+<li><strong>Independen</strong> — Urutan menjalankan tes tidak mempengaruhi hasil. Tes A bisa jalan duluan atau tes B duluan</li>
+<li><strong>Cepat</strong> — Unit test harus jalan dalam hitungan milidetik</li>
+<li><strong>Fokus</strong> — Setiap tes hanya menguji SATU hal saja</li>
+</ul>
+<p>💡 <strong>Tips Hafalan: "IICF"</strong> — Isolasi, Independen, Cepat, Fokus</p>`
+            },
+            'owasp_access': {
+                title: 'OWASP: Broken Access Control',
+                content: `<p><strong>Broken Access Control (A1)</strong> = User bisa mengakses sesuatu yang <strong>seharusnya tidak boleh</strong>.</p>
+<ul>
+<li>Contoh: User biasa (guest) bisa masuk ke halaman admin</li>
+<li>Unit Test: Uji bahwa fungsi otorisasi <strong>menolak akses</strong> jika role tidak sesuai</li>
+<li>Kode tes: <code>assert result == "Access Denied"</code></li>
+</ul>`
+            },
+            'owasp_crypto': {
+                title: 'OWASP: Cryptographic Failures',
+                content: `<p><strong>Cryptographic Failures (A2)</strong> = Kegagalan melindungi data sensitif.</p>
+<ul>
+<li>Contoh: Password disimpan sebagai <strong>plain text</strong> (tidak di-hash)</li>
+<li>Unit Test: Pastikan password yang disimpan <strong>≠ password asli</strong></li>
+<li>Kode tes: <code>assert hashed != password</code></li>
+</ul>`
+            },
+            'owasp_injection': {
+                title: 'OWASP: SQL Injection',
+                content: `<p><strong>Injection (A3)</strong> = Penyerang menyisipkan kode berbahaya melalui input.</p>
+<ul>
+<li>Payload klasik: <code>' OR 1=1 --</code></li>
+<li>Unit Test: Pastikan input berbahaya <strong>ditolak</strong></li>
+<li>Kode tes: <code>assert result == "Login Failed"</code> saat input mengandung SQL injection</li>
+</ul>`
+            },
+            'owasp_design': {
+                title: 'OWASP: Insecure Design',
+                content: `<p><strong>Insecure Design (A4)</strong> = Desain aplikasi yang dari awal <strong>tidak memikirkan keamanan</strong>.</p>
+<ul>
+<li>Contoh: Tidak ada pembatasan percobaan login (brute force) — tidak ada rate limiting/lockout</li>
+<li>Unit Test: Uji bahwa akun terkunci setelah beberapa kali gagal login</li>
+</ul>`
+            },
+            'owasp_misconfig': {
+                title: 'OWASP: Security Misconfiguration',
+                content: `<p><strong>Security Misconfiguration (A5)</strong> = Konfigurasi keamanan yang salah.</p>
+<ul>
+<li>Contoh: <strong>Debug mode aktif di production</strong>, password default</li>
+<li>Unit Test: Pastikan <code>config["DEBUG"] == False</code> di production</li>
+</ul>`
+            },
+            'owasp_logging': {
+                title: 'OWASP: Security Logging Failures',
+                content: `<p><strong>Security Logging & Monitoring Failures (A9)</strong> = Aktivitas keamanan <strong>tidak dicatat</strong>.</p>
+<ul>
+<li>Contoh: Gagal login tidak dicatat di log → serangan tidak terdeteksi</li>
+<li>Unit Test: Pastikan event <code>"Failed login attempt"</code> tercatat di log</li>
+</ul>`
+            },
+            'owasp_ssrf': {
+                title: 'OWASP: SSRF (Server-Side Request Forgery)',
+                content: `<p><strong>SSRF (A10)</strong> = Server dipaksa melakukan request ke resource internal yang seharusnya diblokir.</p>
+<ul>
+<li>Contoh: Penyerang mengarahkan server ke <code>http://localhost/admin</code></li>
+<li>Unit Test: Pastikan URL internal <strong>diblokir</strong></li>
+</ul>`
+            },
+            'owasp_components': {
+                title: 'OWASP: Vulnerable & Outdated Components',
+                content: `<p><strong>Vulnerable Components (A6)</strong> = Menggunakan library/framework yang sudah <strong>kadaluarsa</strong> dan memiliki celah keamanan.</p>
+<ul>
+<li>Solusi: Rutin update dependency dan cek CVE database</li>
+</ul>`
+            },
+            'mocking': {
+                title: 'Mocking & Isolation',
+                content: `<p><strong>Mocking</strong> = Mengganti dependency eksternal dengan objek tiruan agar tes tetap <strong>terisolasi</strong>.</p>
+<ul>
+<li>Tujuan: Unit test tetap cepat dan tidak tergantung database/API sungguhan</li>
+<li>Memungkinkan simulasi skenario sulit (jaringan putus, server error)</li>
+</ul>`
+            },
+            'framework': {
+                title: 'Framework Unit Testing',
+                content: `<p><strong>Framework populer yang WAJIB dihapal:</strong></p>
+<ul>
+<li><strong>Java → JUnit</strong> (paling standar)</li>
+<li><strong>Python → Pytest</strong> (paling populer)</li>
+<li><strong>JavaScript → Jest</strong> (untuk React/Node.js)</li>
+<li>C#/.NET → xUnit, PHP → PHPUnit, Go → testing (built-in)</li>
+</ul>`
+            },
+            'keuntungan': {
+                title: 'Keuntungan Unit Testing',
+                content: `<ul>
+<li><strong>Deteksi Bug Lebih Awal</strong> — Bug ditemukan saat coding, bukan saat deploy</li>
+<li><strong>Refactoring Lebih Aman</strong> — Ada jaring pengaman saat ubah kode</li>
+<li><strong>Dokumentasi Hidup</strong> — Tes menjelaskan expected behavior fungsi</li>
+</ul>`
+            }
+        }
+    },
+    bab2: {
+        title: 'Bab 2: Regression Testing',
+        topics: {
+            'dasar': {
+                title: 'Dasar Regression Testing',
+                content: `<p><strong>Regression Testing</strong> = Memastikan perubahan kode <strong>tidak merusak fitur lama</strong>.</p>
+<p>Dilakukan setiap kali ada: bug fix, fitur baru, refactoring, update dependency.</p>`
+            },
+            'retesting': {
+                title: 'Retesting vs Regression Testing',
+                content: `<ul>
+<li><strong>Retesting</strong> = Verifikasi <strong>bug yang di-fix sudah benar-benar fix</strong> (scope sempit)</li>
+<li><strong>Regression</strong> = Verifikasi <strong>perubahan tidak merusak area lain</strong> (scope luas)</li>
+</ul>
+<p>💡 Re-testing = "Apakah bug-nya fix?" | Regression = "Apakah hal lain ikut rusak?"</p>`
+            },
+            'cicd': {
+                title: 'Regression Testing dalam CI/CD',
+                content: `<p>Peran utama dalam CI/CD: <strong>Menjaga stabilitas build</strong></p>
+<ul>
+<li>Developer push kode → CI server otomatis jalankan regression test → Jika gagal = build FAILED</li>
+<li>Memastikan setiap perubahan tidak merusak fungsionalitas yang ada</li>
+</ul>`
+            },
+            'tipe': {
+                title: 'Tipe-Tipe Regression Testing',
+                content: `<ul>
+<li><strong>Corrective</strong> — Tidak ada perubahan kode, cek tes lama masih valid</li>
+<li><strong>Progressive</strong> — Ada perubahan kode, tes mungkin perlu di-update</li>
+<li><strong>Selective</strong> — Hanya subset tes yang relevan</li>
+<li><strong>Complete/Full</strong> — Seluruh test suite dijalankan</li>
+</ul>`
+            },
+            'seleksi': {
+                title: 'Strategi Seleksi Test Case',
+                content: `<ul>
+<li><strong>Risk-based</strong> — Prioritas area paling kritis/berisiko</li>
+<li><strong>Coverage-based</strong> — Tes yang mencakup area kode yang berubah</li>
+<li><strong>Dependency-based</strong> — Modul yang saling terhubung/tergantung</li>
+</ul>`
+            },
+            'update': {
+                title: 'Pentingnya Update Test Suite',
+                content: `<p>Jika test suite <strong>tidak pernah di-update</strong>, bug baru pada fitur yang ditambahkan <strong>tidak akan terdeteksi</strong>.</p>`
+            },
+            'rpa': {
+                title: 'RPA & UI.Vision',
+                content: `<p><strong>RPA</strong> = Software robot untuk otomatisasi tugas repetitif.</p>
+<p><strong>UI.Vision</strong> = Tool RPA open-source untuk regression testing berbasis UI — merekam dan memutar ulang interaksi user.</p>`
+            },
+            'loadtest': {
+                title: 'Load Testing vs Regression Testing',
+                content: `<ul>
+<li><strong>Load Testing</strong> = Menguji <strong>performa</strong> di bawah beban</li>
+<li><strong>Regression</strong> = Menguji <strong>fungsionalitas</strong> setelah perubahan</li>
+</ul>`
+            }
+        }
+    },
+    bab3: {
+        title: 'Bab 3: Integration, System & Acceptance Testing',
+        topics: {
+            'integrasi': {
+                title: 'Pendekatan Integration Testing',
+                content: `<ul>
+<li><strong>Big Bang</strong> — Semua komponen digabung sekaligus. Sulit cari sumber error</li>
+<li><strong>Top-Down</strong> — Dari atas ke bawah, pakai <strong>Stub</strong> (pengganti modul bawah)</li>
+<li><strong>Bottom-Up</strong> — Dari bawah ke atas, pakai <strong>Driver</strong> (pengganti modul atas)</li>
+</ul>`
+            },
+            'stub_mock': {
+                title: 'Stub vs Mock (PALING PENTING!)',
+                content: `<ul>
+<li><strong>Stub</strong> = Nilai <strong>statis/hardcoded</strong> → State verification → Cek HASIL<br>Contoh: <code>return "LUNAS"</code> selalu</li>
+<li><strong>Mock</strong> = <strong>Dinamis</strong> → Behavior verification → Cek apakah METHOD DIPANGGIL<br>Contoh: <code>verify(mock).sendEmail("user@mail.com")</code></li>
+</ul>
+<p>💡 Stub = <strong>S</strong>tatis + <strong>S</strong>tate | Mock = <strong>M</strong>onitoring + <strong>M</strong>ethod call</p>`
+            },
+            'test_doubles': {
+                title: 'Test Doubles Lainnya',
+                content: `<ul>
+<li><strong>Dummy</strong> — Pengisi parameter saja, tidak benar-benar digunakan</li>
+<li><strong>Fake</strong> — Implementasi nyata tapi disederhanakan (misal in-memory database)</li>
+</ul>`
+            },
+            'uat_oat': {
+                title: 'UAT vs OAT',
+                content: `<ul>
+<li><strong>UAT</strong> (User Acceptance Testing) — Oleh <strong>pengguna akhir</strong> → "Apakah ini yang saya butuhkan?"<br>Contoh: Mahasiswa coba fitur IRS di SIAKAD</li>
+<li><strong>OAT</strong> (Operational Acceptance Testing) — Oleh <strong>tim IT/operasional</strong> → "Apakah bisa di-deploy?"<br>Contoh: Admin IT backup & restore database</li>
+</ul>`
+            },
+            'alpha_beta': {
+                title: 'Alpha vs Beta Testing',
+                content: `<ul>
+<li><strong>Alpha</strong> = Di lingkungan <strong>internal</strong> (pengembang)</li>
+<li><strong>Beta</strong> = Di lingkungan <strong>eksternal</strong> (user sungguhan)</li>
+</ul>
+<p>💡 Alpha = Awal = di dalam | Beta = Belakangan = di luar</p>`
+            },
+            'system': {
+                title: 'System Testing',
+                content: `<p>Menguji <strong>keseluruhan sistem</strong> sebagai satu kesatuan utuh. Jenis: Functional, Performance, Security, Compatibility, Usability, Recovery.</p>`
+            }
+        }
+    },
+    bab4: {
+        title: 'Bab 4: Penetration Testing',
+        topics: {
+            'dasar_pentest': {
+                title: 'Konsep Dasar Pentest',
+                content: `<p>Pentest = Simulasi serangan nyata untuk menemukan kerentanan.</p>
+<p>⚠️ <strong>PENTING:</strong> Pentest <strong>TIDAK bisa membuktikan sistem 100% aman</strong>, hanya menunjukkan kerentanan yang ditemukan.</p>`
+            },
+            'tipe_pentest': {
+                title: 'Tipe Pentest: Black, White, Gray Box',
+                content: `<ul>
+<li><strong>Black Box</strong> = "Gelap" → Tidak tahu apa-apa → Simulasi hacker luar</li>
+<li><strong>White Box</strong> = "Terang" → Tahu semua → Simulasi orang dalam (insider)</li>
+<li><strong>Gray Box</strong> = "Abu-abu" → Tahu sebagian → Simulasi user dengan akses terbatas</li>
+</ul>`
+            },
+            'fase': {
+                title: '7 Fase Penetration Testing',
+                content: `<ol>
+<li><strong>Pre-engagement</strong> — Kontrak, scope, aturan main</li>
+<li><strong>Reconnaissance</strong> — Kumpulkan info (Passive: tanpa sentuh target | Active: sentuh target langsung)</li>
+<li><strong>Threat Modeling</strong> — Identifikasi ancaman & prioritas</li>
+<li><strong>Vulnerability Analysis</strong> — Cari celah keamanan</li>
+<li><strong>Exploitation</strong> — Serang! Eksploitasi celah</li>
+<li><strong>Post-Exploitation</strong> — Nilai dampak setelah berhasil masuk</li>
+<li><strong>Reporting</strong> — Buat laporan lengkap</li>
+</ol>`
+            },
+            'tools': {
+                title: 'Tools Pentest (WAJIB HAPAL!)',
+                content: `<ul>
+<li><strong>Nmap</strong> = Port scanning & network discovery</li>
+<li><strong>Nessus</strong> = Vulnerability scanner</li>
+<li><strong>Metasploit</strong> = Exploitation framework (menyerang)</li>
+<li><strong>Burp Suite</strong> = Intercept trafik HTTP/HTTPS</li>
+<li><strong>SQLmap</strong> = Otomatisasi SQL Injection</li>
+<li><strong>Wireshark</strong> = Packet sniffing (tangkap paket jaringan)</li>
+<li><strong>Dradis</strong> = Reporting tool</li>
+</ul>`
+            },
+            'spidering': {
+                title: 'Spidering / Crawling',
+                content: `<p>Memetakan <strong>seluruh struktur aplikasi web</strong> — semua URL, halaman, form, endpoint. BUKAN untuk menyerang.</p>`
+            },
+            'active_risk': {
+                title: 'Risiko Active Scanning',
+                content: `<p>Active scanning intensif berisiko <strong>mengganggu layanan</strong> (service disruption) karena bisa membuat server overload.</p>`
+            }
+        }
+    },
+    bab5: {
+        title: 'Bab 5: Law, Ethics & Cyber Crime',
+        topics: {
+            'etika_hukum': {
+                title: 'Etika vs Hukum',
+                content: `<ul>
+<li><strong>Etika</strong> = Prinsip <strong>moral</strong> (subyektif) → Sanksi sosial</li>
+<li><strong>Hukum</strong> = Aturan <strong>negara</strong> (obyektif) → Sanksi pidana (denda/penjara)</li>
+</ul>
+<p>Sesuatu bisa legal tapi tidak etis (misal: jual data user yang sudah di-agree di ToS)</p>`
+            },
+            'uu_ite': {
+                title: 'UU ITE — Pasal-Pasal Penting',
+                content: `<ul>
+<li><strong>Pasal 30</strong> = <strong>Hacking</strong> / akses ilegal → <strong>Maks 8 tahun + Rp 800 juta</strong></li>
+<li><strong>Pasal 31</strong> = <strong>Intersepsi</strong> / penyadapan</li>
+<li><strong>Pasal 33</strong> = <strong>Malware</strong> / gangguan sistem</li>
+<li><strong>Pasal 35</strong> = <strong>Pencurian identitas</strong> / manipulasi data</li>
+</ul>
+<p>💡 Urutan: Hack → Sadap → Virus → Palsu (30-31-33-35)</p>`
+            },
+            'uu_pdp': {
+                title: 'UU PDP (UU No. 27/2022)',
+                content: `<p>Data pribadi dibedakan menjadi:</p>
+<ul>
+<li><strong>Umum (General)</strong> — Nama, email, nomor telepon</li>
+<li><strong>Spesifik (Specific)</strong> — Data kesehatan, biometrik, catatan keuangan</li>
+</ul>`
+            },
+            'gdpr': {
+                title: 'GDPR (General Data Protection Regulation)',
+                content: `<p>Regulasi perlindungan data dari <strong>Uni Eropa</strong>.</p>
+<ul>
+<li>Pemrosesan data harus punya <strong>tujuan yang sah</strong> (legitimate purpose)</li>
+<li><strong>Right to Erasure</strong> = Hak meminta data dihapus (right to be forgotten)</li>
+<li>Data minimization — hanya kumpulkan data yang diperlukan</li>
+</ul>`
+            },
+            'hukum_as': {
+                title: 'Hukum Siber AS',
+                content: `<ul>
+<li><strong>CFAA</strong> = Kejahatan komputer (hacking)</li>
+<li><strong>DMCA</strong> = Hak cipta digital</li>
+<li><strong>HIPAA</strong> = Data kesehatan pasien</li>
+<li><strong>ECPA</strong> = Privasi komunikasi elektronik</li>
+</ul>`
+            },
+            'regulasi_id': {
+                title: 'Regulasi Indonesia Lainnya',
+                content: `<ul>
+<li><strong>UU 28/2014</strong> = Hak Cipta (termasuk software)</li>
+<li><strong>UU 30/2000</strong> = Rahasia Dagang (trade secret)</li>
+</ul>`
+            },
+            'kode_etik': {
+                title: 'Kode Etik Profesi IT',
+                content: `<ul>
+<li><strong>ACM</strong> = Computing / Programming</li>
+<li><strong>(ISC)²</strong> = Cybersecurity (sertifikasi <strong>CISSP</strong>)</li>
+<li><strong>ISACA</strong> = IT Governance & Audit</li>
+</ul>`
+            }
+        }
+    }
+};
+
+// ===== QUESTION-TO-TOPIC MAPPING =====
+const questionTopics = {
+    // Bab 1
+    0:'prinsip', 1:'prinsip', 2:'owasp_injection', 3:'owasp_access', 4:'owasp_crypto',
+    5:'owasp_injection', 6:'mocking', 7:'framework', 8:'framework', 9:'prinsip',
+    10:'owasp_design', 11:'owasp_misconfig', 12:'owasp_logging', 13:'owasp_ssrf',
+    14:'keuntungan', 15:'owasp_components',
+    // Bab 2
+    16:'dasar', 17:'retesting', 18:'cicd', 19:'seleksi', 20:'update',
+    21:'dasar', 22:'tipe', 23:'rpa', 24:'loadtest', 25:'tipe',
+    26:'seleksi', 27:'tipe', 28:'dasar', 29:'tipe', 30:'seleksi', 31:'rpa',
+    // Bab 3
+    32:'integrasi', 33:'integrasi', 34:'integrasi', 35:'stub_mock', 36:'stub_mock',
+    37:'stub_mock', 38:'uat_oat', 39:'uat_oat', 40:'alpha_beta', 41:'test_doubles',
+    42:'test_doubles', 43:'integrasi', 44:'uat_oat', 45:'system', 46:'alpha_beta', 47:'stub_mock',
+    // Bab 4
+    48:'dasar_pentest', 49:'tools', 50:'tools', 51:'active_risk', 52:'spidering',
+    53:'tipe_pentest', 54:'tipe_pentest', 55:'fase', 56:'fase', 57:'tools',
+    58:'tools', 59:'fase', 60:'tools', 61:'tools', 62:'tipe_pentest', 63:'tools',
+    // Bab 5
+    64:'uu_ite', 65:'uu_ite', 66:'etika_hukum', 67:'gdpr', 68:'uu_pdp',
+    69:'uu_ite', 70:'hukum_as', 71:'hukum_as', 72:'hukum_as', 73:'uu_ite',
+    74:'regulasi_id', 75:'regulasi_id', 76:'kode_etik', 77:'etika_hukum', 78:'gdpr', 79:'uu_ite'
+};
+
+const allQuestions = [
+    // ===== BAB 1: UNIT TESTING (16 soal) =====
+    {bab:"bab1",q:"Apa yang dimaksud dengan Unit Testing?",options:["Menguji seluruh sistem secara bersamaan","Menguji bagian terkecil dari perangkat lunak secara terisolasi","Menguji performa jaringan","Menguji kesesuaian tampilan UI"],answer:1,explanation:"Unit testing menguji unit terkecil (fungsi/method) secara terisolasi."},
+    {bab:"bab1",q:"Prinsip unit testing yang menyatakan setiap tes tidak boleh bergantung pada urutan eksekusi disebut...",options:["Isolasi","Fokus","Independen","Cepat"],answer:2,explanation:"Independen = urutan eksekusi tidak mempengaruhi hasil tes."},
+    {bab:"bab1",q:"Dari perspektif keamanan, tujuan utama unit testing adalah...",options:["Menguji kecepatan loading halaman","Memastikan kompatibilitas browser","Memastikan setiap fungsi terkecil mampu menangani input berbahaya secara terisolasi","Menguji koneksi database production"],answer:2,explanation:"Unit test keamanan memastikan fungsi bisa menangani input berbahaya di level terkecil."},
+    {bab:"bab1",q:"User dengan role 'guest' mencoba akses admin panel dan harus ditolak. Kerentanan OWASP apa yang diuji?",options:["Injection","SSRF","Broken Access Control","Cryptographic Failures"],answer:2,explanation:"Broken Access Control = mengakses resource yang tidak seharusnya."},
+    {bab:"bab1",q:"Test yang memverifikasi bahwa password tersimpan ≠ password asli menguji kerentanan...",options:["Broken Access Control","Injection","Cryptographic Failures","SSRF"],answer:2,explanation:"Cryptographic Failures = kegagalan enkripsi/hash data sensitif."},
+    {bab:"bab1",q:"Input ' OR 1=1 -- adalah payload untuk menguji kerentanan...",options:["XSS","SSRF","SQL Injection","Broken Access Control"],answer:2,explanation:"' OR 1=1 -- adalah payload klasik SQL Injection."},
+    {bab:"bab1",q:"Apa kegunaan mocking dalam unit testing?",options:["Menghubungkan tes ke database production","Membuat tes berjalan lebih lambat","Mengisolasi unit dari dependency eksternal seperti database dan API","Menghapus test case yang gagal"],answer:2,explanation:"Mocking mengisolasi unit dari dependency eksternal."},
+    {bab:"bab1",q:"Framework unit testing paling populer untuk Python adalah...",options:["JUnit","Jest","Pytest","xUnit"],answer:2,explanation:"Pytest adalah framework paling populer untuk Python."},
+    {bab:"bab1",q:"Framework unit testing standar untuk Java adalah...",options:["Pytest","PHPUnit","JUnit","Mocha"],answer:2,explanation:"JUnit adalah framework standar untuk Java."},
+    {bab:"bab1",q:"Prinsip unit testing 'Fokus' berarti...",options:["Tes harus berjalan sangat cepat","Tes tidak bergantung komponen lain","Setiap tes hanya menguji satu hal/fungsionalitas","Tes bisa dijalankan di urutan apapun"],answer:2,explanation:"Fokus = satu tes untuk satu fungsionalitas, jangan campur-campur."},
+    {bab:"bab1",q:"Test yang memverifikasi akun terkunci setelah 5x gagal login menguji kerentanan...",options:["Cryptographic Failures","Insecure Design","SSRF","Injection"],answer:1,explanation:"Insecure Design = desain yang tidak memikirkan keamanan (misal tidak ada rate limiting)."},
+    {bab:"bab1",q:"Security Misconfiguration contohnya adalah...",options:["SQL Injection pada form login","Password disimpan plain text","Debug mode aktif di environment production","User biasa akses admin"],answer:2,explanation:"Security Misconfiguration = konfigurasi keamanan yang salah, seperti debug mode di production."},
+    {bab:"bab1",q:"Test yang memverifikasi event 'Failed login' tercatat di log menguji kerentanan...",options:["Injection","Cryptographic Failures","Security Logging and Monitoring Failures","Insecure Design"],answer:2,explanation:"Security Logging Failures = aktivitas keamanan tidak dicatat dengan baik."},
+    {bab:"bab1",q:"SSRF terjadi ketika...",options:["Password tidak di-hash","User biasa akses admin","Server dipaksa melakukan request ke resource internal yang seharusnya diblokir","Database tidak terenkripsi"],answer:2,explanation:"SSRF = server dipaksa request ke resource internal (misal localhost/admin)."},
+    {bab:"bab1",q:"Keuntungan unit test sebagai 'dokumentasi hidup' berarti...",options:["Test case menjelaskan bagaimana fungsi seharusnya berperilaku","Test case bisa diunduh sebagai PDF","Test case otomatis menjadi komentar kode","Test case menggantikan user manual"],answer:0,explanation:"Unit test sebagai dokumentasi hidup karena menunjukkan expected behavior fungsi."},
+    {bab:"bab1",q:"Vulnerable and Outdated Components merujuk pada...",options:["Penggunaan library/framework yang sudah kadaluarsa dan memiliki celah keamanan","Password yang lemah","Konfigurasi firewall yang salah","Debug mode yang aktif"],answer:0,explanation:"A6 OWASP = menggunakan komponen yang sudah usang dan rentan."},
+
+    // ===== BAB 2: REGRESSION TESTING (16 soal) =====
+    {bab:"bab2",q:"Tujuan utama regression testing adalah...",options:["Menguji performa server","Memastikan perubahan kode tidak menyebabkan masalah baru pada fitur yang sudah berfungsi","Menguji keamanan jaringan","Mendesain user interface"],answer:1,explanation:"Regression testing memastikan perubahan tidak merusak fungsionalitas yang ada."},
+    {bab:"bab2",q:"Perbedaan utama retesting dan regression testing adalah...",options:["Keduanya identik","Retesting memverifikasi bug spesifik yang di-fix, regression memverifikasi dampak perubahan terhadap area lain","Retesting lebih luas dari regression","Regression tidak bisa diotomatisasi"],answer:1,explanation:"Retesting = verifikasi fix bug. Regression = verifikasi dampak perubahan."},
+    {bab:"bab2",q:"Peran utama regression test dalam CI/CD adalah...",options:["Menguji UI secara manual","Menambah fitur baru ke kode","Menjaga stabilitas build dengan memastikan perubahan tidak merusak fungsionalitas yang ada","Menghapus kode lama"],answer:2,explanation:"Regression test di CI/CD = menjaga stabilitas build."},
+    {bab:"bab2",q:"Strategi seleksi test case yang memprioritaskan area paling kritis/berbahaya disebut...",options:["Coverage-based","Random selection","Risk-based selection","Alphabetical selection"],answer:2,explanation:"Risk-based = prioritas pada area yang paling berisiko."},
+    {bab:"bab2",q:"Jika regression test suite tidak pernah di-update, maka...",options:["Test menjadi lebih akurat","Bug baru pada fitur yang ditambahkan tidak akan terdeteksi","Performance meningkat","Kode lebih bersih"],answer:1,explanation:"Test suite yang tidak di-update tidak mencakup skenario baru."},
+    {bab:"bab2",q:"Menjalankan kembali tes lama pada regression testing bertujuan untuk...",options:["Menghabiskan waktu","Memastikan perubahan terbaru tidak merusak fungsi yang sebelumnya sudah benar","Menguji fitur baru saja","Mengecek performa"],answer:1,explanation:"Tes lama dijalankan untuk memverifikasi tidak ada regresi pada fitur lama."},
+    {bab:"bab2",q:"Complete/Full Regression Testing berarti...",options:["Hanya menjalankan tes tertentu","Menjalankan seluruh test suite dari awal sampai akhir","Menghapus semua tes lama","Hanya menguji UI"],answer:1,explanation:"Complete regression = seluruh test suite dijalankan untuk cakupan maksimal."},
+    {bab:"bab2",q:"UI.Vision dalam regression testing digunakan untuk...",options:["Menguji keamanan API","Mengotomatisasi regression testing berbasis UI dengan merekam dan memutar ulang interaksi","Menghapus file duplikat","Membuat database baru"],answer:1,explanation:"UI.Vision = tool RPA untuk otomatisasi regression test berbasis UI."},
+    {bab:"bab2",q:"Perbedaan Load Testing dan Regression Testing adalah...",options:["Load testing menguji fungsionalitas, regression menguji performa","Load testing menguji performa di bawah beban, regression menguji apakah perubahan merusak fungsi","Keduanya sama","Regression tidak butuh test case"],answer:1,explanation:"Load = performa. Regression = fungsionalitas setelah perubahan."},
+    {bab:"bab2",q:"Corrective Regression Testing dilakukan ketika...",options:["Ada perubahan besar pada kode","Tidak ada perubahan kode, hanya memastikan tes yang ada masih valid","Seluruh test suite harus dijalankan","Terjadi masalah keamanan"],answer:1,explanation:"Corrective = tanpa perubahan kode, memastikan tes lama masih valid."},
+    {bab:"bab2",q:"Dependency-based selection memilih test case berdasarkan...",options:["Abjad","Risiko bisnis","Ketergantungan antar modul yang terdampak perubahan","Waktu pembuatan"],answer:2,explanation:"Dependency-based = memilih tes berdasarkan modul yang saling terhubung."},
+    {bab:"bab2",q:"Progressive Regression Testing dilakukan ketika...",options:["Tidak ada perubahan","Hanya UI yang berubah","Ada perubahan kode dan test case mungkin perlu di-update","Hanya saat major release"],answer:2,explanation:"Progressive = saat ada perubahan kode, tes mungkin perlu disesuaikan."},
+    {bab:"bab2",q:"Regression testing cocok diotomatisasi karena...",options:["Hanya dijalankan sekali","Test case-nya repetitif dan harus dijalankan berulang setiap ada perubahan","Tidak memerlukan test case","Hanya menguji satu fungsi"],answer:1,explanation:"Regression test repetitif dan sering dijalankan → otomatisasi efisien."},
+    {bab:"bab2",q:"Selective Regression Testing adalah...",options:["Menjalankan seluruh test suite","Menghapus test case lama","Memilih subset test suite yang relevan dengan area yang berubah","Menguji hanya fitur baru"],answer:2,explanation:"Selective = hanya tes yang relevan dengan perubahan."},
+    {bab:"bab2",q:"Coverage-based selection memprioritaskan tes berdasarkan...",options:["Jumlah baris kode","Cakupan kode — tes yang mencakup area yang berubah diprioritaskan","Nama developer","Tanggal pembuatan"],answer:1,explanation:"Coverage-based = prioritas tes yang mencakup area kode yang berubah."},
+    {bab:"bab2",q:"RPA (Robotic Process Automation) dalam konteks testing adalah...",options:["Robot fisik yang menguji hardware","Teknologi yang menggunakan software robot untuk mengotomatisasi tugas repetitif","Jenis database baru","Framework JavaScript"],answer:1,explanation:"RPA = software robot untuk otomatisasi tugas repetitif, termasuk UI testing."},
+
+    // ===== BAB 3: INTEGRATION, SYSTEM & ACCEPTANCE (16 soal) =====
+    {bab:"bab3",q:"Integration Testing menguji...",options:["Setiap fungsi secara terisolasi","Interaksi antar komponen/modul untuk memastikan mereka bekerja sama","Performa di bawah beban","Tampilan UI saja"],answer:1,explanation:"Integration testing = menguji interaksi antar komponen."},
+    {bab:"bab3",q:"Pendekatan Big Bang Integration berarti...",options:["Komponen digabung satu per satu","Semua komponen digabung sekaligus dan diuji bersama-sama","Hanya komponen atas yang diuji","Menggunakan mock untuk semua"],answer:1,explanation:"Big Bang = semua komponen digabung sekaligus."},
+    {bab:"bab3",q:"Pada Top-Down integration, komponen pengganti modul bawah yang belum siap disebut...",options:["Mock","Driver","Stub","Fake"],answer:2,explanation:"Top-Down menggunakan Stub untuk modul bawah yang belum siap."},
+    {bab:"bab3",q:"Kode yang selalu return 'LUNAS' tanpa logika apapun adalah contoh...",options:["Mock","Driver","Fake","Stub"],answer:3,explanation:"Mengembalikan nilai statis/hardcoded = Stub."},
+    {bab:"bab3",q:"Stub digunakan untuk verifikasi...",options:["Behavior (pemanggilan method)","Performance","State (hasil/nilai yang dikembalikan)","Security"],answer:2,explanation:"Stub = state verification (cek nilai hasil)."},
+    {bab:"bab3",q:"Mock digunakan untuk verifikasi...",options:["State (hasil)","Behavior (apakah method dipanggil dengan benar)","Performance","Tampilan UI"],answer:1,explanation:"Mock = behavior verification (cek pemanggilan method)."},
+    {bab:"bab3",q:"UAT (User Acceptance Testing) dilakukan oleh...",options:["Developer","Admin server","Pengguna akhir (end user)","QA team internal"],answer:2,explanation:"UAT dilakukan oleh pengguna akhir untuk memvalidasi kebutuhan mereka."},
+    {bab:"bab3",q:"Admin IT backup database lalu restore data. Ini termasuk pengujian...",options:["UAT","Unit Testing","OAT (Operational Acceptance Testing)","Regression Testing"],answer:2,explanation:"OAT = pengujian operasional oleh tim IT."},
+    {bab:"bab3",q:"Alpha Testing dilakukan di...",options:["Lingkungan pengguna","Production server","Lingkungan pengembang (internal)","Cloud"],answer:2,explanation:"Alpha = internal, Beta = eksternal."},
+    {bab:"bab3",q:"Dummy dalam test double adalah objek yang...",options:["Mengembalikan nilai statis","Memverifikasi pemanggilan method","Hanya sebagai pengisi parameter dan tidak benar-benar digunakan","Implementasi sederhana dari komponen asli"],answer:2,explanation:"Dummy = pengisi parameter saja, tidak dipakai."},
+    {bab:"bab3",q:"In-memory database sebagai pengganti database sungguhan disebut...",options:["Stub","Mock","Fake","Dummy"],answer:2,explanation:"Fake = implementasi nyata tapi disederhanakan."},
+    {bab:"bab3",q:"Bottom-Up integration menggunakan komponen pengganti bernama...",options:["Stub","Fake","Dummy","Driver"],answer:3,explanation:"Bottom-Up menggunakan Driver sebagai pengganti modul atas."},
+    {bab:"bab3",q:"Mahasiswa mencoba fitur pengisian IRS di SIAKAD. Ini adalah contoh...",options:["OAT","Integration Testing","UAT (User Acceptance Testing)","System Testing"],answer:2,explanation:"Mahasiswa (pengguna akhir) menguji fitur = UAT."},
+    {bab:"bab3",q:"System Testing menguji...",options:["Setiap fungsi secara terisolasi","Interaksi dua modul","Keseluruhan sistem sebagai satu kesatuan utuh","Hanya aspek keamanan"],answer:2,explanation:"System testing = menguji seluruh sistem terintegrasi."},
+    {bab:"bab3",q:"Beta Testing dilakukan di...",options:["Lingkungan internal","Lingkungan pengguna oleh user sungguhan setelah Alpha testing","Lab pengembang","Server staging internal"],answer:1,explanation:"Beta = eksternal, oleh user sungguhan."},
+    {bab:"bab3",q:"Menguji form login terhadap SQL Injection saat frontend kirim data ke backend termasuk...",options:["Unit Testing keamanan","Load Testing","Integration Testing keamanan","UAT"],answer:2,explanation:"Menguji interaksi frontend-backend = integration test."},
+
+    // ===== BAB 4: PENETRATION TESTING (16 soal) =====
+    {bab:"bab4",q:"Penetration testing dapat...",options:["Membuktikan sistem 100% aman","Menunjukkan adanya kerentanan, tetapi tidak bisa membuktikan sistem 100% aman","Mengganti infrastruktur keamanan","Mempercepat loading aplikasi"],answer:1,explanation:"Pentest hanya menunjukkan kerentanan yang ditemukan, bukan jaminan 100% aman."},
+    {bab:"bab4",q:"Metasploit digunakan untuk...",options:["Membuat laporan pentest","Scanning port jaringan","Mengeksploitasi kerentanan yang ditemukan pada sistem target","Mendesain arsitektur jaringan"],answer:2,explanation:"Metasploit = exploitation framework."},
+    {bab:"bab4",q:"Burp Suite berfungsi untuk...",options:["Mengedit source code","Melakukan backup database","Menginteresepsi dan memodifikasi trafik HTTP/HTTPS antara browser dan server","Mengirim notifikasi push"],answer:2,explanation:"Burp Suite = proxy untuk intercept trafik HTTP/HTTPS."},
+    {bab:"bab4",q:"Risiko utama active scanning yang intensif adalah...",options:["Laporan lebih cepat","Mengganggu layanan (service disruption) pada sistem target","Meningkatkan keamanan","Mempercepat jaringan"],answer:1,explanation:"Active scanning intensif bisa menyebabkan server overload."},
+    {bab:"bab4",q:"Spidering/crawling dalam pengujian web berfungsi untuk...",options:["Mengeksploitasi SQL Injection","Memetakan seluruh struktur dan halaman aplikasi web","Menghapus log server","Mengenkripsi data"],answer:1,explanation:"Spidering = memetakan struktur aplikasi web."},
+    {bab:"bab4",q:"Black Box Testing berarti tester...",options:["Tahu semua tentang sistem","Tahu sebagian informasi","Tidak memiliki informasi apapun tentang target","Hanya tahu source code"],answer:2,explanation:"Black Box = zero knowledge tentang target."},
+    {bab:"bab4",q:"White Box Testing mensimulasikan serangan dari...",options:["Hacker luar","Orang dalam (insider) dengan pengetahuan lengkap tentang sistem","Pengguna biasa","Bot otomatis"],answer:1,explanation:"White Box = insider threat, tahu semua tentang sistem."},
+    {bab:"bab4",q:"Fase pertama penetration testing adalah...",options:["Reconnaissance","Exploitation","Pre-engagement Interaction","Reporting"],answer:2,explanation:"Pre-engagement = persiapan kontrak, scope, aturan main."},
+    {bab:"bab4",q:"Passive Reconnaissance berbeda dari Active karena...",options:["Passive lebih berbahaya","Passive mengumpulkan info tanpa menyentuh target sehingga target tidak menyadari","Active menggunakan Google","Passive menggunakan Metasploit"],answer:1,explanation:"Passive = tanpa interaksi langsung dengan target."},
+    {bab:"bab4",q:"Nmap digunakan terutama untuk...",options:["Exploitasi kerentanan","Port scanning dan network discovery","Membuat laporan","SQL Injection otomatis"],answer:1,explanation:"Nmap = port scanning dan menemukan service yang berjalan."},
+    {bab:"bab4",q:"Nessus adalah tool untuk...",options:["Exploitation","Port scanning","Vulnerability scanning — memindai kerentanan yang sudah diketahui","Packet sniffing"],answer:2,explanation:"Nessus = vulnerability scanner."},
+    {bab:"bab4",q:"Post-Exploitation bertujuan untuk...",options:["Menandatangani kontrak","Mengumpulkan info awal","Menilai seberapa besar dampak setelah berhasil masuk ke sistem","Membuat wireframe"],answer:2,explanation:"Post-exploitation = menilai dampak setelah berhasil eksploitasi."},
+    {bab:"bab4",q:"SQLmap mengotomatisasi serangan jenis...",options:["XSS","Phishing","SQL Injection","DDoS"],answer:2,explanation:"SQLmap = otomatisasi SQL Injection."},
+    {bab:"bab4",q:"Dradis digunakan untuk...",options:["Exploitasi kerentanan","Port scanning","Mengorganisir temuan menjadi laporan terstruktur (reporting)","Sniffing jaringan"],answer:2,explanation:"Dradis = reporting tool untuk mengorganisir temuan pentest."},
+    {bab:"bab4",q:"Gray Box Testing mensimulasikan serangan dari...",options:["Hacker luar tanpa info","Orang dalam dengan akses penuh","User biasa dengan pengetahuan/akses terbatas tentang sistem","Administrator sistem"],answer:2,explanation:"Gray Box = tester tahu sebagian info, simulasi user dengan akses terbatas."},
+    {bab:"bab4",q:"Wireshark digunakan untuk...",options:["SQL Injection","Menangkap dan menganalisis paket data jaringan secara real-time","Membuat laporan","Mengeksploitasi kerentanan"],answer:1,explanation:"Wireshark = network protocol analyzer / packet sniffing."},
+
+    // ===== BAB 5: LAW, ETHICS & CYBER CRIME (16 soal) =====
+    {bab:"bab5",q:"Sanksi maksimal hacking menurut UU ITE adalah...",options:["4 tahun / Rp 400 juta","6 tahun / Rp 600 juta","8 tahun penjara dan/atau denda Rp 800 juta","10 tahun / Rp 1 miliar"],answer:2,explanation:"Pasal 30 UU ITE: maksimal 8 tahun + Rp 800 juta."},
+    {bab:"bab5",q:"Pasal berapa UU ITE yang melarang pencurian identitas dan manipulasi data?",options:["Pasal 30","Pasal 31","Pasal 33","Pasal 35"],answer:3,explanation:"Pasal 35 = pencurian identitas / manipulasi informasi elektronik."},
+    {bab:"bab5",q:"Perbedaan utama etika dan hukum adalah...",options:["Etika bersifat subyektif (prinsip moral), hukum adalah aturan resmi negara dengan sanksi pidana","Keduanya identik","Hukum bersifat subyektif","Etika ditegakkan polisi"],answer:0,explanation:"Etika = moral (subyektif). Hukum = aturan negara (obyektif + sanksi)."},
+    {bab:"bab5",q:"GDPR mengharuskan pemrosesan data pribadi harus...",options:["Dilakukan tanpa persetujuan","Memiliki tujuan yang sah (legitimate purpose) dan jelas","Tidak perlu alasan","Hanya untuk perusahaan besar"],answer:1,explanation:"GDPR = pemrosesan data harus punya dasar hukum yang sah."},
+    {bab:"bab5",q:"UU PDP membedakan data pribadi menjadi...",options:["Data publik dan rahasia","Data umum (general) dan data spesifik (specific)","Data primer dan sekunder","Data online dan offline"],answer:1,explanation:"UU PDP: data umum (nama, email) vs data spesifik (kesehatan, biometrik)."},
+    {bab:"bab5",q:"Pasal 33 UU ITE melarang...",options:["Hacking","Penyadapan","Penyebaran malware dan gangguan sistem elektronik","Pencurian identitas"],answer:2,explanation:"Pasal 33 = malware / gangguan sistem elektronik."},
+    {bab:"bab5",q:"CFAA di Amerika Serikat mengatur...",options:["Data kesehatan","Kejahatan komputer termasuk akses tidak sah","Hak cipta digital","Keterbukaan info pemerintah"],answer:1,explanation:"CFAA = hukum utama AS untuk kejahatan komputer."},
+    {bab:"bab5",q:"DMCA melindungi...",options:["Data kesehatan","Hak cipta digital dan melarang pembajakan software","Privasi komunikasi","Data keuangan perusahaan"],answer:1,explanation:"DMCA = hak cipta digital."},
+    {bab:"bab5",q:"HIPAA mengatur perlindungan...",options:["Hak cipta software","Data keuangan","Data kesehatan pasien","Informasi pemerintah"],answer:2,explanation:"HIPAA = data kesehatan pasien."},
+    {bab:"bab5",q:"Pasal 31 UU ITE melarang...",options:["Hacking","Intersepsi/penyadapan komunikasi elektronik","Penyebaran malware","Manipulasi data"],answer:1,explanation:"Pasal 31 = intersepsi / penyadapan."},
+    {bab:"bab5",q:"UU No. 28 Tahun 2014 mengatur tentang...",options:["Perlindungan data pribadi","Transaksi elektronik","Hak cipta, termasuk perlindungan software","Rahasia dagang"],answer:2,explanation:"UU 28/2014 = Hak Cipta."},
+    {bab:"bab5",q:"UU No. 30 Tahun 2000 mengatur tentang...",options:["Hak cipta","Perlindungan data pribadi","Rahasia dagang (trade secret)","Transaksi elektronik"],answer:2,explanation:"UU 30/2000 = Rahasia Dagang."},
+    {bab:"bab5",q:"(ISC)² menaungi profesional di bidang...",options:["Programming","Keamanan siber (cybersecurity) dengan sertifikasi CISSP","Akuntansi","Desain grafis"],answer:1,explanation:"(ISC)² = organisasi cybersecurity profesional (CISSP)."},
+    {bab:"bab5",q:"Sesuatu yang legal tapi tidak etis dalam IT contohnya...",options:["Hacking tanpa izin","Menjual data user yang sudah disetujui di ToS meskipun merugikan user","Menyebarkan malware","Menyadap telepon"],answer:1,explanation:"Legal karena ada persetujuan di ToS, tapi tidak etis karena merugikan."},
+    {bab:"bab5",q:"Right to Erasure dalam GDPR berarti...",options:["Hak akses data","Hak memindahkan data","Hak meminta penghapusan data pribadi (right to be forgotten)","Hak memperbaiki data"],answer:2,explanation:"Right to Erasure = hak meminta data dihapus."},
+    {bab:"bab5",q:"Pasal 30 UU ITE mengatur tentang...",options:["Penyebaran malware","Pencurian identitas","Penyadapan","Hacking / akses ilegal ke sistem komputer tanpa izin"],answer:3,explanation:"Pasal 30 = hacking / akses ilegal."}
+];
+
+const STORAGE_KEY = 'pkpl_uas_sim_answers';
+const RESULT_KEY = 'pkpl_uas_simulation';
+const SUBMITTED_KEY = 'pkpl_uas_submitted';
+
+function getSaved() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+function isSubmitted() { return localStorage.getItem(SUBMITTED_KEY) === 'true'; }
+
+function renderNumberNav() {
+    const nav = document.getElementById('numberNav');
+    const saved = getSaved();
+    nav.innerHTML = allQuestions.map((_, i) => {
+        const answered = saved[i] !== undefined;
+        return `<button class="${answered ? 'answered' : ''}" onclick="scrollToQ(${i})" title="Soal ${i+1}">${i+1}</button>`;
+    }).join('');
+}
+
+function updateProgress() {
+    const saved = getSaved();
+    const answered = Object.keys(saved).length;
+    const total = allQuestions.length;
+    const pct = Math.round((answered / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `${answered}/${total} dijawab`;
+    document.getElementById('progressPct').textContent = pct + '%';
+    renderNumberNav();
+}
+
+function getBabLabel(bab) {
+    const labels = { bab1: 'Bab 1: Unit Testing', bab2: 'Bab 2: Regression Testing', bab3: 'Bab 3: Integration, System & Acceptance', bab4: 'Bab 4: Penetration Testing', bab5: 'Bab 5: Law, Ethics & Cyber Crime' };
+    return labels[bab] || bab;
+}
+
+function renderQuiz(filter = 'all') {
+    const container = document.getElementById('quizContainer');
+    const saved = getSaved();
+    const submitted = isSubmitted();
+    let currentBab = '';
+    let html = '';
+
+    allQuestions.forEach((q, i) => {
+        const show = filter === 'all' || filter === q.bab || (filter === 'unanswered' && saved[i] === undefined);
+        if (!show) return;
+
+        if (q.bab !== currentBab) {
+            currentBab = q.bab;
+            html += `<div class="section-divider">📚 ${getBabLabel(currentBab)}</div>`;
+        }
+
+        const answered = saved[i] !== undefined;
+        html += `<div class="quiz-question ${answered ? 'answered' : ''}" id="qq-${i}">
+            <div class="q-num">Soal ${i + 1} dari ${allQuestions.length}</div>
+            <div class="q-text">${q.q}</div>
+            ${q.options.map((opt, j) => {
+                let cls = '';
+                if (submitted) {
+                    if (j === q.answer) cls = 'correct';
+                    else if (parseInt(saved[i]) === j && j !== q.answer) cls = 'incorrect';
+                }
+                return `<label class="quiz-option ${cls}" id="opt-${i}-${j}">
+                    <input type="radio" name="q${i}" value="${j}" ${saved[i] == j ? 'checked' : ''} ${submitted ? 'disabled' : ''} onchange="saveAnswer(${i},${j})">
+                    <span>${opt}</span>
+                    ${submitted && j === q.answer ? `<div class="explanation" style="display:block">💡 ${q.explanation}</div>` : ''}
+                </label>`;
+            }).join('')}
+            ${submitted && parseInt(saved[i]) !== q.answer ? getReviewCardHTML(i) : ''}
+        </div>`;
+    });
+
+    container.innerHTML = html;
+    if (submitted) showResults();
+}
+
+function saveAnswer(qi, oi) {
+    if (isSubmitted()) return;
+    const s = getSaved();
+    s[qi] = oi;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    updateProgress();
+    const el = document.getElementById(`qq-${qi}`);
+    if (el) el.classList.add('answered');
+}
+
+function scrollToQ(i) {
+    const el = document.getElementById(`qq-${i}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+function filterQuestions(filter) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    renderQuiz(filter);
+}
+
+function submitExam() {
+    const saved = getSaved();
+    const unanswered = allQuestions.length - Object.keys(saved).length;
+    if (unanswered > 0) {
+        if (!confirm(`Masih ada ${unanswered} soal yang belum dijawab. Yakin mau submit?`)) return;
+    }
+    localStorage.setItem(SUBMITTED_KEY, 'true');
+    renderQuiz();
+    showResults();
+}
+
+function showResults() {
+    const saved = getSaved();
+    let correct = 0;
+    const babScores = {};
+
+    allQuestions.forEach((q, i) => {
+        if (!babScores[q.bab]) babScores[q.bab] = { correct: 0, total: 0 };
+        babScores[q.bab].total++;
+        if (parseInt(saved[i]) === q.answer) {
+            correct++;
+            babScores[q.bab].correct++;
+        }
+    });
+
+    const total = allQuestions.length;
+    const pct = Math.round((correct / total) * 100);
+    const rb = document.getElementById('resultBox');
+    rb.style.display = 'block';
+    document.getElementById('scoreText').textContent = `${correct}/${total}`;
+
+    let grade, gradeColor;
+    if (pct >= 85) { grade = 'A — Luar Biasa! 🏆'; gradeColor = '#34d399'; }
+    else if (pct >= 75) { grade = 'B — Bagus! 👍'; gradeColor = '#60a5fa'; }
+    else if (pct >= 65) { grade = 'C — Cukup, perlu belajar lagi'; gradeColor = '#fbbf24'; }
+    else if (pct >= 50) { grade = 'D — Kurang, banyak yang harus dipelajari'; gradeColor = '#f97316'; }
+    else { grade = 'E — Belum siap, ayo belajar lagi! 📚'; gradeColor = '#ef4444'; }
+
+    document.getElementById('gradeText').textContent = grade;
+    document.getElementById('gradeText').style.color = gradeColor;
+
+    const breakdownHTML = Object.entries(babScores).map(([bab, s]) => {
+        const p = Math.round((s.correct / s.total) * 100);
+        return `<div class="item"><div class="label">${getBabLabel(bab).replace('Bab ','').split(':')[0]}</div><div class="val">${s.correct}/${s.total} (${p}%)</div></div>`;
+    }).join('');
+    document.getElementById('breakdownBox').innerHTML = breakdownHTML;
+
+    const weakBabs = Object.entries(babScores).filter(([_, s]) => (s.correct / s.total) < 0.7).map(([bab]) => getBabLabel(bab));
+    document.getElementById('adviceText').textContent = weakBabs.length > 0
+        ? `📚 Fokus pelajari lagi: ${weakBabs.join(', ')}`
+        : '🎉 Semua materi sudah dikuasai dengan baik!';
+
+    localStorage.setItem(RESULT_KEY, JSON.stringify({ correct, total }));
+    document.getElementById('examStatus').textContent = `${pct}%`;
+
+    // Show review button if there are wrong answers
+    const wrongCount = total - correct;
+    const reviewBtn = document.getElementById('reviewToggleBtn');
+    if (wrongCount > 0) {
+        reviewBtn.style.display = 'flex';
+        reviewBtn.textContent = `📖 Lihat Materi Tambahan (${wrongCount} soal salah)`;
+        buildReviewSummary(saved);
+    } else {
+        reviewBtn.style.display = 'none';
+    }
+
+    rb.scrollIntoView({ behavior: 'smooth' });
+}
+
+function getReviewCardHTML(qIndex) {
+    const q = allQuestions[qIndex];
+    const topicKey = questionTopics[qIndex];
+    if (!topicKey) return '';
+    const babData = reviewMaterial[q.bab];
+    if (!babData || !babData.topics[topicKey]) return '';
+    const topic = babData.topics[topicKey];
+    return `<div class="review-card">
+        <div class="review-title">📖 Materi yang Perlu Dipelajari: ${topic.title}</div>
+        <div class="review-content">${topic.content}</div>
+    </div>`;
+}
+
+function buildReviewSummary(saved) {
+    const wrongByBab = {};
+    allQuestions.forEach((q, i) => {
+        if (parseInt(saved[i]) !== q.answer) {
+            if (!wrongByBab[q.bab]) wrongByBab[q.bab] = new Set();
+            const topicKey = questionTopics[i];
+            if (topicKey) wrongByBab[q.bab].add(topicKey);
+        }
+    });
+
+    let html = '';
+    Object.entries(wrongByBab).forEach(([bab, topicSet]) => {
+        const babData = reviewMaterial[bab];
+        if (!babData) return;
+        html += `<div class="review-bab"><h3>${babData.title}</h3>`;
+        topicSet.forEach(topicKey => {
+            const topic = babData.topics[topicKey];
+            if (!topic) return;
+            html += `<div class="concept"><h4>${topic.title}</h4>${topic.content}</div>`;
+        });
+        html += `</div>`;
+    });
+
+    document.getElementById('reviewContent').innerHTML = html;
+}
+
+function toggleReviewSummary() {
+    const rs = document.getElementById('reviewSummary');
+    const btn = document.getElementById('reviewToggleBtn');
+    if (rs.style.display === 'block') {
+        rs.style.display = 'none';
+        btn.textContent = btn.textContent.replace('Sembunyikan', 'Lihat');
+    } else {
+        rs.style.display = 'block';
+        btn.textContent = btn.textContent.replace('Lihat', 'Sembunyikan');
+        rs.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function resetExam() {
+    if (!confirm('Yakin mau reset semua jawaban? Ini tidak bisa di-undo.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(RESULT_KEY);
+    localStorage.removeItem(SUBMITTED_KEY);
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('reviewSummary').style.display = 'none';
+    document.getElementById('reviewToggleBtn').style.display = 'none';
+    document.getElementById('examStatus').textContent = 'Belum';
+    renderQuiz();
+    updateProgress();
+    scrollToTop();
+}
+
+// Init
+renderQuiz();
+updateProgress();
+if (isSubmitted()) {
+    document.getElementById('examStatus').textContent = 'Selesai';
+}
+</script>
+</body>
+</html>

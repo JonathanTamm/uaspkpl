@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bab 1: Unit Testing — PKPL Study Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(99,102,241,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
+        .nav-links a:hover{color:#c4b5fd;background:rgba(99,102,241,0.1);text-decoration:none}
+        .nav-links a.active{color:#e2e8f0;font-weight:600}
+        .nav-links .sep{color:#1e293b;margin:0 2px;font-size:0.7rem;user-select:none}
+        .nav-brand{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15));border:1px solid rgba(99,102,241,0.25);border-radius:50px;font-size:0.78rem;font-weight:600;color:#c4b5fd;white-space:nowrap}
+        body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e8f0;line-height:1.7;padding-top:56px}
+        .bg-glow{position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .container{max-width:900px;margin:0 auto;padding:30px 20px;position:relative;z-index:1}
+        a{color:#a5b4fc;text-decoration:none}a:hover{text-decoration:underline}
+        .back-link{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:#64748b;margin-bottom:24px;transition:color 0.2s}.back-link:hover{color:#a5b4fc;text-decoration:none}
+        .chapter-header{margin-bottom:40px;animation:fadeIn 0.6s ease}
+        .chapter-badge{display:inline-block;padding:5px 14px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(129,140,248,0.2));border:1px solid rgba(99,102,241,0.3);border-radius:50px;font-size:0.75rem;font-weight:600;color:#a5b4fc;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+        .chapter-header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e2e8f0,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .chapter-header p{color:#94a3b8;font-size:1rem}
+        .section{background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.1);border-radius:16px;padding:28px;margin-bottom:24px;backdrop-filter:blur(10px);animation:fadeIn 0.6s ease}
+        .section h2{font-size:1.4rem;font-weight:800;color:#e2e8f0;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .section h3{font-size:1.1rem;font-weight:700;color:#c4b5fd;margin:20px 0 10px;padding-left:12px;border-left:3px solid #6366f1}
+        .section h4{font-size:0.95rem;font-weight:600;color:#93c5fd;margin:14px 0 8px}
+        .section p,.section li{font-size:0.92rem;color:#cbd5e1;line-height:1.8}
+        .section ul,.section ol{padding-left:20px;margin:8px 0 16px}
+        .section li{margin-bottom:6px}
+        .highlight-box{background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(168,85,247,0.08));border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .highlight-box.warning{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.08));border-color:rgba(245,158,11,0.3)}
+        .highlight-box.success{background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(16,185,129,0.08));border-color:rgba(52,211,153,0.3)}
+        .highlight-box h4{margin-top:0;color:#fbbf24}
+        .highlight-box.success h4{color:#34d399}
+        .code-block{background:#0f172a;border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:16px;margin:12px 0;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.82rem;color:#a5b4fc;line-height:1.6}
+        .code-block .comment{color:#64748b}
+        .code-block .keyword{color:#c084fc}
+        .code-block .string{color:#34d399}
+        .code-block .func{color:#fbbf24}
+        table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem}
+        th,td{border:1px solid rgba(99,102,241,0.15);padding:10px 14px;text-align:left}
+        th{background:rgba(99,102,241,0.12);color:#a5b4fc;font-weight:600}
+        td{color:#cbd5e1}
+        tr:hover td{background:rgba(99,102,241,0.05)}
+        .memory-tip{background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .memory-tip h4{color:#f9a8d4;margin:0 0 8px;font-size:0.95rem}
+        .memory-tip p,.memory-tip li{font-size:0.88rem;color:#e2a8d4}
+        .quiz-section{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(168,85,247,0.05));border:1px solid rgba(99,102,241,0.2);border-radius:16px;padding:28px;margin:30px 0}
+        .quiz-section h2{color:#a5b4fc}
+        .quiz-question{background:rgba(15,23,42,0.8);border:1px solid rgba(99,102,241,0.1);border-radius:12px;padding:20px;margin:16px 0}
+        .quiz-question .q-num{font-size:0.75rem;font-weight:700;color:#6366f1;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-question .q-text{font-size:0.93rem;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.6}
+        .quiz-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;margin:6px 0;border-radius:8px;cursor:pointer;border:1px solid rgba(99,102,241,0.08);transition:all 0.2s;font-size:0.88rem}
+        .quiz-option:hover{background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.2)}
+        .quiz-option input{margin-top:3px;accent-color:#6366f1}
+        .quiz-option.correct{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.4)}
+        .quiz-option.incorrect{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.4)}
+        .quiz-option .explanation{display:none;font-size:0.82rem;color:#94a3b8;margin-top:6px;padding-top:6px;border-top:1px solid rgba(99,102,241,0.1)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(99,102,241,0.3)}
+        .btn-secondary{background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.3)}.btn-secondary:hover{background:rgba(99,102,241,0.25)}
+        .result-box{display:none;background:rgba(15,23,42,0.8);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:24px;margin-top:20px;text-align:center}
+        .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
+        .example-box{background:rgba(15,23,42,0.8);border-left:3px solid #6366f1;border-radius:0 10px 10px 0;padding:16px 20px;margin:12px 0}
+        .example-box .label{font-size:0.75rem;font-weight:700;color:#6366f1;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.quiz-section{padding:20px}}
+    </style>
+</head>
+<body>
+<nav class="sticky-nav">
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <span class="sep">/</span>
+        <a class="active">Chapter 1</a>
+        <span class="sep">/</span>
+        <a href="ch02-regression-testing.html">Ch 2 →</a>
+    </div>
+    <div class="nav-brand">✨ Made by Chill House</div>
+</nav>
+<div class="bg-glow"></div>
+<div class="container">
+
+    <div class="chapter-header">
+        <div class="chapter-badge">Bab 1 — Materi + Quiz 9</div>
+        <h1>🧪 Unit Testing</h1>
+        <p>Pengujian unit terkecil dari perangkat lunak — fondasi utama untuk memastikan setiap bagian kode bekerja dengan benar dan aman.</p>
+    </div>
+
+    <!-- ===== MATERI LENGKAP ===== -->
+    <div class="section">
+        <h2>📖 Apa Itu Unit Testing?</h2>
+        <p><strong>Unit Testing</strong> adalah proses menguji <strong>bagian terkecil (unit)</strong> dari sebuah perangkat lunak secara <strong>terisolasi</strong> (terpisah dari bagian lain). Unit ini bisa berupa sebuah <strong>fungsi</strong>, <strong>method</strong>, atau <strong>class</strong>.</p>
+        <p>Bayangkan kamu sedang membuat sebuah kalkulator. Sebelum menguji seluruh kalkulator, kamu tes dulu satu per satu: fungsi penjumlahan benar nggak? Fungsi pembagian bisa handle pembagian nol nggak? Itulah <strong>unit testing</strong>.</p>
+
+        <h3>Tujuan Unit Testing</h3>
+        <ul>
+            <li>Menemukan <strong>bug sedini mungkin</strong> (di level paling kecil/awal)</li>
+            <li>Memastikan setiap fungsi individual bekerja sesuai yang diharapkan</li>
+            <li>Menjadikan kode lebih mudah di-<strong>refactor</strong> (diubah tanpa takut rusak)</li>
+            <li>Sebagai <strong>dokumentasi hidup</strong> — tes menjelaskan bagaimana fungsi seharusnya berperilaku</li>
+        </ul>
+
+        <h3>4 Prinsip Utama Unit Testing</h3>
+        <div class="highlight-box">
+            <table>
+                <tr><th>Prinsip</th><th>Penjelasan Mudah</th></tr>
+                <tr><td><strong>Isolasi</strong></td><td>Setiap tes berdiri sendiri, tidak tergantung pada komponen lain (database, API, dll.). Kalau tes gagal, kamu langsung tahu masalahnya di mana.</td></tr>
+                <tr><td><strong>Independen</strong></td><td>Urutan menjalankan tes tidak pengaruh. Tes A boleh jalan duluan atau tes B duluan, hasilnya harus sama.</td></tr>
+                <tr><td><strong>Cepat</strong></td><td>Unit test harus jalan sangat cepat (hitungan milidetik), karena jumlahnya bisa ribuan.</td></tr>
+                <tr><td><strong>Fokus</strong></td><td>Setiap tes hanya menguji SATU hal. Jangan campur-campur pengujian dalam satu tes.</td></tr>
+            </table>
+        </div>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan: "I-I-C-F" → Ingat "IICF"</h4>
+            <ul>
+                <li><strong>I</strong>solasi — Sendirian (terisolasi)</li>
+                <li><strong>I</strong>ndependen — Bebas urutan</li>
+                <li><strong>C</strong>epat — Kilat</li>
+                <li><strong>F</strong>okus — Satu hal saja</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🛠️ Framework Unit Testing</h2>
+        <p>Framework adalah alat bantu yang memudahkan kita membuat dan menjalankan unit test. Berikut framework populer berdasarkan bahasa pemrograman:</p>
+        <table>
+            <tr><th>Bahasa</th><th>Framework</th><th>Keterangan</th></tr>
+            <tr><td>Java</td><td><strong>JUnit, TestNG</strong></td><td>JUnit paling populer untuk Java. TestNG mendukung parameterized testing.</td></tr>
+            <tr><td>C# / .NET</td><td><strong>xUnit, NUnit, MSTest</strong></td><td>xUnit lebih modern, NUnit klasik</td></tr>
+            <tr><td>Python</td><td><strong>Pytest, unittest</strong></td><td>Pytest lebih fleksibel dan banyak dipakai</td></tr>
+            <tr><td>JavaScript</td><td><strong>Jest, Mocha, Jasmine</strong></td><td>Jest paling populer untuk React/Node.js</td></tr>
+            <tr><td>PHP</td><td><strong>PHPUnit</strong></td><td>Standar testing untuk PHP</td></tr>
+            <tr><td>Go</td><td><strong>testing (built-in)</strong></td><td>Go sudah punya package testing bawaan</td></tr>
+        </table>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan Framework</h4>
+            <p>Ingat saja: <strong>Java → JUnit</strong>, <strong>Python → Pytest</strong>, <strong>JS → Jest</strong>. Tiga ini paling sering keluar di soal.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Keuntungan Unit Testing</h2>
+        <ul>
+            <li><strong>Deteksi Bug Lebih Awal</strong> — Bug ditemukan saat coding, bukan saat sudah di-deploy. Lebih murah dan mudah diperbaiki.</li>
+            <li><strong>Refactoring Lebih Aman</strong> — Mau ubah kode? Jalankan tes dulu. Kalau hijau semua (pass), berarti aman.</li>
+            <li><strong>Dokumentasi Hidup</strong> — Unit test menjelaskan apa yang seharusnya dilakukan oleh fungsi, lebih baik dari komentar biasa.</li>
+            <li><strong>Meningkatkan Kualitas Kode</strong> — Kode yang testable biasanya juga kode yang bersih dan terstruktur.</li>
+            <li><strong>Mempercepat Development</strong> — Walaupun awalnya memakan waktu, dalam jangka panjang mempercepat karena mengurangi debugging.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔐 OWASP-Based Unit Testing (Sangat Penting!)</h2>
+        <p>Ini adalah bagian paling penting dari materi ini. <strong>OWASP</strong> (Open Web Application Security Project) mendefinisikan <strong>Top 10</strong> kerentanan keamanan web. Dalam unit testing, kita membuat tes khusus untuk memastikan kode kita <strong>tidak rentan</strong> terhadap ancaman-ancaman ini.</p>
+
+        <div class="highlight-box warning">
+            <h4>⚠️ Kenapa OWASP-Based Unit Testing Penting?</h4>
+            <p>Unit testing bukan hanya soal "apakah fungsinya berjalan" tapi juga "<strong>apakah fungsinya aman dari serangan?</strong>". Kita harus memastikan bahwa di level unit (fungsi terkecil), kode sudah bisa menangani <strong>input berbahaya</strong>.</p>
+        </div>
+
+        <h3>A1: Broken Access Control</h3>
+        <p><strong>Apa itu?</strong> Ketika pengguna bisa mengakses sesuatu yang <strong>seharusnya tidak boleh</strong> mereka akses. Contoh: user biasa bisa masuk ke halaman admin.</p>
+        <p><strong>Unit Test-nya:</strong> Uji bahwa fungsi otorisasi <strong>menolak akses</strong> jika role user tidak sesuai.</p>
+        <div class="code-block">
+<span class="comment"># Contoh: Tes akses ke fungsi admin oleh user biasa</span>
+<span class="keyword">def</span> <span class="func">test_guest_cannot_access_admin</span>():
+    user = User(role=<span class="string">"guest"</span>)
+    result = access_admin_panel(user)
+    <span class="keyword">assert</span> result == <span class="string">"Access Denied"</span>
+        </div>
+
+        <h3>A2: Cryptographic Failures</h3>
+        <p><strong>Apa itu?</strong> Kegagalan dalam melindungi data sensitif — misalnya menyimpan password dalam bentuk <strong>plain text</strong> (teks biasa, tidak di-hash/enkripsi).</p>
+        <p><strong>Unit Test-nya:</strong> Pastikan password yang disimpan <strong>tidak sama</strong> dengan password asli (artinya sudah di-hash).</p>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">test_password_is_hashed</span>():
+    password = <span class="string">"mypassword123"</span>
+    hashed = hash_password(password)
+    <span class="keyword">assert</span> hashed != password  <span class="comment"># Harus berbeda!</span>
+    <span class="keyword">assert</span> len(hashed) > 20   <span class="comment"># Hash biasanya panjang</span>
+        </div>
+
+        <h3>A3: Injection (SQL Injection)</h3>
+        <p><strong>Apa itu?</strong> Penyerang menyisipkan kode berbahaya melalui input — misalnya memasukkan perintah SQL di form login. Contoh input jahat: <code>' OR 1=1 --</code></p>
+        <p><strong>Unit Test-nya:</strong> Pastikan input berbahaya ditolak atau disanitasi.</p>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">test_sql_injection_prevented</span>():
+    malicious_input = <span class="string">"' OR 1=1 --"</span>
+    result = login(malicious_input, <span class="string">"any"</span>)
+    <span class="keyword">assert</span> result == <span class="string">"Login Failed"</span>  <span class="comment"># TIDAK boleh berhasil login!</span>
+        </div>
+
+        <h3>A4: Insecure Design</h3>
+        <p><strong>Apa itu?</strong> Desain aplikasi yang sudah dari awal <strong>tidak memikirkan keamanan</strong>. Contoh: tidak ada pembatasan jumlah percobaan login (brute force).</p>
+        <p><strong>Unit Test-nya:</strong> Uji bahwa setelah beberapa kali gagal login, akun terkunci.</p>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">test_account_lockout_after_failed_attempts</span>():
+    <span class="keyword">for</span> i <span class="keyword">in</span> range(5):
+        login(<span class="string">"user"</span>, <span class="string">"wrong_pass"</span>)
+    result = login(<span class="string">"user"</span>, <span class="string">"correct_pass"</span>)
+    <span class="keyword">assert</span> result == <span class="string">"Account Locked"</span>
+        </div>
+
+        <h3>A5: Security Misconfiguration</h3>
+        <p><strong>Apa itu?</strong> Konfigurasi keamanan yang salah — misalnya <strong>debug mode aktif di production</strong>, atau menggunakan password default.</p>
+        <p><strong>Unit Test-nya:</strong> Pastikan konfigurasi keamanan sudah benar.</p>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">test_debug_mode_disabled_in_production</span>():
+    config = load_config(<span class="string">"production"</span>)
+    <span class="keyword">assert</span> config[<span class="string">"DEBUG"</span>] == <span class="keyword">False</span>
+        </div>
+
+        <h3>A6: Vulnerable and Outdated Components</h3>
+        <p><strong>Apa itu?</strong> Menggunakan library atau framework yang sudah <strong>kadaluarsa</strong> dan memiliki celah keamanan yang sudah diketahui.</p>
+        <p><strong>Unit Test-nya:</strong> Cek versi dependency apakah sudah di atas versi minimum yang aman.</p>
+
+        <h3>A7: Identification and Authentication Failures</h3>
+        <p><strong>Apa itu?</strong> Kelemahan dalam proses login/autentikasi — misalnya menerima <strong>password lemah</strong> atau session yang tidak expired.</p>
+        <p><strong>Unit Test-nya:</strong> Pastikan password lemah ditolak.</p>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">test_weak_password_rejected</span>():
+    result = register(<span class="string">"user"</span>, <span class="string">"123"</span>)  <span class="comment"># Password terlalu pendek</span>
+    <span class="keyword">assert</span> result == <span class="string">"Password Too Weak"</span>
+        </div>
+
+        <h3>A8: Software and Data Integrity Failures</h3>
+        <p><strong>Apa itu?</strong> Kegagalan memastikan integritas software — misalnya tidak memverifikasi <strong>checksum/signature</strong> saat update software.</p>
+        <p><strong>Unit Test-nya:</strong> Pastikan file yang diunduh memiliki checksum yang valid.</p>
+
+        <h3>A9: Security Logging and Monitoring Failures</h3>
+        <p><strong>Apa itu?</strong> Tidak adanya <strong>pencatatan (logging)</strong> aktivitas keamanan — misalnya gagal login tidak dicatat, sehingga serangan tidak terdeteksi.</p>
+        <p><strong>Unit Test-nya:</strong> Pastikan event keamanan tercatat di log.</p>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">test_failed_login_is_logged</span>():
+    login(<span class="string">"user"</span>, <span class="string">"wrong"</span>)
+    logs = get_security_logs()
+    <span class="keyword">assert</span> <span class="string">"Failed login attempt"</span> <span class="keyword">in</span> logs
+        </div>
+
+        <h3>A10: Server-Side Request Forgery (SSRF)</h3>
+        <p><strong>Apa itu?</strong> Penyerang memanfaatkan server untuk melakukan request ke resource internal yang seharusnya tidak boleh diakses dari luar (misalnya <code>http://localhost/admin</code>).</p>
+        <p><strong>Unit Test-nya:</strong> Pastikan URL internal diblokir.</p>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">test_ssrf_internal_url_blocked</span>():
+    result = fetch_url(<span class="string">"http://localhost/admin"</span>)
+    <span class="keyword">assert</span> result == <span class="string">"Blocked: Internal URL not allowed"</span>
+        </div>
+
+        <div class="memory-tip">
+            <h4>💡 Tips Hafalan OWASP Top 10 — "BCIIS VISSS"</h4>
+            <ul>
+                <li><strong>B</strong>roken Access Control</li>
+                <li><strong>C</strong>ryptographic Failures</li>
+                <li><strong>I</strong>njection</li>
+                <li><strong>I</strong>nsecure Design</li>
+                <li><strong>S</strong>ecurity Misconfiguration</li>
+                <li><strong>V</strong>ulnerable Components</li>
+                <li><strong>I</strong>dentification & Auth Failures</li>
+                <li><strong>S</strong>oftware Integrity Failures</li>
+                <li><strong>S</strong>ecurity Logging Failures</li>
+                <li><strong>S</strong>SRF</li>
+            </ul>
+            <p>Atau ingat urutan A1–A10 saja. Yang paling sering keluar di soal: <strong>Broken Access Control, Injection, Cryptographic Failures</strong>.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧩 Mocking & Isolation dalam Unit Testing</h2>
+        <p>Karena unit test harus <strong>terisolasi</strong>, kita tidak bisa langsung terhubung ke database, API, atau layanan eksternal saat testing. Solusinya adalah menggunakan <strong>Mock</strong> — objek tiruan yang meniru perilaku objek asli.</p>
+
+        <h3>Kenapa Perlu Mocking?</h3>
+        <ul>
+            <li>Unit test harus <strong>cepat</strong> — kalau harus konek ke database, jadi lambat</li>
+            <li>Unit test harus <strong>terisolasi</strong> — kalau database error, tes ikut gagal padahal kode-nya benar</li>
+            <li>Memungkinkan kita <strong>mensimulasikan skenario</strong> yang sulit direproduksi (misal: jaringan putus, server error)</li>
+        </ul>
+
+        <div class="example-box">
+            <div class="label">Contoh Skenario</div>
+            <p>Kamu punya fungsi <code>get_user_data()</code> yang mengambil data dari database. Saat unit test, kamu <strong>mock</strong> fungsi database-nya agar mengembalikan data dummy tanpa perlu koneksi database sungguhan.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
+        <div class="highlight-box success">
+            <h4>✅ Ringkasan Kunci untuk UAS</h4>
+            <ol>
+                <li><strong>Unit Testing</strong> = menguji bagian <strong>terkecil</strong> dari software secara <strong>terisolasi</strong></li>
+                <li>4 Prinsip: <strong>Isolasi, Independen, Cepat, Fokus</strong></li>
+                <li>Tujuan utama dari perspektif keamanan: memastikan <strong>setiap fungsi terkecil mampu menangani input berbahaya</strong></li>
+                <li><strong>Broken Access Control</strong> = user biasa bisa akses fungsi admin → harus diuji dengan unit test</li>
+                <li><strong>Cryptographic Failures</strong> = password disimpan plain text → tes: hash ≠ password asli</li>
+                <li><strong>Injection</strong> = input seperti <code>' OR 1=1 --</code> → tes: harus ditolak</li>
+                <li><strong>Mocking</strong> digunakan agar unit test tetap terisolasi dari dependency eksternal (database, API, dll.)</li>
+                <li>Framework: Java → JUnit, Python → Pytest, JavaScript → Jest</li>
+                <li>Unit test = <strong>bukan untuk menguji integrasi antar komponen</strong>, itu tugas Integration Testing</li>
+                <li><strong>Setiap tes hanya menguji SATU hal</strong> (prinsip Fokus)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Contoh Soal & Jawaban</h2>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 1</div>
+            <p><strong>Apa tujuan utama unit testing dari perspektif keamanan perangkat lunak?</strong></p>
+            <p>A. Menguji seluruh sistem secara bersamaan<br>
+            B. Memastikan setiap fungsi terkecil mampu menangani input berbahaya secara terisolasi<br>
+            C. Menguji performa server<br>
+            D. Menguji UI aplikasi</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: B</strong> — Unit testing dari perspektif keamanan bertujuan memastikan bahwa di level fungsi terkecil, kode sudah bisa menangani input berbahaya.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 2</div>
+            <p><strong>Seorang tester menulis unit test di mana akun guest mencoba mengakses fungsi admin dan hasilnya harus "Access Denied". Kerentanan OWASP apa yang sedang diuji?</strong></p>
+            <p>A. SQL Injection<br>
+            B. Cryptographic Failures<br>
+            C. Broken Access Control<br>
+            D. SSRF</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: C</strong> — Broken Access Control adalah tentang pengguna yang mengakses resource yang seharusnya tidak boleh mereka akses.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="label">Contoh Soal 3</div>
+            <p><strong>Kenapa mocking/isolation penting dalam unit testing?</strong></p>
+            <p>A. Agar tes bisa mengetes semua komponen sekaligus<br>
+            B. Agar unit test dapat berjalan independen dari dependency eksternal seperti database<br>
+            C. Agar tes bisa berjalan lebih lambat<br>
+            D. Agar tes tergantung satu sama lain</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: B</strong> — Mocking memungkinkan unit test berjalan tanpa perlu koneksi sungguhan ke dependency eksternal.</p>
+        </div>
+    </div>
+
+    <!-- ===== LATIHAN SOAL INTERAKTIF ===== -->
+    <div class="quiz-section" id="quizSection">
+        <h2>🎮 Latihan Soal Interaktif — Unit Testing</h2>
+        <p style="color:#94a3b8;margin-bottom:20px">Kerjakan 15 soal berikut, lalu klik Submit untuk melihat hasilnya. Jawaban tersimpan otomatis.</p>
+
+        <div id="quizContainer"></div>
+
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="submitQuiz()">📊 Submit & Lihat Hasil</button>
+            <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Reset</button>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <div class="score" id="scoreText">0/15</div>
+            <div class="score-label">Skor Anda</div>
+            <p style="margin-top:12px;color:#94a3b8;font-size:0.88rem" id="scoreMessage"></p>
+        </div>
+    </div>
+
+    <a href="ch02-regression-testing.html" class="btn btn-primary" style="margin-top:20px;text-decoration:none">Lanjut ke Bab 2: Regression Testing →</a>
+
+</div>
+
+<script>
+const questions = [
+    {
+        q: "Apa yang dimaksud dengan Unit Testing?",
+        options: [
+            "Menguji seluruh sistem aplikasi secara bersamaan",
+            "Menguji bagian terkecil dari perangkat lunak secara terisolasi untuk memastikan setiap unit berfungsi dengan benar",
+            "Menguji performa jaringan server",
+            "Menguji tampilan visual aplikasi"
+        ],
+        answer: 1,
+        explanation: "Unit testing menguji unit terkecil (fungsi/method) secara terisolasi."
+    },
+    {
+        q: "Prinsip mana yang menyatakan bahwa unit test harus bisa dijalankan dalam urutan apapun?",
+        options: ["Isolasi", "Fokus", "Independen", "Cepat"],
+        answer: 2,
+        explanation: "Prinsip Independen berarti tes tidak bergantung pada urutan eksekusi."
+    },
+    {
+        q: "Dari perspektif keamanan, tujuan utama unit testing adalah...",
+        options: [
+            "Menguji kecepatan loading halaman web",
+            "Memastikan tampilan UI responsif di semua device",
+            "Memastikan setiap fungsi terkecil mampu menangani input berbahaya secara terisolasi",
+            "Menguji koneksi database di production"
+        ],
+        answer: 2,
+        explanation: "Unit testing keamanan fokus pada kemampuan setiap fungsi menangani input berbahaya."
+    },
+    {
+        q: "Seorang tester menulis test berikut: user dengan role 'guest' mencoba mengakses admin panel dan harus mendapat 'Access Denied'. Kerentanan OWASP apa yang diuji?",
+        options: ["Injection", "SSRF", "Broken Access Control", "Cryptographic Failures"],
+        answer: 2,
+        explanation: "Broken Access Control = pengguna mengakses resource yang tidak diizinkan."
+    },
+    {
+        q: "Framework unit testing yang paling populer untuk bahasa Python adalah...",
+        options: ["JUnit", "Jest", "Pytest", "xUnit"],
+        answer: 2,
+        explanation: "Pytest adalah framework unit testing paling populer untuk Python."
+    },
+    {
+        q: "Apa kegunaan mocking dalam unit testing?",
+        options: [
+            "Menghubungkan tes ke database production",
+            "Membuat tes berjalan lebih lambat agar lebih teliti",
+            "Mengisolasi unit dari dependency eksternal seperti database dan API",
+            "Menghapus semua test case yang gagal"
+        ],
+        answer: 2,
+        explanation: "Mocking menggantikan dependency eksternal dengan objek tiruan agar tes terisolasi."
+    },
+    {
+        q: "Test berikut memeriksa bahwa password yang disimpan ≠ password asli. Kerentanan OWASP apa yang diuji?",
+        options: ["Broken Access Control", "Injection", "Cryptographic Failures", "Insecure Design"],
+        answer: 2,
+        explanation: "Cryptographic Failures = data sensitif tidak dienkripsi/di-hash dengan benar."
+    },
+    {
+        q: "Input ' OR 1=1 -- digunakan untuk menguji kerentanan...",
+        options: ["SSRF", "SQL Injection", "XSS", "Broken Access Control"],
+        answer: 1,
+        explanation: "' OR 1=1 -- adalah payload klasik SQL Injection."
+    },
+    {
+        q: "Prinsip unit testing yang menyatakan setiap tes hanya menguji satu hal disebut...",
+        options: ["Independen", "Isolasi", "Cepat", "Fokus"],
+        answer: 3,
+        explanation: "Prinsip Fokus = setiap tes hanya menguji satu fungsionalitas."
+    },
+    {
+        q: "Tes yang memverifikasi bahwa akun terkunci setelah 5 kali gagal login sedang menguji kerentanan...",
+        options: ["Cryptographic Failures", "Insecure Design", "SSRF", "Injection"],
+        answer: 1,
+        explanation: "Insecure Design = tidak ada mekanisme keamanan dasar seperti rate limiting/lockout."
+    },
+    {
+        q: "Framework unit testing standar untuk Java adalah...",
+        options: ["Pytest", "PHPUnit", "JUnit", "Mocha"],
+        answer: 2,
+        explanation: "JUnit adalah framework unit testing standar dan paling populer untuk Java."
+    },
+    {
+        q: "Keuntungan unit testing yang memungkinkan developer mengubah kode tanpa takut merusak fungsionalitas yang sudah ada adalah...",
+        options: [
+            "Dokumentasi hidup",
+            "Refactoring yang lebih aman",
+            "Meningkatkan kecepatan server",
+            "Mengurangi jumlah fitur"
+        ],
+        answer: 1,
+        explanation: "Unit test memberikan jaring pengaman saat melakukan refactoring."
+    },
+    {
+        q: "Tes yang memastikan debug mode dimatikan di environment production menguji kerentanan...",
+        options: ["Injection", "Security Misconfiguration", "SSRF", "Broken Access Control"],
+        answer: 1,
+        explanation: "Security Misconfiguration = konfigurasi keamanan yang salah/default."
+    },
+    {
+        q: "Tes yang memverifikasi bahwa event 'Failed login attempt' tercatat di log menguji kerentanan...",
+        options: [
+            "Cryptographic Failures",
+            "Security Logging and Monitoring Failures",
+            "Injection",
+            "Insecure Design"
+        ],
+        answer: 1,
+        explanation: "Security Logging Failures = aktivitas keamanan tidak dicatat dengan baik."
+    },
+    {
+        q: "SSRF (Server-Side Request Forgery) terjadi ketika...",
+        options: [
+            "Password disimpan dalam plain text",
+            "User biasa mengakses halaman admin",
+            "Penyerang memanfaatkan server untuk melakukan request ke resource internal yang seharusnya diblokir",
+            "Database tidak dienkripsi"
+        ],
+        answer: 2,
+        explanation: "SSRF = server dipaksa melakukan request ke resource internal (misal localhost)."
+    }
+];
+
+function renderQuiz() {
+    const container = document.getElementById('quizContainer');
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers') || '{}');
+
+    container.innerHTML = questions.map((q, i) => `
+        <div class="quiz-question" id="qq-${i}">
+            <div class="q-num">Soal ${i+1} dari ${questions.length}</div>
+            <div class="q-text">${q.q}</div>
+            ${q.options.map((opt, j) => `
+                <label class="quiz-option" id="opt-${i}-${j}">
+                    <input type="radio" name="q${i}" value="${j}" ${saved[i] == j ? 'checked' : ''} onchange="saveAnswer(${i}, ${j})">
+                    <span>${opt}</span>
+                </label>
+            `).join('')}
+        </div>
+    `).join('');
+}
+
+function saveAnswer(qi, oi) {
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers') || '{}');
+    saved[qi] = oi;
+    localStorage.setItem('pkpl_quiz_ch01_answers', JSON.stringify(saved));
+}
+
+function submitQuiz() {
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers') || '{}');
+    let correct = 0;
+
+    questions.forEach((q, i) => {
+        const userAns = saved[i];
+        q.options.forEach((_, j) => {
+            const el = document.getElementById(`opt-${i}-${j}`);
+            el.classList.remove('correct', 'incorrect');
+            const oldExp = el.querySelector('.explanation');
+            if (oldExp) oldExp.remove();
+        });
+
+        if (userAns !== undefined) {
+            if (parseInt(userAns) === q.answer) {
+                correct++;
+                document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct');
+            } else {
+                document.getElementById(`opt-${i}-${userAns}`).classList.add('incorrect');
+                document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct');
+            }
+        } else {
+            document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct');
+        }
+
+        const expDiv = document.createElement('div');
+        expDiv.className = 'explanation';
+        expDiv.style.display = 'block';
+        expDiv.textContent = '💡 ' + q.explanation;
+        document.getElementById(`opt-${i}-${q.answer}`).appendChild(expDiv);
+    });
+
+    const resultBox = document.getElementById('resultBox');
+    resultBox.style.display = 'block';
+    document.getElementById('scoreText').textContent = `${correct}/${questions.length}`;
+    const pct = Math.round((correct/questions.length)*100);
+    document.getElementById('scoreMessage').textContent =
+        pct >= 80 ? '🎉 Luar biasa! Kamu sudah menguasai materi Unit Testing!' :
+        pct >= 60 ? '👍 Bagus! Tapi masih ada yang perlu dipelajari lagi.' :
+        '📚 Ayo pelajari lagi materinya dan coba lagi!';
+
+    localStorage.setItem('pkpl_quiz_ch01', JSON.stringify({correct, total: questions.length}));
+    resultBox.scrollIntoView({behavior:'smooth'});
+}
+
+function resetQuiz() {
+    localStorage.removeItem('pkpl_quiz_ch01_answers');
+    localStorage.removeItem('pkpl_quiz_ch01');
+    document.getElementById('resultBox').style.display = 'none';
+    renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
