@@ -868,6 +868,19 @@ window.addEventListener('popstate', function(event) {
     }
 });
 
+// Intercept navigasi dari klik link di navbar (Home, Ch 5, dll)
+document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (!isSubmitted() && href && !href.startsWith('#')) {
+            const leave = confirm('Yakin ingin pindah halaman? Ujian sedang berjalan dan jawaban belum di-submit.');
+            if (!leave) {
+                e.preventDefault(); // Batalkan pindah halaman
+            }
+        }
+    });
+});
+
 // Init
 renderQuiz();
 updateProgress();
