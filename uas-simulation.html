@@ -853,6 +853,21 @@ const unloadHandler = function (e) {
 window.addEventListener('beforeunload', unloadHandler);
 window.onbeforeunload = unloadHandler; // Fallback tambahan untuk iOS/Mobile Safari
 
+// Intercept tombol back di HP (swipe back / tombol back android)
+history.pushState(null, null, location.href);
+window.addEventListener('popstate', function(event) {
+    if (!isSubmitted()) {
+        const leave = confirm('Yakin ingin kembali? Ujian sedang berjalan dan jawaban belum di-submit.');
+        if (!leave) {
+            // Cegah kembali dengan menambah state baru
+            history.pushState(null, null, location.href);
+        } else {
+            // Biarkan user kembali
+            history.back();
+        }
+    }
+});
+
 // Init
 renderQuiz();
 updateProgress();
