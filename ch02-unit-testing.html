@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bab 1: Unit Testing — PKPL Study Hub</title>
+    <title>Bab 6: Unit Testing — PKPL Study Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
@@ -91,9 +91,11 @@
     <div class="nav-links">
         <a href="index.html">🏠 Home</a>
         <span class="sep">/</span>
-        <a class="active">Chapter 1</a>
+        <a href="ch01-database-security.html">← Ch 1</a>
         <span class="sep">/</span>
-        <a href="ch02-regression-testing.html">Ch 2 →</a>
+        <a class="active">Chapter 2</a>
+        <span class="sep">/</span>
+        <a href="ch03-regression-testing.html">Ch 3 →</a>
     </div>
     <div class="nav-brand">✨ Made by Chill House</div>
 </nav>
@@ -101,7 +103,7 @@
 <div class="container">
 
     <div class="chapter-header">
-        <div class="chapter-badge">Bab 1 — Materi + Quiz 9</div>
+        <div class="chapter-badge">Bab 6 — Materi + Quiz 9</div>
         <h1>🧪 Unit Testing</h1>
         <p>Pengujian unit terkecil dari perangkat lunak — fondasi utama untuk memastikan setiap bagian kode bekerja dengan benar dan aman.</p>
     </div>
@@ -342,7 +344,7 @@
     <!-- Tips Menghafal -->
     <div class="section" id="s7">
         <div class="memory-tips-section">
-            <h3>🧠 TIPS MENGHAFAL — Bab 1: Unit Testing</h3>
+            <h3>🧠 TIPS MENGHAFAL — Bab 6: Unit Testing</h3>
             <ol>
                 <li><strong>"IICF"</strong> → 4 Prinsip Unit Testing: <strong>I</strong>solasi (sendirian), <strong>I</strong>ndependen (bebas urutan), <strong>C</strong>epat (kilat), <strong>F</strong>okus (satu hal saja). Bayangkan orang yang kerja sendiri (isolasi), bebas (independen), cepat, dan fokus.</li>
                 <li><strong>"Java → JUnit, Python → Pytest, JS → Jest"</strong> → Tiga framework paling penting. Semua berawalan huruf J/P! Java=JUnit, Python=Pytest, JavaScript=Jest.</li>
@@ -411,7 +413,7 @@
         </div>
     </div>
 
-    <a href="ch02-regression-testing.html" class="btn btn-primary" style="margin-top:20px;text-decoration:none">Lanjut ke Bab 2: Regression Testing →</a>
+    <a href="ch03-regression-testing.html" class="btn btn-primary" style="margin-top:20px;text-decoration:none">Lanjut ke Bab 6: Regression Testing →</a>
 
 </div>
 
@@ -541,7 +543,7 @@ const questions = [
 
 function renderQuiz() {
     const container = document.getElementById('quizContainer');
-    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers') || '{}');
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers') || '{}');
 
     container.innerHTML = questions.map((q, i) => `
         <div class="quiz-question" id="qq-${i}">
@@ -558,13 +560,13 @@ function renderQuiz() {
 }
 
 function saveAnswer(qi, oi) {
-    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers') || '{}');
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers') || '{}');
     saved[qi] = oi;
-    localStorage.setItem('pkpl_quiz_ch01_answers', JSON.stringify(saved));
+    localStorage.setItem('pkpl_quiz_ch02_answers', JSON.stringify(saved));
 }
 
 function submitQuiz() {
-    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers') || '{}');
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers') || '{}');
     let correct = 0;
 
     questions.forEach((q, i) => {
@@ -604,13 +606,13 @@ function submitQuiz() {
         pct >= 60 ? '👍 Bagus! Tapi masih ada yang perlu dipelajari lagi.' :
         '📚 Ayo pelajari lagi materinya dan coba lagi!';
 
-    localStorage.setItem('pkpl_quiz_ch01', JSON.stringify({correct, total: questions.length}));
+    localStorage.setItem('pkpl_quiz_ch02', JSON.stringify({correct, total: questions.length}));
     resultBox.scrollIntoView({behavior:'smooth'});
 }
 
 function resetQuiz() {
-    localStorage.removeItem('pkpl_quiz_ch01_answers');
-    localStorage.removeItem('pkpl_quiz_ch01');
+    localStorage.removeItem('pkpl_quiz_ch02_answers');
+    localStorage.removeItem('pkpl_quiz_ch02');
     document.getElementById('resultBox').style.display = 'none';
     renderQuiz();
 }

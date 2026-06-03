@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bab 2: Regression Testing — PKPL Study Hub</title>
+    <title>Bab 6: Regression Testing — PKPL Study Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
@@ -87,11 +87,11 @@
     <div class="nav-links">
         <a href="index.html">🏠 Home</a>
         <span class="sep">/</span>
-        <a href="ch01-unit-testing.html">← Ch 1</a>
+        <a href="ch02-unit-testing.html">← Ch 2</a>
         <span class="sep">/</span>
-        <a class="active">Chapter 2</a>
+        <a class="active">Chapter 3</a>
         <span class="sep">/</span>
-        <a href="ch03-integration-system-acceptance.html">Ch 3 →</a>
+        <a href="ch04-integration-system-acceptance.html">Ch 4 →</a>
     </div>
     <div class="nav-brand">✨ Made by Chill House</div>
 </nav>
@@ -99,7 +99,7 @@
 <div class="container">
 
     <div class="chapter-header">
-        <div class="chapter-badge">Bab 2 — Materi + Quiz 10</div>
+        <div class="chapter-badge">Bab 6 — Materi + Quiz 10</div>
         <h1>🔄 Regression Testing</h1>
         <p>Memastikan bahwa perubahan kode (fix bug, fitur baru, refactor) tidak merusak fungsi yang sebelumnya sudah berjalan dengan benar.</p>
     </div>
@@ -292,7 +292,7 @@
     <!-- Tips Menghafal -->
     <div class="section" id="s9">
         <div class="memory-tips-section">
-            <h3>🧠 TIPS MENGHAFAL — Bab 2: Regression Testing</h3>
+            <h3>🧠 TIPS MENGHAFAL — Bab 6: Regression Testing</h3>
             <ol>
                 <li><strong>"Regression = Mundur/Rusak"</strong> → Apakah kode baru bikin fitur lama jadi mundur/rusak? Kalau "Retesting" = Mengulang (apakah bug-nya beneran fix?).</li>
                 <li><strong>"Retesting = Sempit, Regression = Luas"</strong> → Retesting fokus ke 1 bug itu saja, Regression fokus ke seluruh sistem yang mungkin terdampak.</li>
@@ -361,8 +361,8 @@
     </div>
 
     <div class="nav-buttons">
-        <a href="ch01-unit-testing.html" class="btn btn-secondary" style="text-decoration:none">← Bab 1: Unit Testing</a>
-        <a href="ch03-integration-system-acceptance.html" class="btn btn-primary" style="text-decoration:none">Bab 3: Integration Testing →</a>
+        <a href="ch02-unit-testing.html" class="btn btn-secondary" style="text-decoration:none">← Bab 2: Unit Testing</a>
+        <a href="ch04-integration-system-acceptance.html" class="btn btn-primary" style="text-decoration:none">Bab 4: Integration →</a>
     </div>
 </div>
 
@@ -537,7 +537,7 @@ const questions = [
 
 function renderQuiz() {
     const container = document.getElementById('quizContainer');
-    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers') || '{}');
+    const saved = JSON.parse(localStorage.getItem('pkpl_quiz_ch03_answers') || '{}');
     container.innerHTML = questions.map((q, i) => `
         <div class="quiz-question" id="qq-${i}">
             <div class="q-num">Soal ${i+1} dari ${questions.length}</div>
@@ -552,10 +552,10 @@ function renderQuiz() {
     `).join('');
 }
 
-function saveAnswer(qi,oi){const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers')||'{}');s[qi]=oi;localStorage.setItem('pkpl_quiz_ch02_answers',JSON.stringify(s))}
+function saveAnswer(qi,oi){const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch03_answers')||'{}');s[qi]=oi;localStorage.setItem('pkpl_quiz_ch03_answers',JSON.stringify(s))}
 
 function submitQuiz(){
-    const saved=JSON.parse(localStorage.getItem('pkpl_quiz_ch02_answers')||'{}');let correct=0;
+    const saved=JSON.parse(localStorage.getItem('pkpl_quiz_ch03_answers')||'{}');let correct=0;
     questions.forEach((q,i)=>{
         q.options.forEach((_,j)=>{const el=document.getElementById(`opt-${i}-${j}`);el.classList.remove('correct','incorrect');const old=el.querySelector('.explanation');if(old)old.remove()});
         const ua=saved[i];
@@ -564,10 +564,10 @@ function submitQuiz(){
     });
     const rb=document.getElementById('resultBox');rb.style.display='block';document.getElementById('scoreText').textContent=`${correct}/${questions.length}`;
     const pct=Math.round((correct/questions.length)*100);document.getElementById('scoreMessage').textContent=pct>=80?'🎉 Luar biasa! Kamu sudah menguasai Regression Testing!':pct>=60?'👍 Bagus! Tapi masih ada yang perlu dipelajari lagi.':'📚 Ayo pelajari lagi materinya!';
-    localStorage.setItem('pkpl_quiz_ch02',JSON.stringify({correct,total:questions.length}));rb.scrollIntoView({behavior:'smooth'});
+    localStorage.setItem('pkpl_quiz_ch03',JSON.stringify({correct,total:questions.length}));rb.scrollIntoView({behavior:'smooth'});
 }
 
-function resetQuiz(){localStorage.removeItem('pkpl_quiz_ch02_answers');localStorage.removeItem('pkpl_quiz_ch02');document.getElementById('resultBox').style.display='none';renderQuiz()}
+function resetQuiz(){localStorage.removeItem('pkpl_quiz_ch03_answers');localStorage.removeItem('pkpl_quiz_ch03');document.getElementById('resultBox').style.display='none';renderQuiz()}
 renderQuiz();
 </script>
 </body>

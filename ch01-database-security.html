@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bab 6: Database Security — PKPL Study Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,185,129,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+        .nav-links::-webkit-scrollbar{display:none}
+        .nav-links a{white-space:nowrap}
+        .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
+        .nav-links a:hover{color:#6ee7b7;background:rgba(16,185,129,0.1);text-decoration:none}
+        .nav-links a.active{color:#e2e8f0;font-weight:600}
+        .nav-links .sep{color:#1e293b;margin:0 2px;font-size:0.7rem;user-select:none}
+        .nav-brand{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15));border:1px solid rgba(99,102,241,0.25);border-radius:50px;font-size:0.78rem;font-weight:600;color:#c4b5fd;white-space:nowrap}
+        body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e8f0;line-height:1.7;padding-top:56px}
+        .bg-glow{position:fixed;bottom:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(16,185,129,0.12) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .container{max-width:900px;margin:0 auto;padding:30px 20px;position:relative;z-index:1}
+        a{color:#6ee7b7;text-decoration:none}a:hover{text-decoration:underline}
+        .back-link{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:#64748b;margin-bottom:24px;transition:color 0.2s}.back-link:hover{color:#6ee7b7;text-decoration:none}
+        .chapter-header{margin-bottom:40px;animation:fadeIn 0.6s ease}
+        .chapter-badge{display:inline-block;padding:5px 14px;background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(52,211,153,0.2));border:1px solid rgba(16,185,129,0.3);border-radius:50px;font-size:0.75rem;font-weight:600;color:#6ee7b7;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+        .chapter-header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e2e8f0,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .chapter-header p{color:#94a3b8;font-size:1rem}
+        .section{background:rgba(15,23,42,0.6);border:1px solid rgba(16,185,129,0.1);border-radius:16px;padding:28px;margin-bottom:24px;backdrop-filter:blur(10px)}
+        .section h2{font-size:1.4rem;font-weight:800;color:#e2e8f0;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .section h3{font-size:1.1rem;font-weight:700;color:#6ee7b7;margin:20px 0 10px;padding-left:12px;border-left:3px solid #10b981}
+        .section h4{font-size:0.95rem;font-weight:600;color:#34d399;margin:14px 0 8px}
+        .section p,.section li{font-size:0.92rem;color:#cbd5e1;line-height:1.8}
+        .section ul,.section ol{padding-left:20px;margin:8px 0 16px}
+        .section li{margin-bottom:6px}
+        .highlight-box{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(52,211,153,0.08));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .highlight-box.warning{background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(248,113,113,0.08));border-color:rgba(239,68,68,0.3)}
+        .highlight-box.success{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(96,165,250,0.08));border-color:rgba(59,130,246,0.3)}
+        .highlight-box h4{margin-top:0}
+        table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem}
+        th,td{border:1px solid rgba(16,185,129,0.15);padding:10px 14px;text-align:left}
+        th{background:rgba(16,185,129,0.1);color:#6ee7b7;font-weight:600}
+        td{color:#cbd5e1}
+        tr:hover td{background:rgba(16,185,129,0.05)}
+        .memory-tip{background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:20px;margin:16px 0}
+        .memory-tip h4{color:#f9a8d4;margin:0 0 8px;font-size:0.95rem}
+        .memory-tip p,.memory-tip li{font-size:0.88rem;color:#e2a8d4}
+        .example-box{background:rgba(15,23,42,0.8);border-left:3px solid #10b981;border-radius:0 10px 10px 0;padding:16px 20px;margin:12px 0}
+        .example-box .label{font-size:0.75rem;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-section{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(52,211,153,0.05));border:1px solid rgba(16,185,129,0.2);border-radius:16px;padding:28px;margin:30px 0}
+        .quiz-section h2{color:#6ee7b7}
+        .quiz-question{background:rgba(15,23,42,0.8);border:1px solid rgba(16,185,129,0.1);border-radius:12px;padding:20px;margin:16px 0}
+        .quiz-question .q-num{font-size:0.75rem;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .quiz-question .q-text{font-size:0.93rem;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.6}
+        .quiz-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;margin:6px 0;border-radius:8px;cursor:pointer;border:1px solid rgba(16,185,129,0.08);transition:all 0.2s;font-size:0.88rem}
+        .quiz-option:hover{background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.2)}
+        .quiz-option input{margin-top:3px;accent-color:#10b981}
+        .quiz-option.correct{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.4)}
+        .quiz-option.incorrect{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.4)}
+        .quiz-option .explanation{display:none;font-size:0.82rem;color:#94a3b8;margin-top:6px;padding-top:6px;border-top:1px solid rgba(16,185,129,0.1)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-primary{background:linear-gradient(135deg,#10b981,#34d399);color:#0a0e1a}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,0.3)}
+        .btn-secondary{background:rgba(16,185,129,0.15);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)}.btn-secondary:hover{background:rgba(16,185,129,0.25)}
+        .result-box{display:none;background:rgba(15,23,42,0.8);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:24px;margin-top:20px;text-align:center}
+        .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#10b981,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
+        .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        .toc{background:rgba(17,24,39,0.7);backdrop-filter:blur(16px);border:1px solid rgba(16,185,129,0.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;animation:fadeIn 0.6s ease}
+        .toc h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#10b981;margin-bottom:16px}
+        .toc ol{padding-left:20px}
+        .toc li{margin-bottom:8px}
+        .toc a{color:#94a3b8;text-decoration:none;font-size:0.9rem;transition:color 0.3s}
+        .toc a:hover{color:#6ee7b7}
+        .memory-tips-section{background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(244,63,94,0.06));border:1px solid rgba(16,185,129,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .memory-tips-section h3{color:#10b981;font-size:1rem;margin-bottom:16px}
+        .memory-tips-section li{margin-bottom:10px;color:#cbd5e1;font-size:0.92rem}
+        .memory-tips-section li strong{color:#6ee7b7}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}.toc{padding:20px 24px}}
+    </style>
+</head>
+<body>
+<nav class="sticky-nav">
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <span class="sep">/</span>
+        <a class="active">Chapter 1</a>
+        <span class="sep">/</span>
+        <a href="ch02-unit-testing.html">Ch 2 →</a>
+    </div>
+    <div class="nav-brand">✨ Made by Chill House</div>
+</nav>
+<div class="bg-glow"></div>
+<div class="container">
+
+    <div class="chapter-header">
+        <div class="chapter-badge">Bab 1 — Materi + Quiz 8</div>
+        <h1>🛡️ Database Security</h1>
+        <p>Memahami ancaman injeksi SQL, manajemen konkurensi (ACID), kontrol akses (RBAC), serta teknik enkripsi pada basis data.</p>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+        <h3>📑 Daftar Isi</h3>
+        <ol>
+            <li><a href="#s1">Overview of SQL & SQL Injection</a></li>
+            <li><a href="#s2">Language-specific Defenses</a></li>
+            <li><a href="#s3">Maintaining Database Correctness (ACID)</a></li>
+            <li><a href="#s4">Managing Activity Concurrency</a></li>
+            <li><a href="#s5">RBAC Security in DBMS</a></li>
+            <li><a href="#s6">Encryption in DBMS</a></li>
+            <li><a href="#s7">Poin-Poin Penting</a></li>
+            <li><a href="#s8">Tips Menghafal</a></li>
+            <li><a href="#s9">Contoh Soal & Jawaban</a></li>
+            <li><a href="#quizSection">Latihan Soal Interaktif</a></li>
+        </ol>
+    </div>
+
+    <div class="section" id="s1">
+        <h2>💉 Overview of SQL & SQL Injection</h2>
+        <p>Database relasional menggunakan SQL (Structured Query Language) untuk manipulasi data. Jika input pengguna tidak divalidasi, maka akan rawan terkena <strong>SQL Injection (SQLi)</strong>.</p>
+        
+        <h3>Konsep Dasar</h3>
+        <ul>
+            <li><strong>Database</strong>: Kumpulan tabel, views, stored procedures.</li>
+            <li><strong>Table</strong>: Baris (Row) dan Kolom (Column).</li>
+            <li><strong>Primary Key</strong>: Identifier unik untuk tiap baris.</li>
+            <li><strong>Foreign Key</strong>: Relasi penghubung ke Primary Key di tabel lain.</li>
+        </ul>
+
+        <h3>SQL Injection (SQLi)</h3>
+        <p>Terjadi saat penyerang memasukkan (inject) <strong>kode SQL berbahaya</strong> melalui input form atau URL parameter yang tidak disanitasi. Tujuannya untuk mencuri data, merusak data, atau bypass autentikasi.</p>
+        
+        <div class="example-box">
+            <div class="label">Contoh SQLi pada Form Login</div>
+            <p><code>SELECT * FROM users WHERE username = '' OR '1'='1'; --' AND password = '...';</code></p>
+            <p>Kondisi <code>'1'='1'</code> selalu bernilai benar (tautology), sehingga penyerang dapat login tanpa password yang sah. Karakter <code>--</code> mengabaikan teks setelahnya.</p>
+        </div>
+
+        <div class="highlight-box success">
+            <h4>Pencegahan SQL Injection</h4>
+            <ul>
+                <li><strong>Parameterized statements / Prepared statements:</strong> Memisahkan logika kode SQL dengan input pengguna. Input diperlakukan sebagai <strong>data</strong> murni, bukan perintah yang dapat dieksekusi.</li>
+                <li><strong>Input validation & sanitization.</strong></li>
+                <li><strong>Least-privilege principle:</strong> Hak akses database hanya secukupnya.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section" id="s2">
+        <h2>🛠️ Language-specific Defenses</h2>
+        <p>Setiap bahasa pemrograman memiliki cara tersendiri untuk mengamankan komunikasi dengan database:</p>
+        <table>
+            <tr><th>Bahasa / Framework</th><th>Teknik Pertahanan (Prepared Statements & ORM)</th></tr>
+            <tr><td><strong>PHP</strong></td><td>Menggunakan <strong>PDO</strong> (PHP Data Objects) atau ekstensi MySQLi. Jangan lupa gunakan fungsi <code>mysqli_real_escape_string</code> jika memakai raw SQL.</td></tr>
+            <tr><td><strong>Python (Django/Flask)</strong></td><td>Memanfaatkan <strong>ORM (Object-Relational Mapping)</strong> seperti Django ORM atau SQLAlchemy yang secara otomatis memproteksi kueri.</td></tr>
+            <tr><td><strong>Java (Spring)</strong></td><td>Menggunakan <strong>JPA (Hibernate)</strong> atau interface <code>PreparedStatement</code> pada JDBC. Jangan gunakan <code>Statement</code> biasa.</td></tr>
+            <tr><td><strong>Node.js (Express)</strong></td><td>Memakai ORM libraries seperti <strong>Sequelize</strong> atau <strong>TypeORM</strong>.</td></tr>
+            <tr><td><strong>C# (.NET)</strong></td><td>Memakai <strong>Entity Framework</strong> atau class <code>SqlParameter</code> untuk raw SQL.</td></tr>
+        </table>
+    </div>
+
+    <div class="section" id="s3">
+        <h2>✔️ Maintaining Database Correctness (ACID)</h2>
+        <p>Setiap operasi pada database (seperti transaksi bank) harus menjunjung tinggi prinsip <strong>ACID</strong> agar data tidak korup/hilang jika terjadi error atau mati lampu.</p>
+        
+        <div class="highlight-box">
+            <h4>Prinsip ACID</h4>
+            <ul>
+                <li><strong>Atomicity:</strong> <em>"All or nothing"</em>. Seluruh operasi dalam satu transaksi harus sukses semua. Jika salah satu gagal, maka semuanya dibatalkan (rollback). Tidak boleh ada pembaruan parsial.</li>
+                <li><strong>Consistency:</strong> Memastikan database bertransisi dari satu "keadaan yang valid" ke "keadaan valid lainnya" tanpa merusak integritas/aturan struktur.</li>
+                <li><strong>Isolation:</strong> Transaksi yang berjalan bersamaan tidak boleh saling mengganggu. Setiap transaksi harus seolah-olah berjalan sendirian (terisolasi).</li>
+                <li><strong>Durability:</strong> Perubahan data bersifat permanen dan dijamin tetap ada setelah di-commit, bahkan jika terjadi kerusakan sistem (mati listrik/crash).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section" id="s4">
+        <h2>🚦 Managing Activity Concurrency</h2>
+        <p>Konkurensi adalah kemampuan DBMS menangani banyak proses transaksi di waktu yang bersamaan. Namun, hal ini dapat menimbulkan anomali (masalah):</p>
+        
+        <h3>4 Anomali Konkurensi</h3>
+        <ol>
+            <li><strong>Dirty Reads:</strong> Membaca data yang <em>belum di-commit</em> oleh transaksi lain (transaksi lain itu kemudian di-rollback). Akibatnya data menjadi tidak konsisten.</li>
+            <li><strong>Non-repeatable reads:</strong> Transaksi membaca satu baris dua kali, tapi hasilnya <em>berbeda</em> karena transaksi lain diam-diam telah mengubah isi baris tersebut.</li>
+            <li><strong>Phantom reads:</strong> Transaksi membaca sekumpulan baris dengan kondisi tertentu, namun transaksi lain menghapus atau menambah baris baru sehingga jumlah baris yang cocok berubah.</li>
+            <li><strong>Lost updates:</strong> Dua transaksi menimpa data yang sama, dan salah satu pembaruan tertimpa (hilang) begitu saja tanpa terdeteksi.</li>
+        </ol>
+
+        <h3>Isolation Levels (Level Isolasi)</h3>
+        <p>Solusi untuk mengatasi anomali di atas (dari yang paling renggang ke paling ketat):</p>
+        <table>
+            <tr><th>Level Isolasi</th><th>Mencegah Anomali</th></tr>
+            <tr><td><strong>Read uncommitted</strong></td><td>Tidak mencegah apapun. (Paling cepat, tapi bahaya).</td></tr>
+            <tr><td><strong>Read committed</strong></td><td>Mencegah <em>Dirty Read</em>.</td></tr>
+            <tr><td><strong>Repeatable Read</strong></td><td>Mencegah <em>Dirty Read</em> & <em>Non-repeatable read</em>.</td></tr>
+            <tr><td><strong>Serializable</strong></td><td>Mencegah SEMUANYA. Mengunci tabel seolah berjalan satu per satu berurutan. (Aman, tapi paling lambat dan rawan <em>Deadlock</em>).</td></tr>
+        </table>
+    </div>
+
+    <div class="section" id="s5">
+        <h2>🔑 RBAC Security in DBMS</h2>
+        <p><strong>Role-Based Access Control (RBAC)</strong> adalah metode mengatur akses pengguna berdasarkan "Peran" (Role) mereka dalam perusahaan, bukan satu-satu per individu.</p>
+        <ul>
+            <li><strong>Inti Konsep:</strong> Mengelompokkan hak akses (privileges) ke dalam sebuah Role (contoh: Role "Manager"), lalu mengarahkan User ke Role tersebut.</li>
+            <li><strong>Policy Administration:</strong> Administrator dapat membuat, mengubah, dan menghapus Roles dari satu tempat terpusat.</li>
+            <li><strong>Dynamic Assignment:</strong> User bisa ditugaskan ke Role secara sementara (misal saat masuk "Project Team") lalu kembali ke Role awal setelah selesai.</li>
+            <li><strong>Manfaat:</strong> Memastikan user hanya memiliki permission yang benar-benar dibutuhkan (Least Privilege) untuk meminimalisir dampak jika terjadi peretasan (breach).</li>
+        </ul>
+    </div>
+
+    <div class="section" id="s6">
+        <h2>🔒 Encryption in DBMS</h2>
+        <p>Melindungi kerahasiaan (confidentiality) data dengan mengubahnya menjadi format acak/kriptografi yang tidak bisa dibaca tanpa kunci (key).</p>
+        
+        <ul>
+            <li><strong>Data-at-rest encryption:</strong> Mengenkripsi data saat disimpan di dalam disk (storage/SSD). Dibuka/didekripsi hanya pada saat data tersebut diakses.</li>
+            <li><strong>Data-in-transit encryption:</strong> Mengamankan data saat dikirim lewat jaringan (network) dari aplikasi ke database (contoh: SSL/TLS).</li>
+            <li><strong>Key Management:</strong> Kunci enkripsi harus <strong>dipisah</strong> dan dikelola jauh dari file database itu sendiri. Termasuk kebijakan seperti melakukan <strong>rotasi kunci</strong> secara berkala untuk membatasi resiko jika kunci bocor.</li>
+        </ul>
+    </div>
+
+    <div class="section" id="s7">
+        <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
+        <div class="highlight-box success">
+            <h4>✅ Ringkasan Kunci untuk UAS</h4>
+            <ol>
+                <li><strong>Prepared Statements (Parameterized Queries):</strong> Cara paling ampuh untuk mencegah SQL Injection karena input user dianggap sebagai <em>data</em> murni, bukan kueri.</li>
+                <li><strong>ACID - Atomicity:</strong> All-or-nothing. Tidak boleh ada <em>partial updates</em>.</li>
+                <li><strong>ACID - Consistency:</strong> Merubah database dari state valid ke state valid lainnya.</li>
+                <li><strong>ACID - Isolation:</strong> Transaksi tidak boleh membaca perubahan yang belum di-commit (mencegah Dirty Read).</li>
+                <li><strong>ACID - Durability:</strong> Bertahan dari kerusakan sistem/listrik (crashes).</li>
+                <li><strong>Phantom Read:</strong> Baris data bertambah/berkurang tiba-tiba (query klausa WHERE menghasilkan jumlah baris yang berbeda).</li>
+                <li><strong>Lost Update:</strong> Update dari dua transaksi saling menimpa tanpa disadari.</li>
+                <li><strong>RBAC (Role-Based Access Control):</strong> Mengelompokkan permission ke dalam <em>role</em>. (Policy Administration = Admin kelola dari pusat, Dynamic = sementara masuk tim proyek).</li>
+                <li><strong>Encryption at rest:</strong> Data di disk terenkripsi. Key management <strong>wajib dipisah</strong> penyimpanannya dan di-<strong>rotasi secara rutin</strong>.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Tips Menghafal -->
+    <div class="section" id="s8">
+        <div class="memory-tips-section">
+            <h3>🧠 TIPS MENGHAFAL — Bab 1: Database Security</h3>
+            <ol>
+                <li><strong>"ACID itu ASID"</strong><br><strong>A</strong>tomicity = All-or-nothing (barengan semua, atau batal semua).<br><strong>C</strong>onsistency = Valid to Valid (sesuai aturan).<br><strong>I</strong>solation = Jangan ngintip yg belom jadi (cegah Dirty read).<br><strong>D</strong>urability = Tahan banting (Aman biarpun server mati/crash).</li>
+                <li><strong>"SQLi = Si Param"</strong> → Obat sakit SQL Injection adalah "<strong>Param</strong>eterized Statements / Prepared Statements". Dia memisahkan kode dan input (dianggap sebagai data).</li>
+                <li><strong>"Dirty, Non-Rep, Phantom, Lost"</strong><br>- <strong>Dirty Read</strong> = Baca data kotor (belum di commit).<br>- <strong>Non-Repeatable</strong> = Data yang sama dibaca dua kali isinya berubah.<br>- <strong>Phantom</strong> = Tiba-tiba ada baris hantu baru (jumlah nambah/kurang karena WHERE).<br>- <strong>Lost Update</strong> = Ketiban (Saling nabrak update).</li>
+                <li><strong>"RBAC = Grup Peran"</strong> → Bukannya ngatur user satu-satu (capek), tapi bikin GRUP/ROLE (Admin, User), terus usernya dimasukin ke Role itu. <em>Policy Admin</em> = Pusat kontrol. <em>Dynamic</em> = Pindah role sementara.</li>
+                <li><strong>"Kunci Jangan Ditaro di Bawah Keset"</strong> → Key Management untuk Encryption: Kuncinya harus <strong>dipisah</strong> dari database, dan harus sering-sering <strong>dirotasi</strong> (diganti) biar aman.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section" id="s9">
+        <h2>📝 Contoh Soal & Jawaban</h2>
+        <div class="example-box">
+            <div class="label">Contoh Soal 1</div>
+            <p><strong>Manakah yang paling ampuh mencegah SQL Injection?</strong></p>
+            <p>A. Mengganti semua database ke NoSQL<br>
+            B. Enkripsi disk pada server database<br>
+            C. Menggunakan Parameterized statements<br>
+            D. Hash fungsi satu arah pada seluruh tabel</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: C</strong> — Parameterized statements mencegah input dianggap sebagai kode SQL.</p>
+        </div>
+        <div class="example-box">
+            <div class="label">Contoh Soal 2</div>
+            <p><strong>Sebuah transaksi dibatalkan karena mati lampu, lalu saat dinyalakan tidak ada satupun perubahan yang masuk. Ini merupakan bukti dari sifat ACID apa?</strong></p>
+            <p>A. Atomicity<br>B. Consistency<br>C. Isolation<br>D. Durability</p>
+            <p style="color:#34d399;margin-top:10px"><strong>Jawaban: A</strong> — Atomicity menjamin all-or-nothing (tidak ada perubahan parsial jika terjadi kegagalan sebelum commit).</p>
+        </div>
+    </div>
+
+    <!-- ===== LATIHAN SOAL ===== -->
+    <div class="quiz-section" id="quizSection">
+        <h2>🎮 Latihan Soal Interaktif — Bab 1: Database Security</h2>
+        <p style="color:#94a3b8;margin-bottom:20px">Kerjakan 20 soal berikut berdasarkan Quiz 8, lalu klik Submit untuk melihat hasilnya.</p>
+        <div id="quizContainer"></div>
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="submitQuiz()">📊 Submit & Lihat Hasil</button>
+            <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Reset</button>
+        </div>
+        <div class="result-box" id="resultBox">
+            <div class="score" id="scoreText">0/20</div>
+            <div class="score-label">Skor Anda</div>
+            <p style="margin-top:12px;color:#94a3b8;font-size:0.88rem" id="scoreMessage"></p>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="index.html" class="btn btn-secondary" style="text-decoration:none">← Kembali ke Home</a>
+        <a href="ch02-unit-testing.html" class="btn btn-primary" style="text-decoration:none">Bab 2: Unit Testing →</a>
+    </div>
+</div>
+
+<script>
+const questions = [
+    {q: "Skenario manakah yang paling baik menggambarkan penggunaan encryption at rest dalam DBMS?", options: ["Menyamarkan nama kolom dalam kueri agar penyerang tidak dapat menebak tujuannya.", "Mengenknripsi koneksi jaringan antara aplikasi dan database menggunakan protokol yang aman.", "Menyimpan data pada disk dalam bentuk terenkripsi, dan dideskripsi hanya saat diakses.", "Melakukan hashing pada password pengguna saat operasi insert ke dalam database."], answer: 2, explanation: "Encryption at rest focuses on protecting data when stored pada disk, dan di-decrypt hanya ketika diakses."},
+    {q: "Pernyataan manakah tentang key management untuk enkripsi database yang paling akurat dari perspektif keamanan?", options: ["Setelah dibuat, encryption keys tidak boleh dirotasi (diganti) untuk menghindari hilangnya data.", "Dikelola secara terpisah dari data terenkripsi, dengan access control, kebijakan rotasi, dan penyimpanan yang aman.", "Kunci (keys) harus disimpan di lokasi dan format yang sama dengan file database terenkripsi untuk akses yang cepat dan aman.", "Kunci (keys) harus disematkan (embedded) ke dalam source code aplikasi untuk menyederhanakan deployment."], answer: 1, explanation: "Manajemen kunci harus dipisah dari data terenkripsi, dilindungi aksesnya, dan sering di-rotasi (diganti)."},
+    {q: "Apa yang utamanya dijamin oleh sifat consistency dalam ACID ketika sebuah transaksi berhasil diselesaikan pada skema database yang dirancang dengan baik?", options: ["Transaksi mengubah database dari satu state yang valid ke state valid lainnya, dengan menjaga seluruh constraint integritas.", "Transaksi tidak pernah mengalami deadlock karena hanya menggunakan akuisisi lock berbasis timeout.", "Transaksi dieksekusi tanpa pernah menunggu lock, sehingga menjamin throughput maksimum di bawah beban berat.", "Transaksi menggunakan optimistic concurrency control, dengan asumsi konflik akan jarang terjadi pada operasi normal."], answer: 0, explanation: "Consistency memastikan database berpindah dari keadaan (state) yang valid ke valid lainnya sesuai aturan constraint."},
+    {q: "Penyerang menemukan field pencarian yang menggabungkan (concatenate) input pengguna secara langsung ke kueri pencarian data pelanggan. Mereka memasukkan input yang selalu bernilai true, seperti menyisipkan tautology ke klausa WHERE, dan mendapatkan akses ke semua baris pelanggan. Hasil manakah yang paling baik menggambarkan skenario SQL injection ini?", options: ["Akses tidak sah ke data (Unauthorized access) melebihi set hasil yang dituju tanpa mengubah record yang disimpan.", "Akses sah ke data dengan audit trail yang dengan jelas menangkap seluruh aktivitas pengguna.", "Modifikasi tidak sah pada nilai data yang ada sembari membatasi akses ke satu baris tunggal.", "Korupsi sementara pada metadata database tanpa mengekspos isi tabel."], answer: 0, explanation: "Dengan 1=1 (tautology), attacker bisa melakukan 'Unauthorized access' (pencurian data/Data retrieval) tanpa mengubah data yang ada."},
+    {q: "Contoh manakah yang paling baik mendeskripsikan phantom read?", options: ["Dua transaksi mengupdate baris yang sama dan salah satunya menimpa perubahan yang lain tanpa mendeteksi konflik.", "Sebuah transaksi membaca satu baris dua kali dan mendapatkan nilai yang berbeda setiap kalinya (Non-repeatable read).", "Sebuah transaksi membaca baris yang cocok dengan suatu kondisi, lalu mengulang kueri tersebut dan mendapatkan baris tambahan yang kini cocok.", "Sebuah transaksi membaca data yang telah dimodifikasi oleh transaksi lain namun belum di-commit (Dirty read)."], answer: 2, explanation: "Phantom reads terjadi saat hasil kueri WHERE berubah jumlahnya karena transaksi lain baru saja menambah/menghapus baris (ada baris 'hantu' baru)."},
+    {q: "Manakah dari berikut ini yang paling baik mendeskripsikan manfaat keamanan utama dari penerapan RBAC dalam sistem database?", options: ["RBAC secara otomatis mendeteksi dan memblokir percobaan SQL injection di lapisan database.", "RBAC mengeliminasi kebutuhan enkripsi data dengan mengontrol akses pada level role.", "RBAC memastikan pengguna hanya memiliki permission yang diperlukan untuk peran (role) mereka, membatasi dampak dari pembobolan (Least Privilege).", "RBAC menggantikan mekanisme autentikasi dengan mengelola identitas melalui penugasan role."], answer: 2, explanation: "RBAC menerapkan 'Least Privilege', memastikan user hanya punya izin secukupnya sehingga membatasi dampak kebocoran."},
+    {q: "Praktik manakah yang paling sejalan dengan penggunaan security audits untuk memperkuat pertahanan terhadap SQL injection dari waktu ke waktu?", options: ["Hanya mengandalkan algoritma deteksi deadlock untuk mengungkapkan potensi masalah keamanan pada beban kerja kueri.", "Menonaktifkan semua shared locks untuk operasi read guna mengizinkan akses tak terbatas ke data selama audit.", "Secara rutin meninjau pola kueri, log, dan permission skema untuk mengidentifikasi konstruksi yang tidak aman dan privileges yang tidak perlu.", "Secara otomatis menurunkan level isolasi transaksi kapanpun masalah performa terdeteksi di production."], answer: 2, explanation: "Audit keamanan harus secara reguler mengecek pola kueri dan log untuk menemukan celah yang tidak aman."},
+    {q: "Dalam konteks sifat ACID, apa yang dijamin oleh atomicity untuk transaksi database yang mengupdate beberapa tabel terkait sebagai bagian dari satu operasi logis tunggal?", options: ["Semua perubahan transaksi di-commit bersama-sama atau tidak sama sekali, meninggalkan database tanpa adanya update parsial (All-or-nothing).", "Setiap read di dalam transaksi hanya melihat data yang terakhir di-commit dari transaksi lain, menghindari dirty reads.", "Transaksi selalu mengakuisisi lock dalam urutan yang konsisten untuk mencegah siklus, menghindari deadlock di antara sesi yang konkuren.", "Perubahan transaksi terlihat oleh transaksi lain segera setelah ditulis, bahkan sebelum commit selesai."], answer: 0, explanation: "Atomicity adalah prinsip All-or-nothing, memastikan tidak terjadi pembaruan setengah-setengah (partial updates)."},
+    {q: "Konsep kontrol akses manakah yang menjadi pusat dari Role-Based Access Control (RBAC)?", options: ["Menggunakan satu akun bersama untuk semua pengguna dan melacak aktivitas secara eksternal.", "Memberikan set permission yang sama kepada semua pengguna yang terautentikasi.", "Mengelompokkan permission ke dalam roles (peran) dan menugaskan pengguna ke dalam roles tersebut.", "Menugaskan permission individu secara langsung ke setiap pengguna untuk setiap sumber daya."], answer: 2, explanation: "RBAC berpusat pada pengelompokan permission (izin) ke dalam Role, lalu mengatur User ke dalam Role tersebut."},
+    {q: "Skenario manakah yang paling baik menggambarkan kerentanan SQL injection klasik?", options: ["Sebuah transaksi gagal karena deadlock antara dua update yang konkuren.", "Input pengguna digabungkan (concatenated) secara langsung ke dalam string SQL yang digunakan untuk melakukan kueri ke database.", "Sebuah kueri menggunakan parameter placeholders dan mengikat (bind) nilai pada saat eksekusi.", "Database menolak kueri karena pengguna tidak memiliki privileges yang memadai."], answer: 1, explanation: "SQL Injection terjadi karena input pengguna (user input) digabungkan (concatenated) secara langsung ke dalam string SQL."},
+    {q: "Dalam sistem kontrol konkurensi berbasis lock, situasi manakah yang paling jelas mengindikasikan adanya deadlock?", options: ["Sebuah transaksi mengalami timeout saat menunggu satu lock dan di-rollback.", "Dua transaksi saling menunggu lock yang dipegang satu sama lain tanpa batas waktu, membentuk siklus tunggu (cycle of waiting).", "Sebuah transaksi berulang kali restart karena validasi optimistic-nya gagal pada saat commit.", "Sebuah transaksi terblokir saat menunggu lock yang akan dilepaskan ketika transaksi lain melakukan commit."], answer: 1, explanation: "Deadlock adalah ketika 2 transaksi saling menunggu kunci (lock) yang dipegang satu sama lain, sehingga terjebak selamanya."},
+    {q: "Situasi manakah yang paling baik menggambarkan pelanggaran terhadap sifat \"Isolation\" dari ACID?", options: ["Sebuah transaksi mengupdate banyak baris tetapi hanya beberapa yang tertulis sebelum terjadi kegagalan.", "Setelah sistem crash, transaksi yang telah di-commit secara permanen dipertahankan.", "Seperangkat aturan bisnis ditegakkan melalui constraints.", "Sebuah transaksi membaca perubahan yang dibuat oleh transaksi lain yang kemudian di-rollback (Dirty read)."], answer: 3, explanation: "Membaca data yang pada akhirnya dibatalkan (Dirty read) adalah sebuah pelanggaran dari prinsip Isolation."},
+    {q: "Seorang pengguna diberikan akses sementara ke role \"Project Team\" hanya selama durasi proyek tertentu, kemudian dikembalikan ke role aslinya. Konsep RBAC manakah yang sedang diterapkan?", options: ["Dynamic assignment (Penugasan dinamis)", "Privilege granularity", "Role hierarchy", "Policy administration (Administrasi kebijakan)"], answer: 0, explanation: "Pemberian peran secara sementara berdasarkan konteks atau tugas disebut Dynamic assignment."},
+    {q: "Statement SQL manakah yang paling jelas mendemonstrasikan prinsip pembatasan hasil dengan predikat yang persis untuk mengurangi risiko tereksposnya data (data exposure risk)?", options: ["SELECT id, name FROM Customers;", "SELECT id, name FROM Customers WHERE status = 'ACTIVE';", "SELECT * FROM Customers WHERE status = 'ACTIVE';", "SELECT * FROM Customers;"], answer: 1, explanation: "Pilihan ini membatasi kolom yang diambil (id, name) dan membatasi kondisi/predikat secara persis (status = 'ACTIVE')."},
+    {q: "Pernyataan manakah yang paling baik menangkap manfaat dari sifat \"Durability\" dalam ACID untuk keamanan database?", options: ["Menjamin bahwa semua operasi yang dijadwalkan akan setara dengan urutan transaksi yang serial.", "Mengizinkan transaksi untuk di-rollback kapan saja, bahkan setelah commit untuk mengikuti prinsip fleksibilitas database.", "Menjamin bahwa transaksi tidak melihat perubahan dari transaksi lain yang belum di-commit untuk mencegah dirty reads dan phantom reads.", "Menjamin bahwa setelah transaksi di-commit, perubahannya akan selamat dan bertahan dari crash dan kegagalan daya (mati listrik)."], answer: 3, explanation: "Durability berarti permanen dan tahan banting; setelah di-commit, perubahannya akan selamat meskipun listrik padam (crash)."},
+    {q: "Seorang administrator database membuat, memodifikasi, dan menghapus roles beserta hak akses (privileges) terkait dari sebuah lokasi pusat. Konsep RBAC manakah yang mendeskripsikan hal ini?", options: ["Dynamic assignment", "Role hierarchy", "Policy administration", "Privilege granularity"], answer: 2, explanation: "Mengatur/mengelola policy RBAC dari lokasi sentral disebut Policy administration."},
+    {q: "Deskripsi manakah yang paling baik menangkap apa itu anomali \"lost update\"?", options: ["Sebuah transaksi berulang kali membaca data dan melihat nilai-nilai commit yang berbeda setiap kali (Non-repeatable read).", "Sebuah transaksi menahan lock yang mencegah transaksi lain untuk berprogres, menyebabkan deadlock.", "Sebuah transaksi membaca nilai yang telah ditulis oleh transaksi lain yang belum di-commit (Dirty read).", "Dua transaksi sama-sama mengupdate data yang sama, dan salah satu update tertimpa (overwritten) tanpa terdeteksi."], answer: 3, explanation: "Lost update adalah saat dua transaksi update data yang sama, dan salah satu update-nya tertimpa (hilang/overwritten)."},
+    {q: "Seorang arsitek merancang strategi key management untuk sistem database. Praktik manakah yang paling mengurangi kerusakan jika encryption key (kunci enkripsi) terekspos/bocor pada database production yang berumur panjang?", options: ["Menyimpan keys (kunci) dalam format plaintext di sebelah file data terenkripsi untuk pemulihan yang lebih mudah.", "Hanya mengandalkan password yang kuat dengan berbagai tipe string untuk akun pengguna database.", "Menggunakan single master key yang tidak pernah diganti yang disimpan secara fisik di data center tiga lapis untuk mencegah peretasan.", "Merotasi (mengganti) encryption keys dengan jadwal yang reguler dan mengenkripsi ulang data sesuai kebutuhan (Key Rotation)."], answer: 3, explanation: "Secara rutin mengganti/me-rotasi kunci enkripsi (Key Rotation) adalah cara utama membatasi kerusakan dari kebocoran kunci panjang umur."},
+    {q: "Praktik manakah yang secara paling langsung mengurangi risiko SQL injection ketika menyusun kueri yang bergantung pada nilai-nilai yang diberikan pengguna (seperti term pencarian atau kriteria filter)?", options: ["Melakukan hashing pada input pengguna sebelum menggabungkannya ke dalam string kueri untuk mengaburkan karakter khusus.", "Menyimpan dalam cache string kueri yang sebelumnya dieksekusi sehingga input pengguna digunakan kembali tanpa di-parse ulang.", "Menyimpan semua nilai dari pengguna dalam tabel logging terpisah sebelum mengeksekusi kueri dinamis.", "Menggunakan parameterized statements (prepared statements) yang mengikat (bind) input pengguna sebagai data daripada menggabungkannya."], answer: 3, explanation: "Parameterized statements adalah pelindung paling jitu terhadap SQL Injection karena memperlakukan input murni sebagai 'data'."},
+    {q: "Tindakan manakah yang secara paling langsung mereduksi risiko SQL injection dalam sebuah aplikasi yang membangun kueri pencarian dari input pengguna?", options: ["Hanya mengandalkan validasi input dari sisi klien (client-side) dan pengecekan menggunakan JavaScript.", "Mengenknripsi file database pada disk menggunakan algoritma yang kuat (Encryption at rest).", "Menggunakan parameterized queries dengan variabel-variabel terikat (bound variables) untuk seluruh nilai yang diberikan pengguna.", "Menjalankan database di segmen jaringan yang terpisah dari aplikasi."], answer: 2, explanation: "Sekali lagi, penggunaan Parameterized queries adalah pertahanan garis depan dalam mereduksi SQL Injection."}
+];
+
+function renderQuiz(){const c=document.getElementById('quizContainer');const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers')||'{}');c.innerHTML=questions.map((q,i)=>`<div class="quiz-question" id="qq-${i}"><div class="q-num">Soal ${i+1} dari ${questions.length}</div><div class="q-text">${q.q}</div>${q.options.map((opt,j)=>`<label class="quiz-option" id="opt-${i}-${j}"><input type="radio" name="q${i}" value="${j}" ${s[i]==j?'checked':''} onchange="saveAnswer(${i},${j})"><span>${opt}</span></label>`).join('')}</div>`).join('')}
+function saveAnswer(qi,oi){const s=JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers')||'{}');s[qi]=oi;localStorage.setItem('pkpl_quiz_ch01_answers',JSON.stringify(s))}
+function submitQuiz(){const saved=JSON.parse(localStorage.getItem('pkpl_quiz_ch01_answers')||'{}');let correct=0;questions.forEach((q,i)=>{q.options.forEach((_,j)=>{const el=document.getElementById(`opt-${i}-${j}`);el.classList.remove('correct','incorrect');const old=el.querySelector('.explanation');if(old)old.remove()});const ua=saved[i];if(ua!==undefined){if(parseInt(ua)===q.answer){correct++;document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}else{document.getElementById(`opt-${i}-${ua}`).classList.add('incorrect');document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}}else{document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct')}const expDiv=document.createElement('div');expDiv.className='explanation';expDiv.style.display='block';expDiv.innerHTML='💡 <strong>Penjelasan:</strong> '+q.explanation;document.getElementById(`opt-${i}-${q.answer}`).appendChild(expDiv)});const rb=document.getElementById('resultBox');rb.style.display='block';document.getElementById('scoreText').textContent=`${correct}/${questions.length}`;const pct=Math.round((correct/questions.length)*100);document.getElementById('scoreMessage').textContent=pct>=80?'🎉 Luar biasa! Materi Database Security sudah dikuasai!':pct>=60?'👍 Bagus! Coba baca lagi bagian ACID ya.':'📚 Hapalkan lagi prinsip ACID dan pencegahan SQLi!';localStorage.setItem('pkpl_quiz_ch01',JSON.stringify({correct,total:questions.length}));rb.scrollIntoView({behavior:'smooth'})}
+function resetQuiz(){localStorage.removeItem('pkpl_quiz_ch01_answers');localStorage.removeItem('pkpl_quiz_ch01');document.getElementById('resultBox').style.display='none';renderQuiz()}
+renderQuiz();
+</script>
+</body>
+</html>
