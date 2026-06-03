@@ -841,13 +841,17 @@ function resetExam() {
     scrollToTop();
 }
 
-window.addEventListener('beforeunload', function (e) {
+const unloadHandler = function (e) {
     if (!isSubmitted()) {
         const confirmationMessage = 'Yakin ingin meninggalkan halaman? Simulasi ujian sedang berjalan.';
-        e.returnValue = confirmationMessage;
-        return confirmationMessage;
+        e.preventDefault(); // Standard modern browser (termasuk mobile)
+        e.returnValue = confirmationMessage; // Chrome, Edge, Firefox, dll.
+        return confirmationMessage; // Safari dan browser lama
     }
-});
+};
+
+window.addEventListener('beforeunload', unloadHandler);
+window.onbeforeunload = unloadHandler; // Fallback tambahan untuk iOS/Mobile Safari
 
 // Init
 renderQuiz();
