@@ -8,7 +8,9 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,158,11,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+        .nav-links::-webkit-scrollbar{display:none}
+        .nav-links a{white-space:nowrap}
         .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
         .nav-links a:hover{color:#fde68a;background:rgba(245,158,11,0.1);text-decoration:none}
         .nav-links a.active{color:#e2e8f0;font-weight:600}
@@ -66,8 +68,23 @@
         .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
         .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
+        .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        .toc{background:rgba(17,24,39,0.7);backdrop-filter:blur(16px);border:1px solid rgba(245,158,11,0.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;animation:fadeIn 0.6s ease}
+        .toc h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#f59e0b;margin-bottom:16px}
+        .toc ol{padding-left:20px}
+        .toc li{margin-bottom:8px}
+        .toc a{color:#94a3b8;text-decoration:none;font-size:0.9rem;transition:color 0.3s}
+        .toc a:hover{color:#fde68a}
+        .key-points{background:linear-gradient(135deg,rgba(52,211,153,0.06),rgba(6,182,212,0.06));border:1px solid rgba(52,211,153,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .key-points h3{color:#34d399;font-size:1rem;margin-bottom:16px}
+        .key-points li{margin-bottom:10px}
+        .memory-tips-section{background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(244,63,94,0.06));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .memory-tips-section h3{color:#f59e0b;font-size:1rem;margin-bottom:16px}
+        .memory-tips-section li{margin-bottom:10px;color:#cbd5e1;font-size:0.92rem}
+        .memory-tips-section li strong{color:#fde68a}
         @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}.toc{padding:20px 24px}}
     </style>
 </head>
 <body>
@@ -92,8 +109,25 @@
         <p>Hukum, etika, dan kejahatan siber — aturan main yang harus dipahami oleh setiap profesional IT.</p>
     </div>
 
+    <!-- TOC -->
+    <div class="toc">
+        <h3>📑 Daftar Isi</h3>
+        <ol>
+            <li><a href="#s1">Etika vs Hukum</a></li>
+            <li><a href="#s2">Hukum Siber di Amerika Serikat</a></li>
+            <li><a href="#s3">GDPR</a></li>
+            <li><a href="#s4">Hukum Siber di Indonesia (SANGAT PENTING!)</a></li>
+            <li><a href="#s5">UU PDP & Regulasi Sektoral Lainnya</a></li>
+            <li><a href="#s6">Kode Etik Profesi IT</a></li>
+            <li><a href="#s7">Poin-Poin Penting</a></li>
+            <li><a href="#s8">Tips Menghafal</a></li>
+            <li><a href="#s9">Contoh Soal & Jawaban</a></li>
+            <li><a href="#quizSection">Latihan Soal Interaktif</a></li>
+        </ol>
+    </div>
+
     <!-- ETIKA VS HUKUM -->
-    <div class="section">
+    <div class="section" id="s1">
         <h2>📖 Etika vs Hukum — Apa Bedanya?</h2>
         <p>Ini konsep dasar yang sering keluar di soal. Keduanya berbeda meskipun saling terkait.</p>
 
@@ -118,7 +152,7 @@
     </div>
 
     <!-- HUKUM AS -->
-    <div class="section">
+    <div class="section" id="s2">
         <h2>🇺🇸 Hukum Siber di Amerika Serikat</h2>
         <p>Beberapa undang-undang penting di AS yang sering disebut dalam konteks keamanan siber:</p>
 
@@ -166,7 +200,7 @@
     </div>
 
     <!-- GDPR -->
-    <div class="section">
+    <div class="section" id="s3">
         <h2>🇪🇺 GDPR (General Data Protection Regulation)</h2>
         <p><strong>GDPR</strong> adalah regulasi perlindungan data dari <strong>Uni Eropa</strong> yang berlaku sejak 2018. Ini adalah standar perlindungan data paling ketat di dunia.</p>
 
@@ -195,7 +229,7 @@
     </div>
 
     <!-- HUKUM INDONESIA -->
-    <div class="section">
+    <div class="section" id="s4">
         <h2>🇮🇩 Hukum Siber di Indonesia (SANGAT PENTING!)</h2>
         <p>Bagian ini <strong>paling banyak keluar di soal</strong>. Hapalkan nomor pasal dan sanksinya!</p>
 
@@ -233,7 +267,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s5">
         <h3>UU PDP (UU No. 27 Tahun 2022) — Perlindungan Data Pribadi</h3>
         <p>UU PDP adalah undang-undang Indonesia yang khusus mengatur tentang <strong>perlindungan data pribadi</strong>, terinspirasi dari GDPR.</p>
 
@@ -245,7 +279,7 @@
         </table>
     </div>
 
-    <div class="section">
+    <div class="section" id="s5b">
         <h3>Regulasi Sektoral Lainnya</h3>
 
         <div class="law-card">
@@ -264,7 +298,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s6">
         <h2>👨‍💻 Kode Etik Profesi IT</h2>
         <p>Organisasi profesi IT memiliki kode etik yang harus dipatuhi anggotanya:</p>
 
@@ -276,7 +310,7 @@
         </table>
     </div>
 
-    <div class="section">
+    <div class="section" id="s7">
         <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
         <div class="highlight-box success">
             <h4>✅ Ringkasan Kunci untuk UAS</h4>
@@ -295,7 +329,24 @@
         </div>
     </div>
 
-    <div class="section">
+    <!-- Tips Menghafal -->
+    <div class="section" id="s8">
+        <div class="memory-tips-section">
+            <h3>🧠 TIPS MENGHAFAL — Bab 5: Law, Ethics & Cyber Crime</h3>
+            <ol>
+                <li><strong>"Etika = Moral, Hukum = Penjara"</strong> → Etika itu dari hati/sosial (dikucilin doang), hukum itu dari negara (bisa dipenjara).</li>
+                <li><strong>"UU ITE Hacking = 30, 8, 800"</strong> → Pasal <strong>30</strong>, sanksinya maks <strong>8</strong> tahun penjara / <strong>800</strong> juta rupiah. INI PASTI KELUAR!</li>
+                <li><strong>"30-31-33-35"</strong> → Hack (30) - Sadap (31) - Virus (33) - Palsu/Manipulasi (35).</li>
+                <li><strong>"GDPR = Ketat di Eropa"</strong> → GDPR berlaku di EU, prinsip utamanya harus ada "Legitimate Purpose" (alasan yang sah) buat ambil data.</li>
+                <li><strong>"Right to be Forgotten"</strong> → Hak buat minta data kita <strong>dihapus total</strong> (Erasure) di GDPR.</li>
+                <li><strong>"CFAA, ECPA, DMCA, HIPAA" (AS)</strong> → <strong>C</strong>omputer (Hack), <strong>E</strong>lectronic (Sadap), <strong>D</strong>igital (Copyright/Bajak), <strong>H</strong>ealth (Data Medis).</li>
+                <li><strong>"Legal belum tentu Etis"</strong> → Contohnya jual data pake Terms & Conditions panjang yang sengaja dibikin ribet biar user gak baca. Secaa hukum legal, tapi gak etis.</li>
+                <li><strong>"Data Spesifik = Bahaya"</strong> → Di UU PDP Indonesia, data spesifik itu yang sensitif banget (kesehatan, genetik, biometrik, orientasi seksual).</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section" id="s9">
         <h2>📝 Contoh Soal & Jawaban</h2>
 
         <div class="example-box">

@@ -8,7 +8,9 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(59,130,246,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+        .nav-links::-webkit-scrollbar{display:none}
+        .nav-links a{white-space:nowrap}
         .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
         .nav-links a:hover{color:#93c5fd;background:rgba(59,130,246,0.1);text-decoration:none}
         .nav-links a.active{color:#e2e8f0;font-weight:600}
@@ -63,8 +65,21 @@
         .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
         .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        .toc{background:rgba(17,24,39,0.7);backdrop-filter:blur(16px);border:1px solid rgba(59,130,246,0.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;animation:fadeIn 0.6s ease}
+        .toc h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3b82f6;margin-bottom:16px}
+        .toc ol{padding-left:20px}
+        .toc li{margin-bottom:8px}
+        .toc a{color:#94a3b8;text-decoration:none;font-size:0.9rem;transition:color 0.3s}
+        .toc a:hover{color:#93c5fd}
+        .key-points{background:linear-gradient(135deg,rgba(52,211,153,0.06),rgba(6,182,212,0.06));border:1px solid rgba(52,211,153,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .key-points h3{color:#34d399;font-size:1rem;margin-bottom:16px}
+        .key-points li{margin-bottom:10px}
+        .memory-tips-section{background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(244,63,94,0.06));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .memory-tips-section h3{color:#f59e0b;font-size:1rem;margin-bottom:16px}
+        .memory-tips-section li{margin-bottom:10px;color:#cbd5e1;font-size:0.92rem}
+        .memory-tips-section li strong{color:#fde68a}
         @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}.toc{padding:20px 24px}}
     </style>
 </head>
 <body>
@@ -89,8 +104,26 @@
         <p>Memastikan bahwa perubahan kode (fix bug, fitur baru, refactor) tidak merusak fungsi yang sebelumnya sudah berjalan dengan benar.</p>
     </div>
 
+    <!-- TOC -->
+    <div class="toc">
+        <h3>📑 Daftar Isi</h3>
+        <ol>
+            <li><a href="#s1">Apa Itu Regression Testing?</a></li>
+            <li><a href="#s2">Retesting vs Regression Testing</a></li>
+            <li><a href="#s3">Tipe-Tipe Regression Testing</a></li>
+            <li><a href="#s4">Strategi Seleksi Test Case</a></li>
+            <li><a href="#s5">Otomatisasi & CI/CD</a></li>
+            <li><a href="#s6">RPA dalam Regression Testing</a></li>
+            <li><a href="#s7">Load Testing vs Regression Testing</a></li>
+            <li><a href="#s8">Poin-Poin Penting</a></li>
+            <li><a href="#s9">Tips Menghafal</a></li>
+            <li><a href="#s10">Contoh Soal & Jawaban</a></li>
+            <li><a href="#quizSection">Latihan Soal Interaktif</a></li>
+        </ol>
+    </div>
+
     <!-- ===== MATERI ===== -->
-    <div class="section">
+    <div class="section" id="s1">
         <h2>📖 Apa Itu Regression Testing?</h2>
         <p><strong>Regression Testing</strong> adalah pengujian ulang terhadap perangkat lunak setelah ada <strong>perubahan</strong> (update kode, perbaikan bug, penambahan fitur) untuk memastikan bahwa perubahan tersebut <strong>tidak menyebabkan masalah baru</strong> pada fitur yang sudah ada.</p>
 
@@ -109,7 +142,7 @@
         </ul>
     </div>
 
-    <div class="section">
+    <div class="section" id="s2">
         <h2>🔍 Retesting vs Regression Testing (WAJIB PAHAM!)</h2>
         <p>Ini adalah konsep yang <strong>sering membingungkan</strong> dan <strong>sering keluar di soal</strong>. Keduanya mirip tapi sangat berbeda.</p>
 
@@ -131,7 +164,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s3">
         <h2>📋 Tipe-Tipe Regression Testing</h2>
 
         <h3>1. Corrective Regression Testing</h3>
@@ -152,7 +185,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s4">
         <h2>🎯 Strategi Seleksi Test Case</h2>
         <p>Karena menjalankan semua tes bisa memakan waktu, kita perlu strategi untuk memilih tes mana yang paling penting:</p>
 
@@ -179,7 +212,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s5">
         <h2>🤖 Otomatisasi & CI/CD</h2>
         <p>Regression testing sangat cocok untuk <strong>diotomatisasi</strong> karena:</p>
         <ul>
@@ -208,7 +241,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s6">
         <h2>🤖 RPA (Robotic Process Automation) dalam Regression Testing</h2>
         <p><strong>RPA</strong> adalah teknologi yang menggunakan "robot" software untuk mengotomatisasi tugas-tugas repetitif yang biasanya dilakukan manusia. Dalam konteks testing, RPA digunakan untuk <strong>regression testing berbasis UI</strong>.</p>
 
@@ -226,7 +259,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s7">
         <h2>⚡ Load Testing vs Regression Testing</h2>
         <table>
             <tr><th>Aspek</th><th>Load Testing</th><th>Regression Testing</th></tr>
@@ -237,7 +270,7 @@
         </table>
     </div>
 
-    <div class="section">
+    <div class="section" id="s8">
         <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
         <div class="highlight-box success">
             <h4>✅ Ringkasan Kunci untuk UAS</h4>
@@ -256,7 +289,25 @@
         </div>
     </div>
 
-    <div class="section">
+    <!-- Tips Menghafal -->
+    <div class="section" id="s9">
+        <div class="memory-tips-section">
+            <h3>🧠 TIPS MENGHAFAL — Bab 2: Regression Testing</h3>
+            <ol>
+                <li><strong>"Regression = Mundur/Rusak"</strong> → Apakah kode baru bikin fitur lama jadi mundur/rusak? Kalau "Retesting" = Mengulang (apakah bug-nya beneran fix?).</li>
+                <li><strong>"Retesting = Sempit, Regression = Luas"</strong> → Retesting fokus ke 1 bug itu saja, Regression fokus ke seluruh sistem yang mungkin terdampak.</li>
+                <li><strong>"CPSC"</strong> → Tipe Regression: <strong>C</strong>orrective (gak ada ubah kode), <strong>P</strong>rogressive (ada ubah kode), <strong>S</strong>elective (pilih-pilih area), <strong>C</strong>omplete (tes semua dari awal).</li>
+                <li><strong>"RCD"</strong> → Strategi seleksi test: <strong>R</strong>isk (risiko tinggi), <strong>C</strong>overage (area kode yang diubah), <strong>D</strong>ependency (modul yang bergantung).</li>
+                <li><strong>"Stabilitas Build"</strong> → Kata kunci peran Regression Testing dalam CI/CD. Dia jadi "satpam" supaya kode jelek gak masuk ke production.</li>
+                <li><strong>"Test Suite Wajib Update"</strong> → Kalau ada fitur baru tapi test suite nggak di-update, bug baru bakal lolos karena tes cuma ngecek yang lama-lama aja.</li>
+                <li><strong>"Otomatisasi = Cocok"</strong> → Regression Test sangat cocok diotomatisasi karena kerjanya ngulang-ngulang terus (repetitif).</li>
+                <li><strong>"UI.Vision"</strong> → Tool RPA (robot) buat otomasi testing berbasis UI.</li>
+                <li><strong>"Load vs Regression"</strong> → Load Testing = Performa (kuat/enggak), Regression = Fungsional (benar/salah).</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section" id="s10">
         <h2>📝 Contoh Soal & Jawaban</h2>
 
         <div class="example-box">

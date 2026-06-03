@@ -8,7 +8,9 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(99,102,241,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+        .nav-links::-webkit-scrollbar{display:none}
+        .nav-links a{white-space:nowrap}
         .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
         .nav-links a:hover{color:#c4b5fd;background:rgba(99,102,241,0.1);text-decoration:none}
         .nav-links a.active{color:#e2e8f0;font-weight:600}
@@ -67,8 +69,21 @@
         .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
         .example-box{background:rgba(15,23,42,0.8);border-left:3px solid #6366f1;border-radius:0 10px 10px 0;padding:16px 20px;margin:12px 0}
         .example-box .label{font-size:0.75rem;font-weight:700;color:#6366f1;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .toc{background:rgba(17,24,39,0.7);backdrop-filter:blur(16px);border:1px solid rgba(99,102,241,0.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;animation:fadeIn 0.6s ease}
+        .toc h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6366f1;margin-bottom:16px}
+        .toc ol{padding-left:20px}
+        .toc li{margin-bottom:8px}
+        .toc a{color:#94a3b8;text-decoration:none;font-size:0.9rem;transition:color 0.3s}
+        .toc a:hover{color:#a5b4fc}
+        .key-points{background:linear-gradient(135deg,rgba(52,211,153,0.06),rgba(6,182,212,0.06));border:1px solid rgba(52,211,153,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .key-points h3{color:#34d399;font-size:1rem;margin-bottom:16px}
+        .key-points li{margin-bottom:10px}
+        .memory-tips-section{background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(244,63,94,0.06));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .memory-tips-section h3{color:#f59e0b;font-size:1rem;margin-bottom:16px}
+        .memory-tips-section li{margin-bottom:10px;color:#cbd5e1;font-size:0.92rem}
+        .memory-tips-section li strong{color:#fde68a}
         @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.quiz-section{padding:20px}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.quiz-section{padding:20px}.toc{padding:20px 24px}}
     </style>
 </head>
 <body>
@@ -91,8 +106,24 @@
         <p>Pengujian unit terkecil dari perangkat lunak — fondasi utama untuk memastikan setiap bagian kode bekerja dengan benar dan aman.</p>
     </div>
 
+    <!-- TOC -->
+    <div class="toc">
+        <h3>📑 Daftar Isi</h3>
+        <ol>
+            <li><a href="#s1">Apa Itu Unit Testing?</a></li>
+            <li><a href="#s2">Framework Unit Testing</a></li>
+            <li><a href="#s3">Keuntungan Unit Testing</a></li>
+            <li><a href="#s4">OWASP-Based Unit Testing</a></li>
+            <li><a href="#s5">Mocking & Isolation</a></li>
+            <li><a href="#s6">Poin-Poin Penting</a></li>
+            <li><a href="#s7">Tips Menghafal</a></li>
+            <li><a href="#s8">Contoh Soal & Jawaban</a></li>
+            <li><a href="#quizSection">Latihan Soal Interaktif</a></li>
+        </ol>
+    </div>
+
     <!-- ===== MATERI LENGKAP ===== -->
-    <div class="section">
+    <div class="section" id="s1">
         <h2>📖 Apa Itu Unit Testing?</h2>
         <p><strong>Unit Testing</strong> adalah proses menguji <strong>bagian terkecil (unit)</strong> dari sebuah perangkat lunak secara <strong>terisolasi</strong> (terpisah dari bagian lain). Unit ini bisa berupa sebuah <strong>fungsi</strong>, <strong>method</strong>, atau <strong>class</strong>.</p>
         <p>Bayangkan kamu sedang membuat sebuah kalkulator. Sebelum menguji seluruh kalkulator, kamu tes dulu satu per satu: fungsi penjumlahan benar nggak? Fungsi pembagian bisa handle pembagian nol nggak? Itulah <strong>unit testing</strong>.</p>
@@ -127,7 +158,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s2">
         <h2>🛠️ Framework Unit Testing</h2>
         <p>Framework adalah alat bantu yang memudahkan kita membuat dan menjalankan unit test. Berikut framework populer berdasarkan bahasa pemrograman:</p>
         <table>
@@ -146,7 +177,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s3">
         <h2>🎯 Keuntungan Unit Testing</h2>
         <ul>
             <li><strong>Deteksi Bug Lebih Awal</strong> — Bug ditemukan saat coding, bukan saat sudah di-deploy. Lebih murah dan mudah diperbaiki.</li>
@@ -157,7 +188,7 @@
         </ul>
     </div>
 
-    <div class="section">
+    <div class="section" id="s4">
         <h2>🔐 OWASP-Based Unit Testing (Sangat Penting!)</h2>
         <p>Ini adalah bagian paling penting dari materi ini. <strong>OWASP</strong> (Open Web Application Security Project) mendefinisikan <strong>Top 10</strong> kerentanan keamanan web. Dalam unit testing, kita membuat tes khusus untuk memastikan kode kita <strong>tidak rentan</strong> terhadap ancaman-ancaman ini.</p>
 
@@ -272,7 +303,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s5">
         <h2>🧩 Mocking & Isolation dalam Unit Testing</h2>
         <p>Karena unit test harus <strong>terisolasi</strong>, kita tidak bisa langsung terhubung ke database, API, atau layanan eksternal saat testing. Solusinya adalah menggunakan <strong>Mock</strong> — objek tiruan yang meniru perilaku objek asli.</p>
 
@@ -289,7 +320,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s6">
         <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
         <div class="highlight-box success">
             <h4>✅ Ringkasan Kunci untuk UAS</h4>
@@ -308,7 +339,26 @@
         </div>
     </div>
 
-    <div class="section">
+    <!-- Tips Menghafal -->
+    <div class="section" id="s7">
+        <div class="memory-tips-section">
+            <h3>🧠 TIPS MENGHAFAL — Bab 1: Unit Testing</h3>
+            <ol>
+                <li><strong>"IICF"</strong> → 4 Prinsip Unit Testing: <strong>I</strong>solasi (sendirian), <strong>I</strong>ndependen (bebas urutan), <strong>C</strong>epat (kilat), <strong>F</strong>okus (satu hal saja). Bayangkan orang yang kerja sendiri (isolasi), bebas (independen), cepat, dan fokus.</li>
+                <li><strong>"Java → JUnit, Python → Pytest, JS → Jest"</strong> → Tiga framework paling penting. Semua berawalan huruf J/P! Java=JUnit, Python=Pytest, JavaScript=Jest.</li>
+                <li><strong>"BCIIS VISSS"</strong> → OWASP Top 10: Broken access, Crypto, Injection, Insecure design, Security misconfig, Vulnerable comp, ID/Auth fail, Software integrity, Security logging, SSRF.</li>
+                <li><strong>"Guest = Denied"</strong> → Broken Access Control. Bayangkan tamu hotel (guest) mencoba masuk ruang VIP dan ditolak satpam. <code>assert result == "Access Denied"</code></li>
+                <li><strong>"Hash ≠ Asli"</strong> → Cryptographic Failures. Password harus di-hash, jadi yang disimpan BEDA dari yang diketik.</li>
+                <li><strong>"' OR 1=1 -- = SQL Injection"</strong> → Payload klasik SQL Injection. Kalau lihat tanda kutip + OR + angka, itu pasti Injection.</li>
+                <li><strong>"5x Gagal = Terkunci"</strong> → Insecure Design. Tidak ada lockout mechanism berarti desainnya tidak aman.</li>
+                <li><strong>"Debug Mode ON di Production = Misconfiguration"</strong> → Security Misconfiguration. Production harus DEBUG=False.</li>
+                <li><strong>"Mock = Tiruan"</strong> → Mocking menggantikan database/API sungguhan dengan yang palsu agar tes tetap cepat dan terisolasi.</li>
+                <li><strong>"Dokumentasi Hidup"</strong> → Unit test bukan cuma tes, tapi juga menjelaskan bagaimana fungsi seharusnya bekerja. Lebih baik dari komentar biasa.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section" id="s8">
         <h2>📝 Contoh Soal & Jawaban</h2>
 
         <div class="example-box">

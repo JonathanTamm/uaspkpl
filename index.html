@@ -13,7 +13,9 @@
             border-bottom: 1px solid rgba(99,102,241,0.12);
             padding: 14px 24px; display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-links { display: flex; align-items: center; gap: 4px; font-size: 0.85rem; flex-wrap: wrap; }
+        .nav-links { display: flex; align-items: center; gap: 4px; font-size: 0.85rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-links a { white-space: nowrap; }
         .nav-links a { color: #94a3b8; text-decoration: none; padding: 5px 12px; border-radius: 7px; transition: all 0.2s; font-weight: 500; }
         .nav-links a:hover { color: #c4b5fd; background: rgba(99,102,241,0.1); text-decoration: none; }
         .nav-links a.active { color: #e2e8f0; font-weight: 600; }

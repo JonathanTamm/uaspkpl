@@ -8,7 +8,9 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(239,68,68,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+        .nav-links::-webkit-scrollbar{display:none}
+        .nav-links a{white-space:nowrap}
         .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
         .nav-links a:hover{color:#fca5a5;background:rgba(239,68,68,0.1);text-decoration:none}
         .nav-links a.active{color:#e2e8f0;font-weight:600}
@@ -68,8 +70,23 @@
         .result-box .score{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#ef4444,#f87171);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
         .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        .result-box .score-label{font-size:0.9rem;color:#94a3b8;margin-top:4px}
+        .nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+        .toc{background:rgba(17,24,39,0.7);backdrop-filter:blur(16px);border:1px solid rgba(239,68,68,0.15);border-radius:16px;padding:28px 32px;margin-bottom:32px;animation:fadeIn 0.6s ease}
+        .toc h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#ef4444;margin-bottom:16px}
+        .toc ol{padding-left:20px}
+        .toc li{margin-bottom:8px}
+        .toc a{color:#94a3b8;text-decoration:none;font-size:0.9rem;transition:color 0.3s}
+        .toc a:hover{color:#fca5a5}
+        .key-points{background:linear-gradient(135deg,rgba(52,211,153,0.06),rgba(6,182,212,0.06));border:1px solid rgba(52,211,153,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .key-points h3{color:#34d399;font-size:1rem;margin-bottom:16px}
+        .key-points li{margin-bottom:10px}
+        .memory-tips-section{background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(244,63,94,0.06));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:28px 32px;margin:20px 0}
+        .memory-tips-section h3{color:#f59e0b;font-size:1rem;margin-bottom:16px}
+        .memory-tips-section li{margin-bottom:10px;color:#cbd5e1;font-size:0.92rem}
+        .memory-tips-section li strong{color:#fde68a}
         @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}}
+        @media(max-width:680px){.chapter-header h1{font-size:1.6rem}.section{padding:20px}.nav-buttons{flex-direction:column}.toc{padding:20px 24px}}
     </style>
 </head>
 <body>
@@ -94,7 +111,25 @@
         <p>Simulasi serangan terhadap sistem untuk menemukan kerentanan keamanan sebelum penyerang sungguhan menemukannya.</p>
     </div>
 
-    <div class="section">
+    <!-- TOC -->
+    <div class="toc">
+        <h3>📑 Daftar Isi</h3>
+        <ol>
+            <li><a href="#s1">Apa Itu Penetration Testing?</a></li>
+            <li><a href="#s2">Tipe Penetration Testing</a></li>
+            <li><a href="#s3">Cakupan (Scope) Penetration Testing</a></li>
+            <li><a href="#s4">7 Fase Penetration Testing</a></li>
+            <li><a href="#s5">Tools Penetration Testing</a></li>
+            <li><a href="#s6">Spidering / Crawling</a></li>
+            <li><a href="#s7">Risiko Active Scanning</a></li>
+            <li><a href="#s8">Poin-Poin Penting</a></li>
+            <li><a href="#s9">Tips Menghafal</a></li>
+            <li><a href="#s10">Contoh Soal & Jawaban</a></li>
+            <li><a href="#quizSection">Latihan Soal Interaktif</a></li>
+        </ol>
+    </div>
+
+    <div class="section" id="s1">
         <h2>📖 Apa Itu Penetration Testing?</h2>
         <p><strong>Penetration Testing (Pentest)</strong> adalah metode pengujian keamanan di mana tester <strong>mensimulasikan serangan nyata</strong> terhadap sistem untuk menemukan kerentanan (vulnerability). Tester berperan sebagai "hacker yang baik" (<strong>ethical hacker</strong>).</p>
 
@@ -109,7 +144,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s2">
         <h2>🎯 Tipe Penetration Testing</h2>
         <table>
             <tr><th>Tipe</th><th>Pengetahuan Tester</th><th>Simulasi</th><th>Kelebihan</th></tr>
@@ -143,7 +178,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s3">
         <h2>🌐 Cakupan (Scope) Penetration Testing</h2>
         <table>
             <tr><th>Scope</th><th>Apa yang Diuji?</th></tr>
@@ -157,7 +192,7 @@
         </table>
     </div>
 
-    <div class="section">
+    <div class="section" id="s4">
         <h2>📋 7 Fase Penetration Testing (SANGAT PENTING!)</h2>
         <p>Pentest dilakukan secara sistematis melalui 7 fase berurutan:</p>
 
@@ -236,7 +271,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s5">
         <h2>🔧 Tools Penetration Testing (WAJIB HAPAL!)</h2>
         <p>Setiap tool punya fungsi spesifik. Berikut yang paling sering keluar di soal:</p>
 
@@ -308,7 +343,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s6">
         <h2>🕷️ Spidering / Crawling</h2>
         <p><strong>Spidering</strong> (atau crawling) adalah proses otomatis <strong>memetakan seluruh struktur aplikasi web</strong> — menemukan semua halaman, link, form, dan endpoint yang ada.</p>
         <p>Fungsinya:</p>
@@ -325,7 +360,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="s7">
         <h2>⚠️ Risiko Active Scanning</h2>
         <p><strong>Active scanning</strong> (pemindaian aktif) melibatkan interaksi langsung dengan target. Risikonya:</p>
         <ul>
@@ -336,7 +371,7 @@
         </ul>
     </div>
 
-    <div class="section">
+    <div class="section" id="s8">
         <h2>📌 Poin-Poin Penting (WAJIB DIHAPAL)</h2>
         <div class="highlight-box success">
             <h4>✅ Ringkasan Kunci untuk UAS</h4>
@@ -355,7 +390,25 @@
         </div>
     </div>
 
-    <div class="section">
+    <!-- Tips Menghafal -->
+    <div class="section" id="s9">
+        <div class="memory-tips-section">
+            <h3>🧠 TIPS MENGHAFAL — Bab 4: Penetration Testing</h3>
+            <ol>
+                <li><strong>"Bukan 100% Aman"</strong> → Pentest <strong>hanya mencari bolong (kerentanan)</strong>, bukan ngasih cap halal 100% aman. Gak mungkin ngetes semua hal.</li>
+                <li><strong>"Black, White, Gray"</strong> → Black = Gelap (gak tahu apa-apa, luar). White = Terang (tahu semua source code, dalam). Gray = Abu-abu (tahu sebagian, user biasa).</li>
+                <li><strong>"PR-TV-EPR" (7 Fase)</strong> → <strong>P</strong>re-engagement, <strong>R</strong>econ, <strong>T</strong>hreat model, <strong>V</strong>uln analysis, <strong>E</strong>xploit, <strong>P</strong>ost-exploit, <strong>R</strong>eporting.</li>
+                <li><strong>"Recon = Ngintip"</strong> → Passive recon = ngintip dari jauh (Google, socmed), musuh gak sadar. Active recon = ngetok pintu (Nmap, port scan), musuh bisa sadar.</li>
+                <li><strong>"Metasploit = Senjata"</strong> → Kumpulan exploit buat <strong>menyerang</strong>.</li>
+                <li><strong>"Burp Suite = Tukang Sadap"</strong> → Proxy buat <strong>intercept/sadap trafik HTTP</strong> antara browser dan server.</li>
+                <li><strong>"Nmap = Bikin Peta"</strong> → Network Mapper buat <strong>port scanning</strong> nyari port yang bolong.</li>
+                <li><strong>"Nessus = Scanner Otomatis"</strong> → Vulnerability scanner buat nyari kerentanan yang udah dikenal publik.</li>
+                <li><strong>"Spidering = Robot Pemetaan"</strong> → Crawling buat bikin <strong>peta struktur web</strong> (link, halaman), BUKAN buat nyerang.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section" id="s10">
         <h2>📝 Contoh Soal & Jawaban</h2>
 
         <div class="example-box">

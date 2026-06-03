@@ -8,7 +8,9 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         .sticky-nav{position:fixed;top:0;left:0;right:0;z-index:1001;background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(236,72,153,0.12);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:wrap}
+        .nav-links{display:flex;align-items:center;gap:4px;font-size:0.85rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+        .nav-links::-webkit-scrollbar{display:none}
+        .nav-links a{white-space:nowrap}
         .nav-links a{color:#94a3b8;text-decoration:none;padding:5px 12px;border-radius:7px;transition:all 0.2s;font-weight:500}
         .nav-links a:hover{color:#f9a8d4;background:rgba(236,72,153,0.1);text-decoration:none}
         .nav-links a.active{color:#e2e8f0;font-weight:600}
@@ -838,6 +840,14 @@ function resetExam() {
     updateProgress();
     scrollToTop();
 }
+
+window.addEventListener('beforeunload', function (e) {
+    if (!isSubmitted()) {
+        const confirmationMessage = 'Yakin ingin meninggalkan halaman? Simulasi ujian sedang berjalan.';
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+    }
+});
 
 // Init
 renderQuiz();
